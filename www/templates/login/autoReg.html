@@ -1,0 +1,44 @@
+<ion-view id="login">
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <form ng-submit="saveCar('save')" class="list" ng-show="autoreg">
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Marca
+        </div>
+        <select ng-model="carData.marca">
+          <option value="Alfa Romeo">Alfa Romeo</option>
+          <option value="Subaru" selected>Subaru</option>
+          <option value="Ferrari">Ferrari</option>
+          <option value="Lamborghini">Lamborghini</option>
+        </select>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Modelo</span>
+        <input type="text" ng-model="carData.modelo">
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">Año</div>
+        <select ng-model="carData.ano">
+          <option>2017</option>
+          <option selected value="2016">2016</option>
+          <option value="2015">2015</option>
+          <option value="2014">2014</option>
+          <option value="2013">2013</option>
+          <option value="2012">2012</option>
+          <option value="2011">2011</option>
+          <option value="2010">2010</option>
+          <option value="2009">2009</option>
+          <option value="2008">2008</option>
+        </select>
+      </label>
+      <button type="submit" class="button icon-right ion-ios-plus button-positive">Añadir</button>
+    </form>
+    <a href="#/welcome" class="button button-positive">Continuar</a>
+  </ion-content>
+</ion-view>

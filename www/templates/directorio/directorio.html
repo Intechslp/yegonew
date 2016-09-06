@@ -1,0 +1,98 @@
+<ion-view id="home" hide-back-button="true" animation="ios" view-title="Directorio">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-tabs">
+    <!-- Logo -->
+    <img src="img/logo-yego.png" alt="" class="logo">
+    <!-- Search -->
+    <div class="bar bar-subheader bar-stable item-input-inset">
+      <label class="search-bar item-input-wrapper">
+        <i class="icon ion-ios-search placeholder-icon "></i>
+        <input
+            type="search" placeholder="Búsqueda"
+            ng-change="srchchange()" ng-model="adn.item"
+            ng-click="tabsState = false; closeBtn = true">
+      </label>
+      <button class="button button-clear closeBtn"
+          ng-click="ressetserach(); tabsState = true; closeBtn = false"
+          ng-show="closeBtn">
+        <i class="ion-android-cancel assertive"></i>
+      </button>
+    </div>
+    <!-- icons container and search spawner -->
+    <div class="after-search">
+      <!-- Search list -->
+      <ion-list id="home-search" ng-show="searchList">
+        <div ng-repeat="x in names"  data="{{names}}" ng-click="getDatapointId(names)" >
+          <ion-item>{{x.name}}</ion-item>
+        </div>
+   		  <div ng-if="names !== undefined && !names.length" class="no-results">
+          <ion-item >No Results Found..</ion-item >
+        </div>
+  		</ion-list>
+      <div class="categories">
+        <div class="row">
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(1,'Car shop')">
+              <img src="img/icons/car.png" alt="" class="menu-icon">
+            </a>
+            <p>Car shop</p>
+          </div>
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(2,'Reparación')">
+              <img src="img/icons/repa.png" alt="" class="menu-icon">
+            </a>
+            <p>Reparación</p>
+          </div>
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(3,'Estética')">
+              <img src="img/icons/este.png" alt="" class="menu-icon">
+            </a>
+            <p>Estética</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(4,'Servicios')">
+              <img src="img/icons/ser.png" alt="" class="menu-icon">
+            </a>
+            <p>Servicios</p>
+          </div>
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(5,'Seguridad')">
+              <img src="img/icons/gas.png" alt="" class="menu-icon">
+            </a>
+            <p>Seguridad</p>
+          </div>
+          <div class="col">
+            <a class="icon-cont" ng-click="goCategory(0,'Gasolineras')">
+              <img src="img/icons/seg.png" alt="" class="menu-icon">
+            </a>
+            <p>Gasolineras</p>
+          </div>
+        </div>
+      </div>
+      <a href="#/app/cerca" class="button button-block icon-left ion-ios-location button-positive">Cerca de mi</a>
+    </div>
+  </ion-content>
+  <div class="tabs tabs-background-positive tabs-color-light tabs-icon-top home-tabs">
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior active" title="Directorio" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="">
+      <div class="my-icon dir-icon"></div>Directorio<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.seguros')">
+      <div class="my-icon seg-icon"></div>Seguros<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Cuponera" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.cuponera')">
+      <div class="my-icon cup-icon"></div>Cuponera<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Libro" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.guia')">
+      <div class="my-icon lib-icon"></div>Libro<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+  </div>
+</ion-view>

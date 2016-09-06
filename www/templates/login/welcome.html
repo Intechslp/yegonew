@@ -1,0 +1,21 @@
+<ion-view id="login">
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <div ng-show="registered == true">
+      <h1>¡Bienvenido a Yego!</h1>
+      <h2>Ya estás registrado</h2>
+      <h3>Disfruta la experiencia completa</h3>
+    </div>
+    <div ng-if="registered == false">
+      <h1>¡Bienvenido a Yego!</h1>
+      <h2>No estás registrado</h2>
+      <h3>Para disfrutar la experiencia completa Registrate</h3>
+    </div>
+    <a href="#/app/directorio" class="button button-positive">Continuar</a>
+  </ion-content>
+</ion-view>

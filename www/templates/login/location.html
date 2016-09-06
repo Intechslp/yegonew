@@ -1,0 +1,32 @@
+<ion-view id="login" view-title="¿De dónde eres?">
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <form class="list" method="post">
+      <label class="item item-input item-select">
+        <div class="input-label">País</div>
+        <select name="pais" ng-model="locationData.pais">
+          <option value="México" selected>México</option>
+        </select>
+      </label>
+      <label class="item item-input item-select" disabled>
+        <div class="input-label">Estado</div>
+        <select name="estado" ng-model="locationData.estado">
+          <option value="San Luis Potosí" selected>San Luis Potosí</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">Ciudad</div>
+        <select name="ciudad" ng-model="locationData.ciudad">
+          <option value="San Luis Potosí" selected>San Luis Potosí</option>
+        </select>
+      </label>
+      <button ng-click="goAuto()" class="button button-positive">Continuar</button>
+    </form>
+
+  </ion-content>
+</ion-view>

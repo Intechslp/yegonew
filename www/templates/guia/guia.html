@@ -1,0 +1,71 @@
+<ion-view id="guia" hide-back-button="true" animation="ios" view-title="Libro de Precios">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+
+    <div class="list">
+
+      <label class="item item-input item-select">
+        <div class="input-label">Marca</div>
+        <select>
+          <option value="select" selected>--seleciona--</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Modelo</div>
+        <select>
+          <option value="select" selected>--seleciona--</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Año</div>
+        <select>
+          <option value="select" selected>--seleciona--</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Estilo</div>
+        <select>
+          <option value="select" selected>--seleciona--</option>
+        </select>
+      </label>
+
+    </div>
+
+    <div class="row">
+      <div class="col">Compra</div>
+      <div class="col">Venta</div>
+    </div>
+    <div class="row">
+      <div class="col"><strong>$0.00</strong></div>
+      <div class="col"><strong>$0.00</strong></div>
+    </div>
+    <div class="row row-low">
+      <div class="col">*Modelos a partir de 2003</div>
+    </div>
+
+  </ion-content>
+  <div class="tabs tabs-background-positive tabs-color-light tabs-icon-top home-tabs">
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Directorio" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.directorio')">
+      <div class="my-icon dir-icon"></div>Directorio<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.seguros')">
+      <div class="my-icon seg-icon"></div>Seguros<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Cuponera" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.cuponera')">
+      <div class="my-icon cup-icon"></div>Cuponera<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior active" title="Libro" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="">
+      <div class="my-icon lib-icon"></div>Libro<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+  </div>
+</ion-view>

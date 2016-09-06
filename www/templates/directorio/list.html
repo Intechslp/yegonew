@@ -1,0 +1,22 @@
+<ion-view id="dirList" animation="ios" view-title="{{subcatName}}">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <div class="list">
+      <a class="item  item-thumbnail-right"  ng-repeat="negocio in negocios" ng-click="lol({{negocio.id}})">
+        <img src="img/logo-yego.png" alt="">
+        <h2>{{negocio.business | capitalize:true}}</h2>
+        <div class="rate-bar">
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <p>0 (0)</p>
+        </div>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

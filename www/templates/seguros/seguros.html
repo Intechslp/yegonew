@@ -1,0 +1,123 @@
+<ion-view id="seguros" hide-back-button="true" animation="ios" view-title="Seguros">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="home-tabs">
+    <div class="row">
+      <div class="col">
+        <h3>Cotiza tu seguro de auto</h3>
+        <p>Encuentra seguros hasta 40% más baratos</p>
+      </div>
+    </div>
+    <form action="" class="list">
+      <!-- Tipo de auto -->
+      <label class="item item-input item-select ">
+        <img src="img/icons/modelo.png" alt="" class="img-left">
+        <div class="input-label">Tipo de auto</div>
+        <select name="tipoAuto" id="tipoAuto">
+          <option value="select" selected></option>
+          <option value="particular">Particular</option>
+          <option value="legalizado">Legalizado</option>
+        </select>
+      </label>
+
+      <!-- Marca -->
+      <label class="item item-input item-select">
+        <img src="img/icons/marca.png" alt="" class="img-left">
+      <div class="input-label">Marca</div>
+      <select name="marca" id="marca">
+        <option value="select" selected></option>
+        <option ng-repeat="brand in brands" value="{{brand[0]}}">{{brand[0]}}</option>
+      </select>
+      </label>
+      <div class="item double-holder">
+        <!-- Modelo -->
+        <label class="item item-input item-select" id="modelo-label">
+        <!-- <div class="input-label">Modelo</div> -->
+        <select name="modelo" id="modelo">
+          <option value="select" selected>Modelo</option>
+          <option ng-repeat="model in models" value="{{model[0]}}">{{model[0]}}</option>
+        </select>
+        </label>
+        <!-- Descripción -->
+        <label class="item item-input item-select" id="descripcion-label">
+        <!-- <div class="input-label">Descripción</div> -->
+        <select name="descripcion" id="descripcion">
+          <option value="select" selected>Descripción</option>
+          <option ng-repeat="de in des" value="{{de[0]}}">{{de[0]}}</option>
+        </select>
+        </label>
+      </div>
+
+      <div class="item double-holder">
+        <!-- Edad -->
+        <label class="item item-input" id="edad-label">
+          <img src="img/icons/edad.png" alt="" class="img-left">
+          <span class="input-label">Edad</span>
+          <input type="tel" id="edad" name="edad" min="16" max="99" maxlength="2">
+        </label>
+        <!-- Género -->
+        <label class="item item-input item-select" id="genero-label">
+          <div class="input-label">Género</div>
+          <select name="genero" id="genero">
+            <option value="select" selected>Género</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Código Postal -->
+      <label class="item item-input" id="codigo-label">
+        <img src="img/icons/codigopostal.png" alt="" class="img-left">
+       <span class="input-label">Código Postal</span>
+       <input type="text" name="CPostal" type="tel" maxlength="5">
+      </label>
+      <!-- Plan -->
+      <!-- <label class="item item-input item-select">
+        <div class="input-label">Plan</div>
+        <select name="plan" id="genero">
+          <option value="select" selected>Seleccionar</option>
+          <option value="AMPLIA">Amplia</option>
+          <option value="LIMITADA">Limitada</option>
+          <option value="RC">Responsabilidad civil</option>
+        </select>
+      </label> -->
+
+    <div class="row">
+      <div class="col">
+        <img src="img/seguro-inteligente.png" alt="" id="seguro-inteligente">
+      </div>
+      <div class="col">
+        <a class="button button-block button-positive button-clear" href="#/app/seguros/lista" ng-click="goForCotizacion()">
+          Cotizar
+        </a>
+      </div>
+      <div class="col">
+        <a class="button button-block button-positive button-clear" href="#" ng-click="clearForm()">
+          OTRO AUTO
+        </a>
+      </div>
+    </div>
+    </form>
+  </ion-content>
+  <div class="tabs tabs-background-positive tabs-color-light tabs-icon-top home-tabs hide-on-keyboard-open">
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Directorio" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.directorio')">
+      <div class="my-icon dir-icon"></div>Directorio<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior active" title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="">
+      <div class="my-icon seg-icon"></div>Seguros<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Cuponera" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.cuponera')">
+      <div class="my-icon cup-icon"></div>Cuponera<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Libro" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.guia')">
+      <div class="my-icon lib-icon"></div>Libro<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+  </div>
+</ion-view>

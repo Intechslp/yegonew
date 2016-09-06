@@ -1,0 +1,54 @@
+<ion-view id="login">
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <!-- Logo -->
+    <img src="img/logo-yego.png" alt="" class="logo">
+    <!-- LOGIN -->
+    <form class="list" ng-submit="loginClick('login','app.directorio')" method="post" ng-if="loginForm == true">
+      <h2>Login</h2>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Usuario</span>
+        <input type="text" ng-model="loginData.user" placeholder="Usuario">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Contraseña</span>
+        <input type="password" ng-model="loginData.pass" placeholder="Contraseña">
+      </label>
+      <button type="submit" class="button button-block button-positive" ng-click="">Iniciar Sesión</button>
+    </form>
+
+    <!-- REGISTER -->
+    <form class="list" method="post" ng-submit="loginClick('register','location')" ng-if="registerForm == true">
+      <button class="button button-icon icon ion-close the-close" ng-click="showForm('','close')"></button>
+      <h2>Registro</h2>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Nombre de Usuario</span>
+        <input type="text" ng-model="registerData.user" placeholder="Nombre de Usuario">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Email</span>
+        <input type="email" ng-model="registerData.email" placeholder="Email">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Contraseña</span>
+        <input type="password" ng-model="registerData.pass" placeholder="Contraseña">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Confirma la contraseña</span>
+        <input type="password" placeholder="Confirma la contraseña">
+      </label>
+      <button type="submit" class="button button-block button-positive" ng-click="">Registrarse</button>
+    </form>
+
+    <!-- BUTTONS -->
+    <div class="button-container" ng-show="btnCont">
+      <button class="button button-positive" ng-click="showForm('register','open')">Registrarse</button>
+      <button class="button button-positive" ng-click="loginClick('guest','location')">Entrar como invitado</button>
+    </div>
+  </ion-content>
+</ion-view>

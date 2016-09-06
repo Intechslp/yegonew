@@ -1,0 +1,39 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <!-- Side Menu (left) -->
+  <ion-side-menu side="left">
+    <ion-content>
+      <div id="profile-card" class="profile-card" style="background-image:url({{profile.carpic}})">
+        <img id="profile-pic" src="{{profile.pic}}" alt="" class="profile-element">
+        <h1 class="profile-element">{{profile.name}}</h1>
+        <h2 class="profile-element">Familia: {{profile.family}}</h2>
+      </div>
+      <ion-list>
+        <ion-item menu-close href="#/app/home">
+          Inicio
+        </ion-item>
+        <ion-item menu-close href="#/app/perfil">
+          Mi Perfil
+        </ion-item>
+        <ion-item menu-close href="#/app/negocio">
+          Mi Negocio
+        </ion-item>
+        <ion-item menu-close href="#/app/config">
+          Configuracion
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

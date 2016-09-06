@@ -1,0 +1,27 @@
+<ion-view id="segList" animation="ios" view-title="Compara">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <div id="seguros-tabs" class="tabs tabs-striped tabs-top tabs-dark">
+    <a class="tab-item" ng-class="{'active':amplia_cont}" ng-click="changeSegurosTab('amplia')">AMPLIA</a>
+    <a class="tab-item" ng-class="{'active':limitada_cont}" ng-click="changeSegurosTab('limitada')">LIMITADA</a>
+  </div>
+  <ion-content class="has-tabs-top">
+    <div class="list">
+      <a class="item  item-thumbnail-right"  ng-repeat="cotizacion in cotizaciones" ng-click="goSingle($index)">
+        <img src="img/logo-yego.png" alt="">
+        <h2>{{cotizacion.NombreAseguradora}}</h2>
+        <div class="rate-bar">
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <p>0 (0)</p>
+        </div>
+        <p>Prima Total: <strong>{{cotizacion.PrimaTotal | currency: '$' : 2}}</strong></p>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

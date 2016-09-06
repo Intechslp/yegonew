@@ -1,0 +1,552 @@
+/* Empty. Add your own CSS if you like */
+@import 'fonts.css';
+/* GENERAL
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+body *{
+  font-family: 'Raleway';
+  color: white;
+}
+body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-view, ion-side-menu {
+  background: #0d1927 !important;
+}
+.scroll{
+  background: #142840;
+  display: flex;
+  flex-direction: column;
+}
+.button.button-positive {
+  color: #0d1927;
+  box-shadow: 1px 2px 2px #000;
+  background: #92baf5;
+  text-transform: uppercase;
+}
+.button.button-positive.button-clear {
+  color:#92baf5;
+  font-weight: bold;
+  line-height: 20px;
+  padding: .7em;
+  }
+.bar-dark .button.button-clear *{
+  color: #92baf5;
+}
+.item p{
+  color: white;
+}
+.popup * {
+  color: black;
+}
+.list .item{
+  background: #142840;
+  border: none;
+  border-bottom: 1px solid #3d4753;
+  margin: 0em;
+}
+ion-content.scroll-content.ionic-scroll {
+  background: #142840;
+}
+ion-content.scroll-content.ionic-scroll.has-tabs-top {
+  top: 93px;
+}
+.row.row-low {
+  margin-top: 3em;
+}
+
+/* HEADER
+–––––––––––––––––––––––––––––*/
+ion-header-bar.bar-dark.bar.bar-header{
+  background: #0d1927;
+  border-color: transparent;
+  background-image: none;
+  border-bottom-width: 0px;
+  color: #92baf5;
+}
+ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:before{
+  color: #92baf5;
+}
+/* TABS
+–––––––––––––––––––––––––––––*/
+
+.home-tabs {
+  background: #142840;
+  padding-top: 5px;
+}
+
+.my-icon {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: contain;
+  height: 60%;
+  width: 100%;
+}
+.dir-icon{background-image: url('../img/icons/dir-i.png');}
+.active .dir-icon{background-image: url('../img/icons/dir-a.png');}
+.seg-icon{background-image: url('../img/icons/seg-i.png');}
+.active .seg-icon{background-image: url('../img/icons/seg-a.png');}
+.cup-icon{background-image: url('../img/icons/cup-i.png');}
+.active .cup-icon{background-image: url('../img/icons/cup-a.png');}
+.lib-icon{background-image: url('../img/icons/libro-i.png');}
+.active .lib-icon{background-image: url('../img/icons/libro-a.png');}
+/* MENU
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#profile-card{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 1em;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+#profile-card:before{
+  content:'';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left: 0;
+  background: rgba(0,0,0,.1); /* For browsers that do not support gradients */
+  background: -webkit-radial-gradient(circle, rgba(2, 87, 127, 0.2), rgba(2, 87, 127, .5)); /* Safari */
+  background: radial-gradient(circle, rgba(2, 87, 127, 0.2), rgba(2, 87, 127, .5)); /* Standard syntax */
+  z-index:1;
+}
+#profile-card *{
+  color:white;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+#profile-card img#profile-pic{
+  border-radius: 100px;
+  width: 50px;
+}
+.profile-element{
+  z-index: 10;
+}
+#profile-card h1{
+  font-size: 24px;
+  margin: 0px;
+}
+#profile-card h2{
+  font-size: 16px;
+  margin: 0px;
+}
+/* HOME
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#home ion-content {
+  overflow: visible;
+}
+#home ion-content .scroll{
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#home .logo{
+  display: block;
+  width:100%;
+  max-width: 85px;
+  margin: 1.5em auto 1em;
+}
+#home .bar.bar-subheader {
+  top: 0;
+  background: #142840;
+  border-bottom-color: transparent;
+  background-image: none;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+  width: 100%;
+  max-width: 300px;
+
+}
+#home button.button.button-clear.closeBtn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+#home label.search-bar.item-input-wrapper {
+  border-radius: 2px;
+  padding: 1em;
+  display: flex;
+  background: white;
+  width: 100%;
+  align-self: center;
+}
+#home .after-search .col{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.icon-cont {
+  border-radius: 50%;
+  background: #0d1927;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 2px #000;
+}
+img.menu-icon {
+  width: 100%;
+  max-width: 32px;
+  position: relative;
+}
+#home .after-search ion-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#home .after-search {
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+#home .after-search ion-list#home-search {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+#home #home-search .list {
+  width: 100%;
+  max-width: 320px;
+}
+#home #home-search ion-item.item.ng-binding {
+  background: rgba(0,89,136,0.98);
+  color: white;
+  font-size: 15px;
+}
+#home .categories {
+  margin-top: 5%;
+  width: 100%;
+  max-width: 320px;
+}
+#home a.button {
+  width: 100%;
+  max-width: 150px;
+}
+/* Categorias Directorio
+–––––––––––––––––––––––––––––*/
+#categories a.item {
+  background: #142840;
+  border: none;
+  border-bottom: 1px solid #3d4753;
+  margin: 0;
+}
+.subcat-img{
+  width:100%;
+  max-width:30px;
+  max-height: 30px;
+  margin-top: 10px;
+}
+/* Lista de Negocios por subcategoría Directorio
+–––––––––––––––––––––––––––––*/
+#dirList .item h2 {
+  text-overflow: clip;
+  overflow: visible;
+  white-space: initial;
+}
+.rate-bar {
+  display: flex;
+  flex-direction: row;
+}
+.rate-bar p,.rate-bar i{
+  color:#92baf5;
+}
+.rate-bar p {
+  margin-left: .5em;
+}
+/* Single Directorio
+–––––––––––––––––––––––––––––*/
+#dirSingle .main-img{width:100%}
+#dirSingle .row{border-top:1px solid #3d4753}
+#dirSingle h1 {color: #92baf5;font-size: 24px;}
+#dirSingle h3 {font-size: 20px;}
+/* CERCA DE MI
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#cerca .bar-assertive, #cerca .button-assertive,
+#cerca-modal .bar-assertive, #cerca-modal .button-assertive{
+  border-color: #B90017;
+  background-color: #B90017;
+  background-image: linear-gradient(0deg, #B90017, #B90017 50%, transparent 50%);
+}
+#cerca .button-assertive, #cerca-modal .button-assertive{
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+  padding: .5em;
+  height: 13%;
+}
+#cerca-modal .button-assertive{
+  font-size: 20px;
+}
+#cerca .scroll, #cerca-modal .scroll{
+  height:100%;
+}
+#cerca #datos {
+  background: #FF6000;
+  margin-bottom: 0px;
+  padding: 1em 1em .3em;
+  height: 40%;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+#cerca #datos .toggle input:checked + .track {
+  border-color: #4cb8d9;
+  background-color: #4cb8d9;
+}
+#cerca #datos .toggle input + .track {
+  border-color: #4cd964;
+  background-color: #4cd964;
+}
+#cerca #datos .input-label {
+  color: white;
+}
+#cerca #datos .item {
+  background: transparent;
+  color: white;
+  padding: 0;
+  border: none;
+  /*border-bottom: 1px solid #d04e00;*/
+}
+#cerca #datos .item:nth-last-child(1){
+  border-bottom: none;
+}
+#cerca #datos .form-header{
+  text-align: center;
+  font-weight: 600;
+  margin: auto;
+  font-size: 18px;
+  padding: 0;
+}
+#cerca .smaller-row {
+  width: 100%;
+  max-width: 250px;
+  margin: auto;
+  padding: 0;
+}
+#cerca #datos .col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+#cerca #datos .smaller-row .col .input-label{
+  font-size: 17px;
+  padding: .3em 0;
+  margin: 0;
+}
+#cerca #datos .select-container {
+  background: white;
+  width: 100%;
+  overflow: hidden;
+  padding: .5em 1em;
+  position:   relative;
+}
+#cerca #datos .select-container, #cerca #datos textarea.com-input,
+#cerca #datos input.ubi-input {
+  margin: 3% 0;
+}
+#cerca #datos .select-container .input-label{
+  width:25%;
+}
+#cerca #datos .select-container select {
+  width: 75%;
+  right: 30px;
+}
+#cerca #datos .select-container .input-label,
+#cerca #datos .select-container select {
+  padding: 0;
+  margin: 0;
+  color: #aaa;
+}
+#cerca #datos textarea.com-input {
+  height: 50px;
+}
+#cerca #datos .select-container,#cerca #datos .com-input,#cerca #datos .ubi-input {
+  background: white;
+  padding: .5em 1em;
+  border: 1px solid #B90017;
+  box-shadow: 0px 3px 5px #b34300;
+  font-size: 17px;
+}
+.not-rescate-map {
+  padding: 1.5em 1em;
+  height: 47%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  background-image: url(../img/map-bg.jpg);
+  background-size: cover;
+  background-origin: initial;
+  background-position: center;
+}
+#cerca .not-rescate-map .button {
+  width: 230px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0px 2px 5px #777;
+  padding: 2px 1em 1px;
+}
+#cerca .rescate-map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+/* CUPONERA
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#cuponera a.item {
+  background: #142840;
+  color: #92baf5;
+  border: 1px solid #3d4753;
+}
+#cuponera .item * {
+  color: #92baf5;
+}
+/* SEGUROS
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#seguros form.list, #guia form.list{
+  display:flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+#seguros .list .item ,#guia .list .item {
+  width:83%;
+  height: 50px;
+  overflow: visible;
+  padding-left: .5em;
+}
+#seguros .list .item *,#guia .list .item *{
+  color: white;
+}
+#seguros .list .item select ,#guia .list .item select {
+  background: #142840;
+}
+#seguros .item .img-left{
+  width:100%;
+  max-width:30px;
+  position: absolute;
+  top: 10px;
+  left: -45px;
+}
+#seguros .item.double-holder {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+}
+#seguros .double-holder .item{width:50%;}
+#seguros .double-holder .item select {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  font-size: 16px;
+  right: auto;
+  left: 0;
+  direction: ltr;
+  padding-left: .5em;
+  padding-right: 1.5em;
+}
+#seguros form.list #modelo-label,#seguros form.list #edad-label{width:40%;}
+#seguros form.list #descripcion-label,#seguros form.list #genero-label{width:60%;}
+#seguros form.list #edad-label input,#seguros form.list #codigo-label input{
+  background: #1a314e;padding-left: .8em;
+}
+#seguros img#seguro-inteligente{
+  width:100%;
+  max-width: 100px;
+  margin:auto;
+}
+#seguros .button.button-positive.button-clear {
+  margin:auto;
+}
+#segList .tabs-dark{
+  background: #193656;
+  box-shadow: 0px 1px 5px #0d1927;
+}
+#segList .tabs-dark a.tab-item.active {
+  border-bottom: 1px solid #92baf5;
+}
+
+/* GUIA
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#guia .list .item{
+  width:100%;
+}
+
+/* PERFIL
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#perfil .has-header {
+  top: 0;
+}
+#perfil .header-item .left-buttons .ion-navicon {
+  background: rgba(5, 89, 138, 0.49);
+}
+#perfil-tabs{
+  position: relative;
+  top:0;
+}
+#perfil #profile-card{
+  align-items: center;
+}
+#perfil #profile-card img#profile-pic {
+  width: 60px;
+  border: 1px solid white;
+  border-radius: 50%;
+}
+#garage-cont button.button.icon, #family-cont button.button.icon {
+  margin: .5em;
+  display: block;
+}
+/* GARAGE
+–––––––––––––––––––––––––––––*/
+#garage-cont .item.auto-card {
+  position: relative;
+}
+#garage-cont a.ion-android-more-vertical {
+  position: absolute;
+  top: 1em;
+  right: .7em;
+}
+#garage-cont a.ion-android-more-vertical:before {
+  font-size: 25px;
+}
+/* MODALS
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+ion-content.scroll-content.ionic-scroll {
+  top: 44px;
+}
+/* ANIMATIONS
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+/*.home-tabs{
+  height:49px;
+}
+.home-tabs {
+  transition: all ease 0.3s;
+}
+.home-tabs.ng-hide {
+  height: 0px;
+}*/
