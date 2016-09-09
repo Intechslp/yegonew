@@ -4,11 +4,20 @@
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
 body *{
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   color: white;
 }
 body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-view, ion-side-menu {
-  background: #0d1927 !important;
+  background: #0d1927;
+}
+ion-view#login.highway {
+  background: url('../img/login.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+.highway ion-content.scroll-content.ionic-scroll, .highway .scroll-content .scroll{
+  background:transparent;
 }
 .scroll{
   background: #142840;
@@ -90,12 +99,16 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
 /* MENU
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+.menu-left ion-content.scroll-content.ionic-scroll{
+  top:0px;
+  background:white;
+}
 #profile-card{
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   padding: 1em;
-  height: 200px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -119,8 +132,10 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 #profile-card img#profile-pic{
-  border-radius: 100px;
+  border-radius: 50%;
   width: 50px;
+  border: 1px solid white;
+  box-shadow: 1px 1px 5px #142840;
 }
 .profile-element{
   z-index: 10;
@@ -133,6 +148,91 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   font-size: 16px;
   margin: 0px;
 }
+#the-side-menu .item *{
+  color:#1b3858;
+}
+#the-side-menu ion-item.item.item-complex {
+  border: none;
+}
+#the-side-menu a.item-content {
+  padding-left: 4em;
+}
+#the-side-menu .list {
+  padding: 1em 0;
+  background: white;
+}
+#the-side-menu ion-list:nth-of-type(1) {
+  border-bottom: solid 1px #afafaf;
+}
+/* highway class
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+.highway .scroll{
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.highway img.logo {
+  width: 100%;
+  max-width: 150px;
+  align-self: center;
+  margin: 2em 0 1.5em;
+}
+.highway form.list {
+  width: 100%;
+  max-width: 320px;
+  align-self: center;
+}
+.highway form.list * {
+  color: white;
+}
+.highway h2 {
+  font-size: 19px;
+}
+.highway .list .item {
+  background-color: transparent;
+  padding-left: 3.5em;
+  padding-right: 1em;
+  border: none;
+}
+.highway .input-label{
+  width: 100%;
+  max-width: 100%;
+  border-bottom: 1px solid white;
+}
+.highway .input-label input {
+  font-size: 16px;
+}
+.highway .input-label input::-webkit-input-placeholder{
+  color:white;
+}
+.highway button.button.button-positive {
+  background: #90ccff;
+  color: #152a3f;
+  box-shadow: 1px 1px 50px #152a3f;
+}
+.highway .enter-register .col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.highway button.the-close {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+.highway button.the-close:before{
+  font-size:14px;
+}
+.highway  a.invitado-link {
+    margin-bottom: 2em;
+}
+/* LOGIN
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+
+
 /* HOME
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
@@ -140,7 +240,6 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   overflow: visible;
 }
 #home ion-content .scroll{
-  height:100%;
   display: flex;
   flex-direction: column;
   align-items: center;

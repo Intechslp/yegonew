@@ -13,7 +13,8 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
   $scope.profile = {
     name: "Asaf López",
     family: "López Govea",
-    pic: "https://pbs.twimg.com/profile_images/650080647940182016/XQCQTGh6_bigger.jpg",
+    user: "saporules",
+    pic: "https://pbs.twimg.com/profile_images/768688103561175041/pDR4Qpx__bigger.jpg",
     carpic: "https://acs2.blob.core.windows.net/imgcatalogo/xl/VA_f5e69006e33442dca2c3bab374ca8817.jpg"
   };
 

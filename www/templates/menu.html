@@ -13,25 +13,33 @@
   </ion-side-menu-content>
 
   <!-- Side Menu (left) -->
-  <ion-side-menu side="left">
+  <ion-side-menu side="left" id="the-side-menu">
     <ion-content>
       <div id="profile-card" class="profile-card" style="background-image:url({{profile.carpic}})">
         <img id="profile-pic" src="{{profile.pic}}" alt="" class="profile-element">
         <h1 class="profile-element">{{profile.name}}</h1>
-        <h2 class="profile-element">Familia: {{profile.family}}</h2>
+        <h2 class="profile-element"><strong>{{profile.user}}</strong></h2>
       </div>
       <ion-list>
         <ion-item menu-close href="#/app/home">
           Inicio
         </ion-item>
         <ion-item menu-close href="#/app/perfil">
-          Mi Perfil
+          Perfil
         </ion-item>
         <ion-item menu-close href="#/app/negocio">
-          Mi Negocio
+          Mi Auto
         </ion-item>
         <ion-item menu-close href="#/app/config">
-          Configuracion
+          Mi Yego Team
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item menu-close href="#/app/home">
+          Agregar Negocio
+        </ion-item>
+        <ion-item menu-close href="#/app/perfil">
+          Acerca de Yego
         </ion-item>
       </ion-list>
     </ion-content>
