@@ -7,19 +7,26 @@
   </ion-nav-bar>
   <ion-content>
     <!-- Logo -->
-    <img src="img/logo-yego.png" alt="" class="logo">
+    <img id="login-logo" src="img/logo-yego.png" alt="" class="logo" ng-class="{'register-active':registerForm,'login-active':loginForm}">
     <!-- LOGIN -->
-    <form class="list" ng-submit="loginClick('login','app.directorio')" method="post" ng-if="loginForm == true">
+    <form class="list login-form" method="post" ng-show="loginForm">
+      <div class="row enter-register">
+        <div class="col">
+          <h2>Inicia sesión</h2>
+        </div>
+      </div>
+
       <label class="item item-input item-icon-left">
         <i class="icon ion-ios-person"></i>
         <span class="input-label">
-          <input type="text" ng-model="loginData.user" placeholder="Nombre de Usuario">
+          <input type="text" ng-model="loginData.email" placeholder="Nombre de Usuario">
         </span>
       </label>
+
       <label class="item item-input item-icon-left">
         <i class="icon ion-ios-locked"></i>
         <span class="input-label">
-          <input type="password" ng-model="loginData.pass" placeholder="Contraseña">
+          <input type="password" ng-model="loginData.password" placeholder="Contraseña">
         </span>
 
       </label>
@@ -28,14 +35,19 @@
           <a class="register-link" ng-click="showForm('register','open')">Registrarse</a>
         </div>
         <div class="col col-33">
-          <button type="submit" class="button button-positive" ng-click="">Entrar</button>
+          <button type="submit" class="button button-positive" ng-click="btnClick('login','app.directorio')">Entrar</button>
+        </div>
+      </div>
+      <div class="row enter-register recup-pass">
+        <div class="col">
+          <a class="register-link">Recuperar mi contraseña</a>
         </div>
       </div>
 
     </form>
 
     <!-- REGISTER -->
-    <form class="list" method="post" ng-submit="loginClick('register','location')" ng-if="registerForm == true">
+    <form class="list register-form" method="post" ng-show="registerForm">
       <button class="button button-icon icon ion-close the-close" ng-click="showForm('','close')"></button>
       <div class="row enter-register">
         <div class="col">
@@ -57,25 +69,26 @@
       <label class="item item-input">
         <span class="input-label item-icon-left">
           <i class="icon ion-ios-locked"></i>
-          <input type="password" ng-model="registerData.pass" placeholder="Contraseña">
+          <input type="password" ng-model="registerData.password" placeholder="Contraseña">
         </span>
       </label>
       <label class="item item-input">
         <span class="input-label item-icon-left">
-          <input type="password" placeholder="Confirma la contraseña">
+          <input type="password" ng-model="registerData.password_confirmation" placeholder="Confirmar contraseña">
         </span>
       </label>
       <div class="row enter-register">
         <div class="col col-50">
+          <a class="register-link" ng-click="showForm('','close')">Ya tengo cuenta</a>
         </div>
         <div class="col col-50">
-          <button type="submit" class="button button-positive" ng-click="">Registrarse</button>
+          <button type="submit" class="button button-positive" ng-click="regBtnClick()">Registrarse</button>
         </div>
       </div>
     </form>
 
     <!-- Entrar como invitado -->
-      <a class="invitado-link" ng-click="loginClick('guest','location')">Entrar como invitado</a>
+      <a class="invitado-link" ng-click="guestClick()">Entrar como invitado</a>
 
   </ion-content>
 </ion-view>

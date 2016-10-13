@@ -1,4 +1,85 @@
 angular.module('starter')
+
+.factory('HeadersSave', function(){
+    var headers = {};
+    return{
+        setHeaders: function(heads){
+            headers = heads;
+        },
+        getHeaders: function(){
+            return headers;
+        }
+    }
+})
+
+.factory('UserData', function($http){
+
+    var url_u = 'https://stage-yego-backoffice.herokuapp.com/api/v1/users/';
+    return {
+        getUserData: function(id,uid){
+            console.log('getUserData()');
+            var ops = {
+                method: 'GET',
+                url: url_u+id,
+                header: {
+                    'Uid': uid
+                }
+            }
+            return $http(ops).then(function(response){
+                var data = response.data;
+                console.log(data);
+                //do something exciting with the data
+                return data;
+            });
+        },
+        getUserLength: function(id,uid){
+            console.log('getUserLength()');
+            var ops = {
+                method: 'GET',
+                url: url_u+id,
+                header: {
+                    'Uid': uid
+                }
+            }
+            return $http(ops).then(function(response){
+                var data = response.data.length;
+                //do something exciting with the data
+                return data;
+            });
+        }
+    }
+})
+
+.factory('LocationData', function($http){
+    var url_p = 'https://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//pais
+    var url_e = 'https://stage-yego-backoffice.herokuapp.com/api/v1/country/';//estado
+    var url_c = 'https://stage-yego-backoffice.herokuapp.com/api/v1/state/';//ciudad
+
+    return{
+        getCountries: function(){
+            return $http.get(url_p).then(function(response){
+                var data = response.data;
+                console.log(data);
+                return data;
+            });
+        },
+        getStates: function(countryId){
+            return $http.get(url_e+countryId+'/states/').then(function(response){
+                var data = response.data;
+                console.log(data);
+                return data;
+            });
+        },
+        getCities: function(stateId){
+            return $http.get(url_c+stateId+'/cities/').then(function(response){
+                var data = response.data;
+                console.log(data);
+                return data;
+            });
+        }
+    }
+})
+
 .factory('SomeDataFactory', function($http){
     var url = 'http://private-3c6f3-tracto.apiary-mock.com/resumen';
 
@@ -14,9 +95,9 @@ angular.module('starter')
 })
 
 .factory('EstablecimientosData', function($http){
-    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/';
-    var url2 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/categories';
-    var url3 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/establishments/';
+    var url = 'https://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/';
+    var url2 = 'https://stage-yego-backoffice.herokuapp.com/api/v1/categories';
+    var url3 = 'https://stage-yego-backoffice.herokuapp.com/api/v1/establishments/';
 
     var subcategorias = {};
 
@@ -73,7 +154,7 @@ angular.module('starter')
 })
 
 .factory('CuponesData', function($http){
-    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/cupons';
+    var url = 'https://stage-yego-backoffice.herokuapp.com/api/v1/cupons';
     return {
         getCupones: function(){
             return $http.get(url).then(function(response){
@@ -93,7 +174,12 @@ angular.module('starter')
 
     return {
         getMarcas: function(){
-            return $soap.post(base_url,"ObtenerMarcas", {"Usuario": user, "Pass": pass, "TipoRegreso": tipo});
+            return $soap.post(base_url,"ObtenerMarcas",
+                {
+                    "Usuario": user,
+                    "Pass": pass,
+                    "TipoRegreso": tipo
+                });
         },
         getModelos: function(marca){
             return $soap.post(base_url,"ObtenerModelos", {"Usuario": user, "Pass": pass, "TipoRegreso": tipo, "Marca":marca});

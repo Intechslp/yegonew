@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src https://codepush.azurewebsites.net 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *" /> -->
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -22,9 +23,12 @@
 <!-- <script src="cordova.js"></script> -->
 
     <!-- plugins js -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI2xw1_9XJyCmjDjpTxXrApcQSCPhEtVM"></script><!-- google maps -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI2xw1_9XJyCmjDjpTxXrApcQSCPhEtVM"></script><!-- google maps --> -->
     <script src="lib/ngmap/build/scripts/ng-map.min.js"></script><!-- ngMap -->
     <script src="lib/ngstorage/ngStorage.min.js"></script><!-- ngStorage -->
+    <script src="lib/jquery/dist/jquery.min.js"></script><!-- jQuery -->
+    <script src="lib/angular-cookie/angular-cookie.min.js"></script><!-- ng-token-auth -->
+    <script src="lib/ng-token-auth/dist/ng-token-auth.js"></script><!-- ng Token auth -->
 
     <!-- your app's js -->
     <script src="js/angular-soap-master/soapclient.js"></script><!-- SOAP ANGULAR REQUEST -->
@@ -32,6 +36,7 @@
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
+    <script src="js/yego.js"></script>
   </head>
 
   <body ng-app="starter">

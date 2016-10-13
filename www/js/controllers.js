@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngMap','ngStorage'])
+angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth'])
 
 // APP CONTROLLER
 .controller('AppCtrl', function($scope, $filter, $ionicModal, $timeout,$state,$ionicHistory) {
@@ -29,7 +29,15 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
 }) // END APP CONTROLLER
 
 // LOGIN CONTROLLER
-.controller('LoginCtrl', function($scope, $state, $localStorage){
+.controller('LoginCtrl', function($scope, $state, $localStorage,$auth, $ionicLoading, $ionicPopup, HeadersSave, UserData){
+  console.log('LoginCtrl');
+  $ionicLoading.show();
+  $auth.validateUser().then(function(resp){
+    $state.go('app.directorio');
+  }).catch(function(resp){
+    $ionicLoading.hide();
+  });
+
   $scope.$storage = $localStorage;
   // VARS
   $scope.loginData = {};
@@ -39,18 +47,64 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
   $scope.registerForm = false;
 
   // METHODS
-  $scope.showForm = function (form,state){
-    if(state=== 'open'){
+  $scope.showForm = function (form,estado){
+    if(estado === 'open'){
       $scope.btnCont = false;
       if(form === "register"){
         $scope.loginForm = false;
         $scope.registerForm = true;
       }
-    }else{
+    }else if (estado === 'close'){
       $scope.btnCont=true;
       $scope.loginForm = true;
       $scope.registerForm = false;
     }
+  }
+  $scope.btnClick = function (){
+    $ionicLoading.show();
+    $auth.submitLogin($scope.loginData)
+      .then(function(resp) {
+        HeadersSave.setHeaders(resp);
+        var str = localStorage.auth_headers;
+        var pre_sesion = str.replace("-","_");
+        var sesion = JSON.parse(pre_sesion);
+        $scope.$storage.headers= sesion;
+        $scope.$storage.id = resp.id;
+        $scope.$storage.custId = resp.customer_id;
+        UserData.getUserData($scope.$storage.id, $scope.$storage.header).then(function(response){
+          $scope.$storage.user = response;
+          $ionicLoading.hide();
+          $state.go('app.directorio');
+        }).catch(function(response){
+          $ionicLoading.hide();
+          $scope.showAlert2();
+        });
+
+      })
+      .catch(function(resp) {
+        $scope.showAlert();
+        $ionicLoading.hide();
+    });
+  }
+
+  $scope.regBtnClick = function() {
+    $scope.registerData.user_roles = {"add_role":"appuser"}
+    $auth.submitRegistration($scope.registerData)
+      .then(function(resp) {
+        console.log(resp);
+        $scope.$storage.guest = false;
+        $state.go('location');
+        // handle success response
+      })
+      .catch(function(resp) {
+        // handle error response
+        console.log(resp);
+      });
+
+  };
+  $scope.guestClick = function(){
+    $scope.$storage.guest = true;
+    $state.go('location')
   }
   $scope.loginClick = function(btn,state){
     if (btn === 'login') {
@@ -62,14 +116,63 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
     }else if(btn === 'guest'){
       $scope.$storage.guest = true;
     }
-    $state.go(state);
+    $state.go('state');
   }
+
+  // An alert dialog
+  $scope.showAlert = function() {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Intento fallido',
+      template: 'El usuario o la contraseña que ingresaste son incorrectos'
+    });
+    alertPopup.then(function(res) {
+    });
+  };
+  $scope.showAlert2 = function() {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Algo salió mal',
+      template: 'Algo ocurrió mientras intentabamos recuperar tus datos, intenta de nuevo'
+    });
+    alertPopup.then(function(res) {
+    });
+  };
 
 })// END LOGIN CONTROLLER
 // LOCATION CONTROLLER
-.controller('LocationCtrl', function ($scope, $state, $filter, $localStorage) {
+.controller('LocationCtrl', function ($scope, $state, $filter, $localStorage,LocationData,$ionicLoading) {
   $scope.$storage = $localStorage;
   $scope.locationData = {};
+
+  $ionicLoading.show();
+  LocationData.getCountries().then(function(resp){
+    $scope.paises = resp;
+    $ionicLoading.hide();
+  }).catch(function(resp){
+    $ionicLoading.hide();
+  });
+
+  $scope.loadStates = function(paisId){
+    console.log('loadStates()');
+    console.log(paisId);
+    $ionicLoading.show();
+    LocationData.getStates(paisId).then(function(resp){
+      $scope.estados = resp;
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      $ionicLoading.hide();
+    });
+  }
+  $scope.loadCities = function(estadoId){
+    console.log('loadCities()');
+    console.log(estadoId);
+    $ionicLoading.show();
+    LocationData.getCities(estadoId).then(function(resp){
+      $scope.ciudades = resp;
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      $ionicLoading.hide();
+    });
+  }
 
   $scope.goAuto = function(){
     if($scope.$storage.guest){
@@ -257,21 +360,33 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
     {title:'Banorte',pos:[22.150233, -100.995128]}
   ];
 })// END CERCA DE MI CONTROLLER
+
+
+
 // SEGUROS CONTROLLER
 .controller('SegurosCtrl', function($state, $scope, $stateParams, $ionicLoading, SegurosData, $ionicNavBarDelegate, $ionicPopup) {
   $ionicNavBarDelegate.showBackButton(false);
-  // $ionicLoading.show();
+  // $scope.brands = {};
+  $scope.marcas = [];
+  $scope.sendData = {};
+  $ionicLoading.show();
 
-  // SegurosData.getMarcas().then(function(response){
-  //   console.log(response);
-  //   $ionicLoading.hide();
-  //   $scope.marcas=response;
-  // }).catch(function(response){
-  //   $ionicLoading.hide();
-  //   console.log(response);
-  //   $scope.showAlert('fail',response);
-  // });
-  //
+  SegurosData.getMarcas().then(function(response){
+    console.log(response);
+    $ionicLoading.hide();
+    // var brands = response.substring(11,response.length-7);
+    // $scope.marcas = JSON.parse(brands);
+    var brands = JSON.parse(response);
+    $scope.marcas = brands.Marcas;
+    $scope.showAlert('success brands',brands);
+    $scope.showAlert('success marcas',$scope.marcas);
+  }).catch(function(response){
+    $ionicLoading.hide();
+    console.log(response);
+    $ionicLoading.hide();
+    $scope.showAlert('fail',response);
+  });
+
   // $scope.goForModels = function(brand){
   //   SegurosData.getModelos(brand).then(function(response){
   //     console.log(response);
@@ -298,7 +413,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
   //   });
   // }
 
-  $scope.goForCotizacion = function(){
+  // $scope.goForCotizacion = function(){
     // $scope.datos={
     //   edad: 25,
     //   marca: 'CHEVROLET',
@@ -322,54 +437,50 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
     //   console.log(response);
     //   $scope.showAlert('fail',response);
     // });
-  }
+  // }
 
   $scope.showAlert = function(res, response) {
-    if(res === "success"){
-      var alertPopup = $ionicPopup.alert({
-        title: 'Yaaas!',
-        template: response
-      });
-    }else{
-      var alertPopup = $ionicPopup.alert({
-        title: 'Damn!',
-        template: response
-      });
-    }
+    var alertPopup = $ionicPopup.alert({
+      title: res,
+      template: '<pre>'+response+'</pre><h2>'+typeof(response)+'</h2>'
+    });
 
     alertPopup.then(function(res) {
       console.log('Thank you for not eating my delicious ice cream cone');
     });
   };
 
-  $scope.marcas = {	"Marcas": [
-      ["ACURA"],
-  		["ALFA ROMEO"],
-  		["AUDI"],
-  		["BAIC"],
-  		["BIUCK"],
-  		["BMW"],
-  		["BUICK"],
-  		["CADILLAC"],
-  		["CHEVROLET"],
-  		["CHRYSLER"],
-  		["DODGE"],
-  		["FIAT"],
-  		["FORD"],
-  		["GENERAL MOTORS"]
-  	]
-  };
-
-  $scope.modelos = {"Modelos":[[2017],[2016],[2015],[2014],[2013],[2012],[2011],[2010],[2009],[2008],[2007],[2005],[2004],null]};
-
-  $scope.descripciones = {"Descripciones":[["ILX "],["MDX "],["RDX "],["RLX "],["TL "],["TSX "],null]};
-
-  $scope.brands = $scope.marcas.Marcas;
-  $scope.models = $scope.modelos.Modelos;
-  $scope.des = $scope.descripciones.Descripciones;
-  console.log($scope.brands);
+  // $scope.marcas = {	"Marcas": [
+  //     ["ACURA"],
+  // 		["ALFA ROMEO"],
+  // 		["AUDI"],
+  // 		["BAIC"],
+  // 		["BIUCK"],
+  // 		["BMW"],
+  // 		["BUICK"],
+  // 		["CADILLAC"],
+  // 		["CHEVROLET"],
+  // 		["CHRYSLER"],
+  // 		["DODGE"],
+  // 		["FIAT"],
+  // 		["FORD"],
+  // 		["GENERAL MOTORS"]
+  // 	]
+  // };
+  //
+  // $scope.modelos = {"Modelos":[[2017],[2016],[2015],[2014],[2013],[2012],[2011],[2010],[2009],[2008],[2007],[2005],[2004],null]};
+  //
+  // $scope.descripciones = {"Descripciones":[["ILX "],["MDX "],["RDX "],["RLX "],["TL "],["TSX "],null]};
+  //
+  // $scope.brands = $scope.marcas.Marcas;
+  // $scope.models = $scope.modelos.Modelos;
+  // $scope.des = $scope.descripciones.Descripciones;
+  // console.log($scope.brands);
 
 })// END SEGUROS CONTROLLER
+
+
+
 
 // SEGUROS LISTA CONTROLLER
 .controller('SegListCtrl', function($state, $filter,$scope, $stateParams, $ionicLoading, SegurosData) {
@@ -721,7 +832,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
   };
 })//END CUPONERA CONTROLLER
 // PERFIL CONTROLLER
-.controller('PerfilCtrl', function($state, $scope, $rootScope, $stateParams, NgMap, $ionicLoading, $localStorage, $ionicModal) {
+.controller('PerfilCtrl', function($state, $scope, $window, NgMap, $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth) {
   $scope.$storage = $localStorage
   $scope.carData = {};
   $scope.famData = {};
@@ -750,6 +861,28 @@ angular.module('starter.controllers', ['ngMap','ngStorage'])
       $scope.familia_cont = true;
     }
   }
+
+  $scope.signOutClick = function() {
+    console.log('botón de cerrar Sesion');
+    $ionicLoading.show();
+    $auth.signOut()
+      .then(function(resp) {
+        // handle success response
+        console.log(resp);
+        console.log("adiós sesión jajajajaja >:)");
+        $ionicLoading.hide();
+        $window.localStorage.clear();
+        $ionicHistory.clearCache();
+        $ionicHistory.clearHistory();
+        $state.go('login');
+      })
+      .catch(function(resp) {
+        // handle error response
+        console.log(resp);
+        console.log("cerrar Sesión incorrecto");
+        $ionicLoading.hide();
+      });
+  };
 
   $ionicModal.fromTemplateUrl('templates/modals/newcar.html', {
     scope: $scope,

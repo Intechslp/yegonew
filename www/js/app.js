@@ -4,14 +4,21 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 'ngStorage', 'angularSoap'])
+angular.module('starter', [
+  'ionic',
+  'ionic.service.core',
+  'starter.controllers',
+  'ngStorage',
+  'angularSoap',
+  'ng-token-auth'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
 
     }
@@ -19,11 +26,38 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
       // org.apache.cordova.statusbar required
       StatusBar.styleBlackTranslucent();
     }
+    // function displayMessage (message) {
+    //   navigator.notification.alert(message, null, ‘CodePush’, ‘OK’);
+    // }
+    // window.codePush.sync(function (syncStatus) {
+    //   switch (syncStatus) {
+    //     case SyncStatus.APPLY_SUCCESS:
+    //       //Success
+    //       return;
+    //     case SyncStatus.UP_TO_DATE:
+    //       displayMessage(“The application is up to date.”);
+    //       break;
+    //     case SyncStatus.UPDATE_IGNORED:
+    //       displayMessage(“The user decided not to install the optional
+    //       update.”);
+    //       break;
+    //     case SyncStatus.ERROR:
+    //       displayMessage(“An error occurred while checking for
+    //       updates”);
+    //       break;
+    //   }
+    // });
+
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-  $ionicConfigProvider.tabs.position('bottom');
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $authProvider) {
+  $authProvider.configure({
+    apiUrl: 'https://stage-yego-backoffice.herokuapp.com/api/v1',
+    storage: 'localStorage'
+  });
+
+  // STATE PROVIDER
   $stateProvider
   // LOGIN
   .state('login',{

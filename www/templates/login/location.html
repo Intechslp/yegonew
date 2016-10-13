@@ -1,31 +1,49 @@
-<ion-view id="login" view-title="¿De dónde eres?">
-  <ion-nav-bar class="bar-stable">
+<ion-view id="location" class="highway">
+  <ion-nav-bar class="bar-clear">
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="left">
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <form class="list" method="post">
+    <!-- Logo -->
+    <img id="login-logo" src="img/logo-yego.png" alt="" class="logo" ng-class="{'register-active':registerForm,'login-active':loginForm}">
+    <!-- LOGIN -->
+    <form class="list login-form">
+      <div class="row enter-register">
+        <div class="col">
+          <h2>Ingresa tu ubicación</h2>
+        </div>
+      </div>
+
       <label class="item item-input item-select">
+        <i class="icon ion-ios-location"></i>
         <div class="input-label">País</div>
-        <select name="pais" ng-model="locationData.pais">
-          <option value="México" selected>México</option>
+        <select name="pais" ng-model="locationData.country" ng-options="p.name for p in paises track by p.id" ng-change="loadStates(locationData.country.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
         </select>
       </label>
+
       <label class="item item-input item-select" disabled>
         <div class="input-label">Estado</div>
-        <select name="estado" ng-model="locationData.estado">
-          <option value="San Luis Potosí" selected>San Luis Potosí</option>
+        <select name="estado" ng-model="locationData.state" ng-options="e.name for e in estados track by e.id" ng-change="loadCities(locationData.state.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
         </select>
       </label>
       <label class="item item-input item-select">
         <div class="input-label">Ciudad</div>
-        <select name="ciudad" ng-model="locationData.ciudad">
-          <option value="San Luis Potosí" selected>San Luis Potosí</option>
+        <select name="ciudad" ng-model="locationData.city" ng-options="c.name for c in ciudades track by c.id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
         </select>
       </label>
-      <button ng-click="goAuto()" class="button button-positive">Continuar</button>
+      <div class="row enter-register">
+        <div class="col col-50">
+        </div>
+        <div class="col col-50">
+          <button ng-click="goAuto()" class="button button-positive">Continuar</button>
+        </div>
+      </div>
+
     </form>
 
   </ion-content>

@@ -10,15 +10,10 @@ body *{
 body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-view, ion-side-menu {
   background: #0d1927;
 }
-ion-view#login.highway {
-  background: url('../img/login.jpg');
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
+.view-container {
+    margin-top: -10px;
 }
-.highway ion-content.scroll-content.ionic-scroll, .highway .scroll-content .scroll{
-  background:transparent;
-}
+
 .scroll{
   background: #142840;
   display: flex;
@@ -29,13 +24,21 @@ ion-view#login.highway {
   box-shadow: 1px 2px 2px #000;
   background: #92baf5;
   text-transform: uppercase;
+  height: 40px;
+  line-height: 35px;
+  min-height: 40px;
+  padding: 0 0.5em;
 }
 .button.button-positive.button-clear {
   color:#92baf5;
   font-weight: bold;
   line-height: 20px;
   padding: .7em;
-  }
+}
+.button.button-positive.button-clear.icon-right:before {
+    font-size: 20px;
+    line-height: 20px;
+}
 .bar-dark .button.button-clear *{
   color: #92baf5;
 }
@@ -172,12 +175,29 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   align-content: center;
   align-items: center;
 }
-
+ion-view.highway{
+  background: url('../img/login.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+.highway ion-content.scroll-content.ionic-scroll, .highway .scroll-content .scroll{
+  background:transparent;
+}
+.highway *{
+  color:white;
+}
+.highway .item-select select {
+  background: transparent;
+}
+.highway .item-select:after{
+  color:white;
+}
 .highway img.logo {
   width: 100%;
   max-width: 150px;
   align-self: center;
-  margin: 2em 0 1.5em;
+  margin: 1em 0 .5em;
 }
 .highway form.list {
   width: 100%;
@@ -188,7 +208,8 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   color: white;
 }
 .highway h2 {
-  font-size: 19px;
+  font-size: 18px;
+  margin-bottom: 0;
 }
 .highway .list .item {
   background-color: transparent;
@@ -226,8 +247,19 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
   font-size:14px;
 }
 .highway  a.invitado-link {
-    margin-bottom: 2em;
+    margin: 1em 0;
 }
+.highway .recup-pass{
+  margin-top: .5em;
+}
+.highway .item-select{
+  position:relative;
+}
+.highway .item-select i.icon {
+  left: 34px;
+  position: absolute;
+}
+
 /* LOGIN
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
@@ -637,9 +669,30 @@ img.menu-icon {
 ion-content.scroll-content.ionic-scroll {
   top: 44px;
 }
-/* ANIMATIONS
+/* ANIMATIONS BEFORE
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+.highway form{
+  opacity:1;
+  transition: opacity .5s, display .5s;
+  transition-delay: .5s
+}
+#login-logo.login-active{
+  transition: max-width .3s,margin .3s;
+}
+/* ANIMATIONS AFTER
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#login-logo.register-active{
+  max-width: 90px;
+  margin: .5em 0;
+  transition: max-width .3s,margin .3s;
+}
+.highway form.ng-hide{
+  opacity:0;
+  transition: opacity .3s, display .3s;
+}
+
 /*.home-tabs{
   height:49px;
 }
