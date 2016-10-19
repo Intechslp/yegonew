@@ -1,0 +1,112 @@
+<ion-view id="seguros" class="seguros-compra" animation="ios" view-title="Pago">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <form class="list" id="amplia-list">
+
+      <p class="info-label bigger">
+        Información<br>
+        <span class="gray-info">Pago con Tarjeta de de crédito o débito.</span>
+      </p>
+
+      <p class="info-label bigger npb">
+        Selecciona el tipo de pago:
+      </p>
+
+      <!-- Pago Anual -->
+      <ion-radio ng-model="choice" ng-value="'A'">Pago Anual $3406.95</ion-radio>
+      <!-- Pago Mensual -->
+      <ion-radio ng-model="choice" ng-value="'B'" checked>Pago Mensual $283.91</ion-radio>
+
+      <!-- Banco -->
+      <label class="item item-input item-select" id="genero-label">
+        <div class="input-label">Banco</div>
+        <select ng-model="sendData.Banco" id="genero">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option value="AMERICAN EXPRESS">American Express Bank (México) S.A.</option>
+          <option value="AFIRME">Banca Afirme S.A.</option>
+          <option value="MIFEL">Banca Mifel S.A.</option>
+          <option value="PROMEX">BANCA PROMEX</option>
+          <option value="QUADRUM">BANCA QUADRUM</option>
+          <option value="BANCOMEXT">Banco de Comercio Exterior</option>
+          <option value="BAJIO">Banco del Bajío S.A.</option>
+          <option value="BANCOSURESTE">BANCO DEL SURESTE</option>
+          <option value="INBURSA">Banco Inbursa S.A.</option>
+          <option value="BANCO INDUSTRIAL">BANCO INDUSTRIAL</option>
+          <option value="INTERACCIONES">Banco Interacciones S.A.</option>
+          <option value="INVEX">Banco Invex S.A.</option>
+          <option value="BANORTE">Banco Mercantil del Norte S.A.</option>
+          <option value="BANAMEX">Banco Nacional de México S.A.</option>
+          <option value="BANJERCITO">Banco Nacional del Ejército Fuerza Aérea y Armada S.N.C.</option>
+          <option value="BANREGIO">Banco Regional de Monterrey S.A.</option>
+          <option value="SANTANDER">Banco Santander S.A.</option>
+          <option value="VE POR MAS">Banco Ve por Mas S.A.</option>
+          <option value="BANSI">Bansi S.A.</option>
+          <option value="BBVA BANCOMER">BBVA Bancomer S.A.</option>
+          <option value="CITIBANK">CITIBANK</option>
+          <option value="GE MONEY">GE Money Bank S.A.</option>
+          <option value="HSBC">HSBC México S.A.</option>
+          <option value="IXE">IXE Banco S.A.</option>
+          <option value="SCOTIABANK">Scotiabank Inverlat S.A.</option>
+        </select>
+      </label>
+
+      <!-- Tarjeta -->
+      <label class="item item-input item-select" id="genero-label">
+        <div class="input-label">Tarjeta</div>
+        <select ng-model="sendData.TipoTarjeta" id="genero">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option value="CREDITO">CREDITO</option>
+          <option value="DEBITO">DEBITO</option>
+        </select>
+      </label>
+
+      <!-- No. Tarjeta -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">No. Tarjeta</span>
+       <input type="text" ng-model="sendData.NumeroPlastico" maxlength="16">
+      </label>
+
+      <!-- Nombre -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Nombre</span>
+       <input type="text" ng-model="sendData.NombrePlastico" maxlength="16">
+      </label>
+
+      <div class="item double-holder">
+        <!-- Mes -->
+        <label class="item item-input" id="codigo-label">
+         <span class="input-label">Mes</span>
+         <input type="tel" ng-model="sendData.MesVigencia" maxlength="2" placeholder="00">
+        </label>
+
+        <!-- Año -->
+        <label class="item item-input" id="codigo-label">
+         <span class="input-label">Año</span>
+         <input type="tel" ng-model="sendData.AnioVigencia" maxlength="4" placeholder="0000">
+        </label>
+      </div>
+
+      <!-- Código Seguridad -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Nombre</span>
+       <input type="tel" ng-model="sendData.CodSeguridad" maxlength="3">
+      </label>
+
+      <div class="row">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/3">
+            CONTINUAR
+          </a>
+        </div>
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>

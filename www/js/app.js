@@ -10,10 +10,11 @@ angular.module('starter', [
   'starter.controllers',
   'ngStorage',
   'angularSoap',
-  'ng-token-auth'
+  'ng-token-auth',
+  'ngCordova'
 ])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $cordovaSQLite, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,6 +27,12 @@ angular.module('starter', [
       // org.apache.cordova.statusbar required
       StatusBar.styleBlackTranslucent();
     }
+
+    // $rootScope.db = $cordovaSQLite.openDB("yego.db");
+    // $cordovaSQLite.execute(db,
+    //   "CREATE TABLE IF NOT EXISTS user (id integer primary key, usrId integer, username text, family text,firstname text, lastname text, pic text, carpic text, guest integer)"
+    // );
+
     // function displayMessage (message) {
     //   navigator.notification.alert(message, null, ‘CodePush’, ‘OK’);
     // }
@@ -169,6 +176,56 @@ angular.module('starter', [
       'menuContent': {
         templateUrl: "templates/seguros/segSingle.html",
         controller: 'SegSingleCtrl'
+      }
+    }
+  })
+  // SEGUROS COMPRA PASO 0
+  .state('app.segCompPaso0', {
+    url: '/seguros/compra/paso/0',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/compra-0.html",
+        controller: 'SegComp0Ctrl'
+      }
+    }
+  })
+  // SEGUROS COMPRA PASO 1
+  .state('app.segCompPaso1', {
+    url: '/seguros/compra/paso/1',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/compra-1.html",
+        controller: 'SegComp1Ctrl'
+      }
+    }
+  })
+  // SEGUROS COMPRA PASO 2
+  .state('app.segCompPaso2', {
+    url: '/seguros/compra/paso/2',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/compra-2.html",
+        controller: 'SegComp2Ctrl'
+      }
+    }
+  })
+  // SEGUROS COMPRA PASO 3
+  .state('app.segCompPaso3', {
+    url: '/seguros/compra/paso/3',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/compra-3.html",
+        controller: 'SegComp3Ctrl'
+      }
+    }
+  })
+  // SEGUROS COMPRA PASO 4
+  .state('app.segCompPaso4', {
+    url: '/seguros/compra/paso/4',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/compra-4.html",
+        controller: 'SegComp4Ctrl'
       }
     }
   })

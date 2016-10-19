@@ -597,8 +597,8 @@ img.menu-icon {
   padding-left: .5em;
   padding-right: 1.5em;
 }
-#seguros form.list #modelo-label,#seguros form.list #edad-label{width:40%;}
-#seguros form.list #descripcion-label,#seguros form.list #genero-label{width:60%;}
+#seguros form.list .double-holder #modelo-label,#seguros form.list .double-holder #edad-label{width:40%;}
+#seguros form.list .double-holder #descripcion-label,#seguros form.list .double-holder #genero-label{width:60%;}
 #seguros form.list #edad-label input,#seguros form.list #codigo-label input{
   background: #1a314e;padding-left: .8em;
 }
@@ -610,12 +610,52 @@ img.menu-icon {
 #seguros .button.button-positive.button-clear {
   margin:auto;
 }
-#segList .tabs-dark{
+#seguros-tabs.tabs-dark{
   background: #193656;
   box-shadow: 0px 1px 5px #0d1927;
 }
-#segList .tabs-dark a.tab-item.active {
+#seguros-tabs.tabs-dark a.tab-item.active {
   border-bottom: 1px solid #92baf5;
+}
+
+#seguros.seguros-compra .list .item{
+  width:100%;
+  padding:0 1em;
+}
+#seguros p.info-label{
+  padding: 1em;
+  font-size: 12px;
+  color:white;
+  line-height: 15px;
+  width:100%;
+}
+#seguros .info-label span.gray-info{
+  font-size: 11px;
+  color:#ccc;
+}
+#seguros p.info-label.bigger{
+  font-size: 14px;
+}
+#seguros p.info-label.npb{
+  padding-bottom: 0em;
+  margin-bottom: 0;
+}
+#seguros .info-label.bigger span.gray-info{
+  font-size: 12px;
+}
+#seguros .item-radio .item-content {
+  background: transparent;
+}
+#seguros .seguros-compra .item-radio.radio-custom .item-content{
+  overflow: visible;
+  text-overflow: initial;
+  white-space: normal;
+}
+#seguros .list .item.radio-custom{
+  height:auto;
+}
+#seguros .paso-0 .item.radio-custom:nth-last-child(1){
+  display: none;
 }
 
 /* GUIA

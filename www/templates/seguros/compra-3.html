@@ -1,0 +1,48 @@
+<ion-view id="seguros" class="seguros-compra" animation="ios" view-title="Vehículo">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <form class="list" id="amplia-list">
+      <p class="info-label bigger">
+        Información<br>
+        <span class="gray-info">Utiliza tu Tarjeta de Circulación o Factura de Vehículo para completar los siguientes datos.</span>
+      </p>
+
+      <!-- No. Motor -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">No. Motor</span>
+       <input type="text" ng-model="sendData.Motor">
+      </label>
+
+      <!-- No. Serie -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">No. Serie</span>
+       <input type="text" ng-model="sendData.Serie">
+      </label>
+
+      <!-- Placas -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Placas</span>
+       <input type="text" ng-model="sendData.Placas">
+      </label>
+
+      <p class="info-label">
+        <span class="gray-info">Las aseguradoras participantes y Mag Agentes de Seguros y de Fianzas S.A. de C.V. se reservan el derecho de revisar el estado del auto asegurado en cualquier momento, antes o después de la contratación de la poliza.</span>
+      </p>
+
+      <div class="row">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/4">
+            CONTINUAR
+          </a>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

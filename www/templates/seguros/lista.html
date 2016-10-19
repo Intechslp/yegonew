@@ -6,11 +6,47 @@
   <div id="seguros-tabs" class="tabs tabs-striped tabs-top tabs-dark">
     <a class="tab-item" ng-class="{'active':amplia_cont}" ng-click="changeSegurosTab('amplia')">AMPLIA</a>
     <a class="tab-item" ng-class="{'active':limitada_cont}" ng-click="changeSegurosTab('limitada')">LIMITADA</a>
+    <a class="tab-item" ng-class="{'active':rc_cont}" ng-click="changeSegurosTab('rc')">RESP. CIVIL</a>
   </div>
   <ion-content class="has-tabs-top">
-    <div class="list">
+    <!-- AMPLIA -->
+    <div class="list" id="amplia-list" ng-show="amplia_cont">
       <a class="item  item-thumbnail-right"  ng-repeat="cotizacion in cotizaciones" ng-click="goSingle($index)">
-        <img src="img/logo-yego.png" alt="">
+        <img src="img/seguros/{{cotizacion.NombreAseguradora}}logo-yego.jpg" alt="">
+        <h2>{{cotizacion.NombreAseguradora}}</h2>
+        <div class="rate-bar">
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <p>0 (0)</p>
+        </div>
+        <p>Prima Total: <strong>{{cotizacion.PrimaTotal | currency: '$' : 2}}</strong></p>
+      </a>
+    </div>
+
+    <!-- LIMITADA -->
+    <div class="list" id="limitada-list" ng-show="limitada_cont">
+      <a class="item  item-thumbnail-right"  ng-repeat="cotizacion in cotizacionesLIM" ng-click="goSingle($index)">
+        <img src="img/{{cotizacion.NombreAseguradora}}logo-yego.jpg" alt="">
+        <h2>{{cotizacion.NombreAseguradora}}</h2>
+        <div class="rate-bar">
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <i class="icon ion-android-star-outline"></i>
+          <p>0 (0)</p>
+        </div>
+        <p>Prima Total: <strong>{{cotizacion.PrimaTotal | currency: '$' : 2}}</strong></p>
+      </a>
+    </div>
+
+    <!-- RC -->
+    <div class="list" id="rc-list" ng-show="rc_cont">
+      <a class="item  item-thumbnail-right"  ng-repeat="cotizacion in cotizacionesRC" ng-click="goSingle($index)">
+        <img src="img/{{cotizacion.NombreAseguradora}}logo-yego.jpg" alt="">
         <h2>{{cotizacion.NombreAseguradora}}</h2>
         <div class="rate-bar">
           <i class="icon ion-android-star"></i>

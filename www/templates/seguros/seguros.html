@@ -1,4 +1,4 @@
-<ion-view id="seguros" hide-back-button="true" animation="ios" view-title="Seguros">
+<ion-view id="seguros" cache-view="false"  hide-back-button="true" animation="ios" view-title="Seguros">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -19,10 +19,10 @@
       <label class="item item-input item-select ">
         <img src="img/icons/modelo.png" alt="" class="img-left">
         <div class="input-label">Tipo de auto</div>
-        <select ng-model="sendData.tipo" id="tipoAuto">
+        <select ng-model="sendData.tipoAuto" id="tipoAuto">
           <option value="" disabled selected hidden>-- Selecciona --</option>
-          <option value="particular">Particular</option>
-          <option value="legalizado">Legalizado</option>
+          <option value="PARTICULAR">Particular</option>
+          <option value="LEGALIZADO">Legalizado</option>
         </select>
       </label>
 
@@ -30,7 +30,7 @@
       <label class="item item-input item-select">
         <img src="img/icons/marca.png" alt="" class="img-left">
       <div class="input-label">Marca</div>
-      <select ng-model="sendData.Marca" id="marca" ng-change="goForModels()">
+      <select ng-model="sendData.Marca" id="marca" ng-change="goForModels(sendData.Marca)">
         <option value="" disabled selected hidden>-- Selecciona --</option>
         <option ng-repeat="marca in marcas" value="{{marca[0]}}">{{marca[0]}}</option>
       </select>
@@ -38,16 +38,16 @@
       <div class="item double-holder">
         <!-- Modelo -->
         <label class="item item-input item-select" id="modelo-label">
-        <select ng-model="sendData.Modelo" id="modelo">
+        <select ng-model="sendData.Modelo" id="modelo" ng-change="goForDescriptions(sendData.Marca,sendData.Modelo)">
           <option value="" disabled selected hidden>Modelo</option>
-          <option ng-repeat="model in models" value="{{model[0]}}">{{model[0]}}</option>
+          <option ng-repeat="modelo in modelos" value="{{modelo[0]}}">{{modelo[0]}}</option>
         </select>
         </label>
         <!-- Descripción -->
         <label class="item item-input item-select" id="descripcion-label">
         <select ng-model="sendData.Descripcion" id="descripcion">
           <option value="" disabled selected hidden>Descripción</option>
-          <option ng-repeat="de in des" value="{{de[0]}}">{{de[0]}}</option>
+          <option ng-repeat="de in descripciones" value="{{de[0]}}">{{de[0]}}</option>
         </select>
         </label>
       </div>
@@ -74,31 +74,27 @@
       <label class="item item-input" id="codigo-label">
         <img src="img/icons/codigopostal.png" alt="" class="img-left">
        <span class="input-label">Código Postal</span>
-       <input type="text" ng-model="sendData.CPostal" type="tel" maxlength="5">
+       <input type="tel" ng-model="sendData.CPostal" maxlength="5">
       </label>
-      <input type="text" ng-model="sendData.Plan" ng-value="AMPLIA" style ="display:none">
+
+      <!-- perioricidadPago -->
+      <input type="text" ng-model="sendData.perioricidadPago" ng-init="sendData.perioricidadPago = 'MENSUAL'" style ="display:none">
       <!-- Plan -->
-      <!-- <label class="item item-input item-select">
-        <div class="input-label">Plan</div>
-        <select name="plan" id="genero">
-          <option value="select" selected>Seleccionar</option>
-          <option value="AMPLIA">Amplia</option>
-          <option value="LIMITADA">Limitada</option>
-          <option value="RC">Responsabilidad civil</option>
-        </select>
-      </label> -->
+      <input type="text" ng-model="sendData.Plan" ng-init="sendData.Plan = 'AMPLIA'" style ="display:none">
+      <!-- Grupo -->
+      <input type="text" ng-model="sendData.Grupo" ng-init="sendData.Grupo = 'Yego'" style ="display:none">
 
     <div class="row">
       <div class="col">
         <img src="img/seguro-inteligente.png" alt="" id="seguro-inteligente">
       </div>
       <div class="col">
-        <a class="button button-block button-positive button-clear" href="#/app/seguros/lista" ng-click="goForCotizacion()">
+        <a class="button button-block button-positive button-clear" ng-click="goForCotizacion()">
           Cotizar
         </a>
       </div>
       <div class="col">
-        <a class="button button-block button-positive button-clear" href="#" ng-click="clearForm()">
+        <a class="button button-block button-positive button-clear" ng-click="clearForm()">
           OTRO AUTO
         </a>
       </div>

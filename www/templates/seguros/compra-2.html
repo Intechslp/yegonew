@@ -1,0 +1,82 @@
+<ion-view id="seguros" class="seguros-compra" animation="ios" view-title="Asegurado: 2">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <form class="list" id="amplia-list">
+
+      <!-- Género -->
+      <label class="item item-input item-select" id="genero-label">
+        <div class="input-label">Género</div>
+        <select ng-model="sendData.Genero" id="genero">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option value="MASCULINO">Masculino</option>
+          <option value="FEMENINO">Femenino</option>
+        </select>
+      </label>
+
+      <!-- RFC -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">RFC</span>
+       <input type="text" ng-model="sendData.RFC" maxlength="13">
+      </label>
+
+      <!-- Calle -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Calle</span>
+       <input type="text" ng-model="sendData.Calle">
+      </label>
+
+      <div class="item double-holder">
+        <!-- No. Ext -->
+        <label class="item item-input" id="codigo-label">
+         <span class="input-label">No. Ext</span>
+         <input type="tel" ng-model="sendData.NoExt" maxlength="5">
+        </label>
+
+        <!-- No. Int -->
+        <label class="item item-input" id="codigo-label">
+         <span class="input-label">No. Int</span>
+         <input type="tel" ng-model="sendData.NoInt" maxlength="4">
+        </label>
+      </div>
+
+      <!-- Colonia -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Colonia</span>
+       <input type="text" ng-model="sendData.Colonia">
+      </label>
+
+      <!-- Estado -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Estado</span>
+       <input type="text" ng-model="sendData.Estado">
+      </label>
+
+      <!-- Municipio -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Municipio</span>
+       <input type="text" ng-model="sendData.Ciudad">
+      </label>
+
+      <p class="info-label">
+        Información<br>
+        <span class="gray-info">*Ésta información es la mínima requerida y obligatoria para generar tu póliza y poder estar en contacto contigo en caso de cualquier incidencia.</span>
+      </p>
+
+      <div class="row">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/3">
+            CONTINUAR
+          </a>
+        </div>
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>

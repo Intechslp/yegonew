@@ -171,6 +171,9 @@ angular.module('starter')
     var tipo = "JSON";
     var base_url = "http://yego.segurointeligente.mx/Segurointeligente.asmx";
     var seguro = {};
+    var datosEnv = {};
+    var la_cotizacion = {};
+    var data_recotizacion = {};
 
     return {
         getMarcas: function(){
@@ -184,11 +187,89 @@ angular.module('starter')
         getModelos: function(marca){
             return $soap.post(base_url,"ObtenerModelos", {"Usuario": user, "Pass": pass, "TipoRegreso": tipo, "Marca":marca});
         },
+        getDescripciones: function(marca,modelo){
+            return $soap.post(base_url,"ObtenerDescripciones",
+            {
+                "Usuario": user,
+                "Pass": pass,
+                "TipoRegreso": tipo,
+                "Marca":marca,
+                "Modelo": modelo
+            });
+        },
+        setData: function(datos){
+            datosEnv = datos;
+        },
+        getData: function(){
+            return datosEnv;
+        },
+        setCotizacion: function(datos){
+            la_cotizacion = datos;
+        },
         getCotizacion: function(datos){
-            return $soap.post(base_url,"Cotizacion", {
-                "Usuario": user, "Pass": pass, "TipoRegreso": tipo, "Edad": datos.edad, "Marca": datos.marca, "CPostal": datos.cp,
-                "Genero": datos.genero, "tipoAuto": datos.tipo, "Modelo": datos.modelo, "Descripcion": datos.descripcion,
-                "Plan": datos.plan, "perioricidadPago": datos.periodo, "Grupo":datos.grupo});
+            if (datos==='already'){
+                return la_cotizacion;
+            }else{
+                return $soap.post(base_url,"Cotizacion", {
+                    "Usuario": user,
+                    "Pass": pass,
+                    "TipoRegreso": tipo,
+                    "Edad": datos.Edad,
+                    "Marca": datos.Marca,
+                    "CPostal": datos.CPostal,
+                    "Genero": datos.Genero,
+                    "tipoAuto": datos.tipoAuto,
+                    "Modelo": datos.Modelo,
+                    "Descripcion": datos.Descripcion,
+                    "Plan": datos.Plan,
+                    "perioricidadPago": datos.perioricidadPago,
+                    "Grupo":datos.Grupo
+                });
+            }
+        },
+        getDescripcionesDetalle: function(auto,aseguradora){
+
+            return $soap.post(base_url,"ObtenerDescripcionesDetalle", {
+                "Usuario": user,
+                "Pass": pass,
+                "TipoRegreso": tipo,
+                "Marca":auto.Marca,
+                "Modelo": auto.Modelo,
+                "Descripcion": auto.Descripcion,
+                "Aseguradora": aseguradora
+            });
+        },
+        setDataForRC: function(datos){
+            data_recotizacion = datos;
+        },
+        getDataForRC: function(){
+            return data_recotizacion;
+        },
+        setReCotizacion: function(datos){
+            la_recotizacion = datos;
+        },
+        getReCotizacion: function(datos){
+            if (datos==='already'){
+                return la_recotizacion;
+            }else{
+                return $soap.post(base_url,"ReCotizacion", {
+                    "Usuario": user,
+                    "Pass": pass,
+                    "CPostal": datos.CPostal,
+                    "Edad": datos.Edad,
+                    "Genero": datos.Genero,
+                    "TipoAuto": datos.tipoAuto,
+                    "Marca": datos.Marca,
+                    "Modelo": datos.Modelo,
+                    "Descripcion": datos.Descripcion,
+                    "Plan": datos.Plan,
+                    "PerioricidadPago": datos.perioricidadPago,
+                    "CveVehic": datos.CveVehic,
+                    "Aseguradora": datos.Aseguradora,
+                    "Grupo":datos.Grupo,
+                    "TipoRegreso": tipo
+                });
+            }
         },
         setSingle: function(datos){
             seguro = datos;

@@ -1,0 +1,58 @@
+<ion-view id="seguros" class="seguros-compra paso-0" animation="ios" view-title="Detalles Vehículo">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <form class="list" id="amplia-list">
+      <!-- Aseguradora  -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Aseguradora: </span><span class="input-label">{{seguro.NombreAseguradora}}</span>
+      </label>
+      <!-- Marca -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Marca:</span>  <span class="input-label">{{auto.Marca}}</span>
+      </label>
+      <!-- Modelo -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Modelo:</span>  <span class="input-label">{{auto.Modelo}}</span>
+      </label>
+      <!-- Descripcion -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Descripcion:</span>  <span class="input-label">{{auto.Descripcion}}</span>
+      </label>
+      <p class="info-label bigger">
+        Asegurate de que la descripción de tu auto sea la correcta<br>
+        <span class="gray-info">*Al cambiar  la descripcion de tu auto se actualizará la tarifa, verifíca que sea la correcta.</span>
+      </p>
+
+      <!-- Detalle auto -->
+      <label class="item item-input" id="genero-label">
+        <div class="input-label">Detalle auto</div>
+      </label>
+      <ion-radio class="radio-custom" ng-model="sendData.CveVehic"
+        ng-repeat="descripcion in descripciones"
+        ng-value="{{descripcion[0]}}">
+        {{descripcion[1]}}
+      </ion-radio>
+
+      <!-- Aseguroadora -->
+      <input type="text" ng-model="sendData.Aseguradora"
+        ng-init="sendData.Aseguradora = seguro.NombreAseguradora"
+        style ="display:none">
+
+      <div class="row">
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+          <a class="button button-block button-positive button-clear" ng-click="goPaso1()">
+            CONTINUAR
+          </a>
+        </div>
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>
