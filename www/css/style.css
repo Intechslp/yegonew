@@ -80,6 +80,21 @@ ion-content.scroll-content.ionic-scroll.has-tabs-top {
   margin-top: 3em;
 }
 
+p.info-label span.gray-info{
+  font-size: 11px;
+  color:#ccc;
+}
+p.info-label.bigger{
+  font-size: 14px;
+}
+p.info-label.npb{
+  padding-bottom: 0em;
+  margin-bottom: 0;
+}
+p.info-label.bigger span.gray-info{
+  font-size: 12px;
+}
+
 /* HEADER
 –––––––––––––––––––––––––––––*/
 .bar-dark.bar.bar-header{
@@ -652,20 +667,7 @@ img.menu-icon {
   line-height: 15px;
   width:100%;
 }
-#seguros .info-label span.gray-info{
-  font-size: 11px;
-  color:#ccc;
-}
-#seguros p.info-label.bigger{
-  font-size: 14px;
-}
-#seguros p.info-label.npb{
-  padding-bottom: 0em;
-  margin-bottom: 0;
-}
-#seguros .info-label.bigger span.gray-info{
-  font-size: 12px;
-}
+
 #seguros .item-radio .item-content {
   background: transparent;
 }
@@ -779,6 +781,15 @@ ion-content.scroll-content.ionic-scroll {
 /* TEAM
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+.new-team{
+  padding: 1em;
+}
+.new-team h2{
+  font-size: 24px;
+}
+.new-team h3{
+  font-size: 20px;
+}
 #team-cont h1 {
   font-size: 24px;
 }

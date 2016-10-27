@@ -286,12 +286,14 @@ angular.module('starter', [
     }
   })
 
+  /* TEAM YEGO
+  –––––––––––––––––––––––––––––––––––*/
   // Team
   .state('app.team', {
     url: '/team',
     views: {
       'menuContent': {
-        templateUrl: "templates/perfil/team.html",
+        templateUrl: "templates/team/team.html",
         controller: 'TeamCtrl'
       }
     }

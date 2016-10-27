@@ -1000,7 +1000,8 @@ function($state, $scope, $window,
 // AUTOS SINGLE CONTROLLER
 .controller('AutoSingleCtrl',
 function($state, $stateParams, $scope, $rootScope, $window, NgMap,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth, AutosData) {
+  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
+  $auth, AutosData) {
 
   $scope.usrId = $rootScope.userId;
   var autoId = $stateParams.autoId;
@@ -1069,11 +1070,132 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
     });
   }
 
+  // A confirm dialog
+  $scope.deleteCarConfirm = function() {
+    var confirmPopup = $ionicPopup.confirm({
+     title: '¿Eliminar '+$scope.theCar.description+' '+$scope.theCar.model+'?',
+     template: 'Una vez eliminado no se podra acceder al automovil ni a los servicios relacionados.'
+    });
+
+    confirmPopup.then(function(res) {
+     if(res) {
+       console.log('adios carrito');
+       $scope.deleteCar();
+     } else {
+       console.log('dice mi mamá que siempre no :3');
+     }
+    });
+  };
+
+  $scope.deleteCar = function(){
+    $ionicLoading.show({templateUrl:'templates/eliminando.html'});
+    AutosData.borrarAuto($scope.theCar).then(function(response){
+      console.log(response);
+      $ionicLoading.hide();
+      $state.go('app.autos');
+    }).catch(function(response){
+      console.log(response);
+      $ionicLoading.hide();
+    });
+  }
+
 })// END AUTOS SINGLE CONTROLLER
 
 
 // TEAM CONTROLLER
-.controller('TeamCtrl', function($state, $scope, $window, NgMap, $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth) {
+.controller('TeamCtrl',
+function($state, $scope, $rootScope,
+  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
+  TeamData) {
+
+  $scope.userId = $rootScope.userId;
+  $scope.team = {};
+  $scope.theresTeam =  false;
+  $scope.teamData = {};
+  $scope.teamData.name = null;
+  $scope.myGuest = {};
+
+  $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
+
+  TeamData.getTeam($scope.userId).then(function(response){
+    $ionicLoading.hide();
+    if(response.length == 0){
+      $scope.theresTeam = false;
+    }else if (response.length > 0){
+      $scope.team = response[0];
+      console.log('Team id: '+$scope.team.id)
+      $scope.theresTeam = true;
+    }
+    console.log(response);
+  }).catch(function(response){
+    $ionicLoading.hide();
+    console.log(response);
+  });
+
+  $scope.newTeam = function(){
+    if($scope.teamData.name !== null){
+      $ionicLoading.show({templateUrl:'templates/enviando.html'});
+      TeamData.crearTeam($scope.teamData).then(function(response){
+        $state.go('app.team', $stateParams, {reload: true, inherit: false})
+        $ionicLoading.hide();
+      }).catch(function(response){
+        console.log(response);
+        $ionicLoading.hide();
+      })
+    }else{
+      $scope.showAlert();
+    }
+  }
+
+  // Cargar el modal
+  $ionicModal.fromTemplateUrl('templates/team/invitation.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.sendInvitationModal = modal;
+  });
+
+  $scope.abrirModal = function(){
+    $scope.myGuest.family_id = $scope.team.id;
+    $scope.sendInvitationModal.show();
+  }
+
+  $scope.cerrarModal  = function(){
+    $scope.sendInvitationModal.hide();
+  }
+
+  // An alert dialog
+  $scope.showAlert = function() {
+   var alertPopup = $ionicPopup.alert({
+     title: 'Error',
+     template: 'Asegurate de ponerle un nombre a tu Yego® Team'
+   });
+  };
+
+  $scope.sendInvitation = function(){
+    $ionicLoading.show({templateUrl:'templates/enviando.html'})
+    TeamData.enviarInvitacion($scope.myGuest).then(function(response){
+      $ionicLoading.hide();
+      $scope.showAlertSuccess();
+      console.log(response);
+    }).catch(function(response){
+      $ionicLoading.hide();
+      console.log(response);
+    });
+  }
+
+  // An alert dialog
+  $scope.showAlertSuccess = function() {
+   var alertPopup = $ionicPopup.alert({
+     title: '¡Genial!',
+     template: 'Tu invitación a sido enviada'
+   });
+   alertPopup.then(function(res) {
+     $scope.sendInvitationModal.hide();
+     console.log('ayossss');
+   });
+  };
+
 })// END TEAM CONTROLLER
 
 

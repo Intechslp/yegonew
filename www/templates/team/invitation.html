@@ -1,0 +1,28 @@
+<ion-modal-view id="team-invitacion" class="perfil team-invitacion">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Enviar Invitación</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModal()">
+      </button>
+  </div>
+  <ion-content>
+    <form action="" class="list">
+      <p class="info-label bigger">
+        Envía una invitación para reunir a tu Yego® Team<br>
+        <span class="gray-info">Inserta el correo electrónico del usuario al que quieres invitar, el usuario debe de tener una cuenta en Yego® para que pueda ver la invitación en la opción Mi Yego® Team de su aplicación.</span>
+      </p>
+      <!-- Correo Invitado  -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Correo Invitado</span>
+       <input type="email" ng-model="myGuest.invited_email">
+      </label>
+
+      <!-- family_id -->
+      <input type="text" style="display:none" ng-model="myGuest.family_id" ng-init="myGuest.family_id = team.id">
+      <button class="button button-positive button-clear icon-right ion-person-add m-icon"
+      ng-click="sendInvitation()">
+        Enviar Invitación
+      </button>
+    </form>
+  </ion-content>
+</ion-modal-view>

@@ -1,4 +1,4 @@
-<ion-view id="team" class="perfil team" view-title="Yego Team">
+<ion-view id="team" cache-view="false" class="perfil team" view-title="Yego Team">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -7,12 +7,33 @@
       </button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-      <button id="header-btn" class="button button-icon icon ion-ios-plus" ng-click="newCar()"></button>
+      <button id="header-btn" class="button button-icon icon ion-person-add"
+      ng-click="abrirModal()" ng-show="theresTeam"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <!-- GARAGE -->
-    <div id="team-cont">
+    <!-- NO HAY UN EQUIPO -->
+    <div class="new-team" ng-show="!theresTeam">
+      <h2>¿No tienes Yego® Team?</h2>
+      <h3>Crea uno:</h3>
+      <form action="" class="list">
+        <!-- name -->
+        <label class="item item-input" id="codigo-label">
+         <span class="input-label">Nombre* </span>
+         <input type="text" ng-model="teamData.name">
+        </label>
+        <!-- administrator_id -->
+        <input type="text" style="display:none" ng-model="teamData.administrator_id" ng-init="teamData.administrator_id = userId">
+        <button class="button button-positive button-clear icon-right ion-ios-plus m-icon"
+        ng-click="newTeam()">
+          crear team
+        </button>
+      </form>
+    </div>
+
+    <!-- YA HAY UN EQUIPO -->
+    <div id="team-cont" ng-show="theresTeam">
+      <h1>{{team.name}}</h1>
       <h1 class="divider">Team Leader</h1>
       <div class="list card">
         <div class="item auto-card">

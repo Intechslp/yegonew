@@ -14,7 +14,7 @@ angular.module('starter')
 
 .factory('UserData', function($http){
 
-    var url_u = 'https://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
+    var url_u = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
     return {
         getUserData: function(id,uid){
             console.log('getUserData('+id+','+uid+')');
@@ -99,6 +99,18 @@ angular.module('starter')
                 console.log(response)
             });
         },
+        borrarAuto: function(obj){
+            console.log('borrarAuto()');
+            console.log(obj);
+            var dvUrl = url+obj.owner_id+'/vehicles/'+obj.id;
+            return $http.delete(dvUrl).then(function(response){
+                console.log('lo logramos!');
+                console.log(response)
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response)
+            });
+        },
         setTheCar: function(obj){
             selected_car = obj;
         },
@@ -112,6 +124,44 @@ angular.module('starter')
             });
         }
 
+    }
+})
+
+.factory('TeamData', function($http){
+    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
+    var urlInv = 'http://stage-yego-backoffice.herokuapp.com/api/v1/family_requests';
+
+    return {
+        getTeam: function(usrId){
+            getUrl = url+usrId+'/families';
+            return $http.get(getUrl).then(function(response){
+                var data = response.data;
+                return data;
+            });
+        },
+        crearTeam: function(teamData){
+            console.log('crearTeam()');
+            console.log(teamData);
+            var ctUrl = url+teamData.administrator_id+'/families';
+            return $http.post(ctUrl,teamData).then(function(response){
+                console.log('lo logramos!');
+                console.log(response);
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response);
+            });
+        },
+        enviarInvitacion: function(obj){
+            console.log('enviarInvitacion()');
+            console.log(obj);
+            return $http.post(urlInv,obj).then(function(response){
+                console.log('lo logramos, enviamos la invitación!');
+                console.log(response);
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response);
+            });
+        }
     }
 })
 
