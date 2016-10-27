@@ -1,0 +1,29 @@
+<ion-view id="autos-single" class="autos perfil auto-single" view-title="{{theCar.description}}">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+      <button id="header-btn" class="button button-icon icon ion-edit" ng-click="editCar()"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <img class="auto-photo" src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
+    <div id="garage-cont">
+      <div class="list card">
+        <div class="item auto-card">
+          <h2>Descripción: {{theCar.description}}</h2>
+          <h3>Marca: {{theCar.brand}}</h3>
+          <h3>Modelo: {{theCar.model}}</h3>
+          <h2>Conductor: {{theCar.driver.name}}</h2>
+          <h3>Color: {{theCar.colour}}</h3>
+          <h3>No. Serie: {{theCar.serial_number}}</h3>
+        </div>
+
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

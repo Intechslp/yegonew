@@ -1,0 +1,51 @@
+<ion-modal-view id="new-car-modal" class="perfil modal modal-new-car" view-title="Editar Auto">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Editar Auto</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close" id="header-btn" ng-click="cerrarModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <form ng-submit="updateCar()" class="list">
+      <!-- colour -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Color</span>
+       <input type="text" ng-model="myCar.colour" ng-init="myCar.colour = theCar.colour" placeholder="{{theCar.colour}}">
+      </label>
+      <!-- serial_number -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">No. Serie</span>
+       <input type="text" ng-model="myCar.serial_number" ng-init="myCar.serial_number = theCar.serial_number" placeholder="{{theCar.serial_number}}">
+      </label>
+      <!-- driver_id changeDriver == false -->
+      <label class="item item-input" ng-if="!changeDriver">
+        <div class="input-label">Conductor</div>
+        <span class="input-label">
+			    	<button class="button button-icon icon ion-edit s-icon" ng-click="theChange()"></button>
+				    {{theCar.driver.name}}
+			    </span>
+      </label>
+      <!-- driver_id changeDriver == true -->
+      <label class="item item-input item-select"  ng-if="changeDriver">
+        <div class="input-label">Conductor</div>
+        <button class="button button-icon icon ion-close s-icon" ng-click="theChange()"></button>
+        <select ng-model="myCar.driver_id" id="driver_id" ng-init>
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="conductor in conductores" value="{{conductor.id}}">{{conductor.name}}</option>
+        </select>
+      </label>
+
+      <!-- brand -->
+      <input type="text" style="display:none" ng-model="myCar.brand" ng-init="myCar.brand = theCar.brand">
+      <!-- model -->
+      <input type="text" style="display:none" ng-model="myCar.model" ng-init="myCar.model = theCar.model">
+      <!-- description -->
+      <input type="text" style="display:none" ng-model="myCar.description" ng-init="myCar.description = theCar.description">
+      <!-- owner_id -->
+      <input type="text" style="display:none" ng-model="myCar.owner_id" ng-init="myCar.owner_id = usrId">
+      <!-- car id -->
+      <input type="text" style="display:none" ng-model="myCar.id" ng-init="myCar.id = theCar.id">
+      <button type="submit" class="button button-positive">Actualizar</button>
+    </form>
+  </ion-content>
+</ion-modal-view>

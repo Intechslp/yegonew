@@ -1,7 +1,8 @@
 angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCordova'])
 
 // APP CONTROLLER
-.controller('AppCtrl', function($scope, $filter, $ionicModal, $timeout,$state,$ionicHistory) {
+.controller('AppCtrl',
+function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory, $localStorage) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -10,13 +11,36 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.profile = {
-    name: "Asaf López",
-    family: "López Govea",
-    user: "saporules",
-    pic: "https://pbs.twimg.com/profile_images/768688103561175041/pDR4Qpx__bigger.jpg",
-    carpic: "https://acs2.blob.core.windows.net/imgcatalogo/xl/VA_f5e69006e33442dca2c3bab374ca8817.jpg"
-  };
+  $scope.$storage = $localStorage;
+  $scope.perfil = $scope.$storage.user;
+  $rootScope.userId = $scope.$storage.id;
+  console.log(" AppCtrl User id:"+$rootScope.userId);
+
+  // if ($scope.perfil.name == null){
+  //   $scope.theres_name = false;
+  // }else{
+  //   $scope.nombre = $scope.perfil.name+" "+$scope.perfil.lastnames;
+  // }
+  // if ($scope.perfil.pic == null){
+  //   $scope.theres_picture = false;
+  //   $scope.perfil.pic = "img/camera.jpg"
+  // }
+  // if ($scope.perfil.username == null){
+  //   $scope.theres_username = false;
+  // }
+
+
+
+  $scope.usuario = $scope.$storage.user;
+  console.log($scope.usuario);
+
+  // $scope.profile = {
+  //   name: "Asaf López",
+  //   family: "López Govea",
+  //   user: "saporules",
+  //   pic: "https://pbs.twimg.com/profile_images/768688103561175041/pDR4Qpx__bigger.jpg",
+  //   carpic: "https://acs2.blob.core.windows.net/imgcatalogo/xl/VA_f5e69006e33442dca2c3bab374ca8817.jpg"
+  // };
 
   $scope.changeTab = function(state){
     $state.go(state);
@@ -27,6 +51,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
   }
 
 }) // END APP CONTROLLER
+
 
 // LOGIN CONTROLLER
 .controller('LoginCtrl',
@@ -39,11 +64,14 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
   if ($scope.$storage.guest) {
     $state.go('app.directorio');
   }
+
   console.log('LoginCtrl');
   $ionicLoading.show();
   $auth.validateUser().then(function(resp){
+    console.log(resp);
     $state.go('app.directorio');
   }).catch(function(resp){
+    console.log(resp);
     $ionicLoading.hide();
   });
 
@@ -70,7 +98,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
     }
   }
   $scope.btnClick = function (){
-    $ionicLoading.show();
+    $ionicLoading.show({templateUrl: 'templates/iniciando.html'});
     $auth.submitLogin($scope.loginData)
       .then(function(resp) {
         HeadersSave.setHeaders(resp);
@@ -81,14 +109,15 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
         $scope.$storage.id = resp.id;
         $scope.$storage.custId = resp.customer_id;
         UserData.getUserData($scope.$storage.id, $scope.$storage.header).then(function(response){
+          console.log(response);
           $scope.$storage.user = response;
           $ionicLoading.hide();
           $state.go('app.directorio');
         }).catch(function(response){
+          console.log(response);
           $ionicLoading.hide();
           $scope.showAlert2();
         });
-
       })
       .catch(function(resp) {
         $scope.showAlert();
@@ -98,6 +127,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
 
   $scope.regBtnClick = function() {
     $scope.registerData.user_roles = {"add_role":"appuser"}
+    console.log($scope.registerData);
     $auth.submitRegistration($scope.registerData)
       .then(function(resp) {
         console.log(resp);
@@ -190,11 +220,11 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
       $ionicLoading.hide();
     });
   }
-  $scope.loadCities = function(estadoId){
+  $scope.loadCities = function(paisId,estadoId){
     console.log('loadCities()');
     console.log(estadoId);
     $ionicLoading.show();
-    LocationData.getCities(estadoId).then(function(resp){
+    LocationData.getCities(paisId,estadoId).then(function(resp){
       $scope.ciudades = resp;
       $ionicLoading.hide();
     }).catch(function(resp){
@@ -211,14 +241,66 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
   }
 
 })// END LOCATION CONTROLLER
+
+
+
 // AUTOREG CONTROLLER
-.controller('AutoRegCtrl', function ($scope, $state, $filter, $localStorage) {
+.controller('AutoRegCtrl',
+function ($scope, $state, $filter, $localStorage, $ionicLoading, SegurosData, UserData) {
+  $scope.marcas = [];
+  $scope.modelos = [];
+  $scope.descripciones = [];
+
+  $scope.myCar = {};
+  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+
+  SegurosData.getMarcas().then(function(response){
+    console.log(response);
+    $ionicLoading.hide();
+    var brands = JSON.parse(response);
+    $scope.marcas = brands.Marcas;
+  }).catch(function(response){
+    $ionicLoading.hide();
+    console.log(response);
+    $ionicLoading.hide();
+    $scope.showAlert('fail',response);
+  });
+
+  $scope.goForModels = function(brand){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    SegurosData.getModelos(brand).then(function(response){
+      $ionicLoading.hide();
+      var models = JSON.parse(response);
+      $scope.modelos = models.Modelos;
+    }).catch(function(response){
+      $ionicLoading.hide();
+      console.log(response);
+      $scope.showAlert('fail',response);
+    });
+  }
+
+  $scope.goForDescriptions = function(brand,model){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    SegurosData.getDescripciones(brand,model).then(function(response){
+      $ionicLoading.hide();
+      var descriptions = JSON.parse(response);
+      $scope.descripciones = descriptions.Descripciones;
+    }).catch(function(response){
+      $ionicLoading.hide();
+      console.log(response);
+      $scope.showAlert('fail',response);
+    });
+  }
+
   $scope.$storage = $localStorage;
+
   $scope.saveCar = function(option){
-    $scope.$storage.car = {marca: $scope.carData.marca, modelo: $scope.carData.modelo, ano: $scope.carData.ano};
+    $scope.$storage.car = $scope.myCar;
     console.log($scope.$storage.car);
   }
 })// END AUTOREG CONTROLLER
+
+
 // WELCOME CONTROLLER
 .controller('WelcomeCtrl', function ($scope, $state, $filter, $localStorage) {
   $scope.$storage = $localStorage;
@@ -266,23 +348,14 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
     $scope.names = $scope.negocios;
   }
 
-  $scope.showAlert = function(res, response) {
-    var alertPopup = $ionicPopup.alert({
-      title: 'Ups!',
-      template: 'Hubo un error accediendo a la base de datos'
-    });
-
-    alertPopup.then(function(res) {
-      //console.log('Thank you for not eating my delicious ice cream cone');
-    });
-  };
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+
   EstablecimientosData.getCategorias().then(function(response){
     $scope.categories = response;
-    // console.log($scope.categories);
+    console.log($scope.categories);
     $ionicLoading.hide();
   }).catch(function(response){
-    // console.log(response);
+    console.log(response);
     $ionicLoading.hide();
   });
 
@@ -305,6 +378,16 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
     $state.go('app.dirCat',{catName: name});
   }
 
+  $scope.showAlert = function(res, response) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Ups!',
+      template: 'Hubo un error accediendo a la base de datos'
+    });
+
+    alertPopup.then(function(res) {
+      //console.log('Thank you for not eating my delicious ice cream cone');
+    });
+  };
 
 })// END DIRECTORIO CONTROLLER
 
@@ -462,14 +545,6 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
   $scope.clearForm = function (){
     console.log('clearForm()')
     $state.go('app.seguros', $stateParams, {reload: true, inherit: false});
-    // $scope.sendData = angular.copy($scope.master);
-    // $scope.sendData.tipoAuto = '';
-    // $scope.sendData.Marca = '';
-    // $scope.sendData.Modelo = '';
-    // $scope.sendData.Descripcion = '';
-    // $scope.sendData.Edad = '';
-    // $scope.sendData.Genero = '';
-    // $scope.sendData.CPostal = '';
   }
 
   $scope.showAlert = function(res, response) {
@@ -477,10 +552,8 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
       title: res,
       template: '<pre>'+response+'</pre>'
     });
-    // alertPopup.then(function(res) {
-    //   console.log('Thank you for not eating my delicious ice cream cone');
-    // });
   };
+
   $scope.showAlert2 = function(res, response) {
     var alertPopup = $ionicPopup.alert({
       title: res,
@@ -506,292 +579,6 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
 
 // SEGUROS LISTA CONTROLLER
 .controller('SegListCtrl', function($state, $filter,$scope, $stateParams, $ionicLoading, SegurosData) {
-  // $ionicLoading.show();
-//   $scope.datos = {
-// 	"IDXML": null,
-// 	"Grupo": null,
-// 	"GrupoAbr": "YEGO",
-// 	"GrupoNombre": null,
-// 	"NuevaCotizacion": null,
-// 	"Vehiculo": null,
-// 	"Contacto": {
-// 		"RFC": null,
-// 		"Nombre": null,
-// 		"ApellidoPaterno": null,
-// 		"ApellidoMaterno": null,
-// 		"Edad": "25",
-// 		"Genero": "MASCULINO",
-// 		"FechaNacimiento": "\/Date(-62135575200000)\/",
-// 		"LugarNacimiento": null,
-// 		"Cliente": null,
-// 		"Direccion": {
-// 			"Calle": null,
-// 			"NoExterior": null,
-// 			"NoInterior": null,
-// 			"CPostal": "78250",
-// 			"IDColonia": 0,
-// 			"Colonia": null,
-// 			"IDCiudad": 0,
-// 			"Ciudad": null,
-// 			"Estado": null,
-// 			"IDEstado": 0,
-// 			"Pais": null
-// 		},
-// 		"Email": null,
-// 		"Telefono": null,
-// 		"Celular": null,
-// 		"RazonSocial": null,
-// 		"TipoPersona": null,
-// 		"Nacionalidad": null
-// 	},
-// 	"FormadePago": {
-// 		"NombreFPago": 0,
-// 		"MedioPago": 0
-// 	},
-// 	"RespuestaCotizacion": null,
-// 	"Cotizacion": [
-//     {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO DT CE PAQ-C C/ACC. V-TELA CD 5PAS. 4PTAS. AUT. L4 MPI",
-// 		"NumeroCotizacion": null,
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 5713.5508,
-// 		"PrimaTotal": 6387.5613,
-// 		"Impuesto": 881.043,
-// 		"Descuento": 857.0325,
-// 		"Recargos": 0,
-// 		"Derechos": 650,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 6387.5632000000005,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "0",
-// 		"NombreAseguradora": "ABA",
-// 		"Cobertura": {
-// 			"Danios_Materiales": "-NDAÑOS MATERIALES-SAmparada-D5.00 %",
-// 			"Robo_Total": "-NROBO TOTAL-SAmparada-D10.00 %",
-// 			"RC_Bienes": "-NRESPONSABILIDAD CIVIL POR DAÑOS A TERCEROS-SAmparada-DDSMVDF",
-// 			"RC_Personas": "-NRESPONSABILIDAD CIVIL PERSONAS-SAmparada-DUMA",
-// 			"Defensa_Legal": "-NASISTENCIA LEGAL PROVIAL *-SAmparada-D",
-// 			"Gastos_Medicos_Ocupantes": "-NGASTOS MÉDICOS OCUPANTES-SAmparada-D",
-// 			"Asistencia_Vial": "-NASISTENCIA EN VIAJE IKE *-SAmparada-D",
-// 			"RC_MuerteAccidental": "-NRESPONSABILIDAD CIVIL POR FALLECIMIENTO-SAmparada-D",
-// 			"RC_USA": "-NRESPONSABILIDAD CIVIL USA ACE-SAmparada-DNo aplica",
-// 			"Gestoria_Vial": "N/A",
-// 			"RC_Familiar": "-NRESPONSABILIDAD  CIVIL  FAMILIAR-SAmparada-D",
-// 			"Extencion_RC": "N/A",
-// 			"Cob_Cristales": "N/A",
-// 			"DescuentCotizacion": "15"
-// 		}
-// 	},{
-// 		"URL": null,
-// 		"VehiculoCotizado": " ",
-// 		"NumeroCotizacion": null,
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 0,
-// 		"PrimaTotal": 0,
-// 		"Impuesto": 0,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 0,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 0,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "1",
-// 		"NombreAseguradora": "AXA",
-// 		"Cobertura": {
-// 			"Danios_Materiales": null,
-// 			"Robo_Total": null,
-// 			"RC_Bienes": null,
-// 			"RC_Personas": null,
-// 			"Defensa_Legal": null,
-// 			"Gastos_Medicos_Ocupantes": null,
-// 			"Asistencia_Vial": null,
-// 			"RC_MuerteAccidental": "N/A",
-// 			"RC_USA": "N/A",
-// 			"Gestoria_Vial": "N/A",
-// 			"RC_Familiar": "N/A",
-// 			"Extencion_RC": "N/A",
-// 			"Cob_Cristales": "N/A",
-// 			"DescuentCotizacion": ""
-// 		}
-// 	}, {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO CE PAQ-M C/ACC. CD 5PAS. 4PTAS. STD. 4CIL.",
-// 		"NumeroCotizacion": null,
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 0,
-// 		"PrimaTotal": 0,
-// 		"Impuesto": 0,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 0,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 0,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "2",
-// 		"NombreAseguradora": "BANORTE",
-// 		"Cobertura": null
-// 	}, {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO CE PAQ-M C/ACC. MP3 STD.",
-// 		"NumeroCotizacion": "4876224",
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 6102.5,
-// 		"PrimaTotal": 7653.11,
-// 		"Impuesto": 1055.6,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 495,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 7653.11,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "3",
-// 		"NombreAseguradora": "GNP",
-// 		"Cobertura": {
-// 			"Danios_Materiales": "-NDAÑOS MATERIALES-SV. CONVENIDO68,355.00-D3,417.75",
-// 			"Robo_Total": "-NROBO TOTAL-SV. CONVENIDO68,355.00-D6,835.50",
-// 			"RC_Bienes": "-NRESPONSABILIDAD CIVIL POR DAÑOS A TERCEROS-S3000000-D",
-// 			"RC_Personas": "N/A",
-// 			"Defensa_Legal": "-NPROTECCIÓN LEGAL-SAMPARADA-D",
-// 			"Gastos_Medicos_Ocupantes": "-NGASTOS MÉDICOS OCUPANTES-S200000-D",
-// 			"Asistencia_Vial": "N/A",
-// 			"RC_MuerteAccidental": "N/A",
-// 			"RC_USA": "N/A",
-// 			"Gestoria_Vial": "N/A",
-// 			"RC_Familiar": "N/A",
-// 			"Extencion_RC": "-NEXTENSIÓN COBERTURA RESP. CIVIL-SAMPARADA-D",
-// 			"Cob_Cristales": "-NCRISTALES-SAMPARADA-D",
-// 			"DescuentCotizacion": "0"
-// 		}
-// 	}, {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO CE PAQ-M 5PAS.",
-// 		"NumeroCotizacion": null,
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 3748.27935599527,
-// 		"PrimaTotal": 4881.6040529545135,
-// 		"Impuesto": 673.32469695924317,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 460,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 0,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "4",
-// 		"NombreAseguradora": "HDI",
-// 		"Cobertura": null
-// 	}, {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO CE PAQ-M",
-// 		"NumeroCotizacion": "1640105415838",
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 1995.41,
-// 		"PrimaTotal": 2836.68,
-// 		"Impuesto": 391.27,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 450,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 2836.68,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "5",
-// 		"NombreAseguradora": "MAPFRE",
-// 		"Cobertura": {
-// 			"Danios_Materiales": "-NDAÑOS MATERIALES-SV. Convenido-D5%",
-// 			"Robo_Total": "-NROBO TOTAL-SV. Convenido-D10%",
-// 			"RC_Bienes": "-NRC A TERCEROS EN SUS BIENES-S500000-D",
-// 			"RC_Personas": "-NRC A TERCEROS EN SUS PERSONAS-S500000-D",
-// 			"Defensa_Legal": "-NDEFENSA JURIDICA-SAmparada-D",
-// 			"Gastos_Medicos_Ocupantes": "-NGASTOS MEDICOS-S200000-D",
-// 			"Asistencia_Vial": "-NASISTENCIA COMPLETA-SAmparada-D",
-// 			"RC_MuerteAccidental": "-NRC CATASTROFICA POR MUERTE ACC-S2000000-D",
-// 			"RC_USA": "N/A",
-// 			"Gestoria_Vial": "N/A",
-// 			"RC_Familiar": "N/A",
-// 			"Extencion_RC": "N/A",
-// 			"Cob_Cristales": "N/A",
-// 			"DescuentCotizacion": null
-// 		}
-// 	}, {
-// 		"URL": null,
-// 		"VehiculoCotizado": "CHEVROLET AVEO CE PAQ-F C/ACC. CD | MP3 5PAS. AUT. 1.60L 103HP ABS",
-// 		"NumeroCotizacion": null,
-// 		"FechaInicio": "\/Date(1472446800000)\/",
-// 		"FechaFin": "\/Date(1503982800000)\/",
-// 		"PrimaNeta": 4904.15,
-// 		"PrimaTotal": 6425.41,
-// 		"Impuesto": 886.26,
-// 		"Descuento": 0,
-// 		"Recargos": 0,
-// 		"Derechos": 635,
-// 		"PorcentajeImp": 0,
-// 		"PrimerPago": 6425.41,
-// 		"PagosSubsecuentes": 0,
-// 		"ClavePaquete": null,
-// 		"ViaWS": false,
-// 		"IDAseguradora": "6",
-// 		"NombreAseguradora": "QUALITAS",
-// 		"Cobertura": {
-// 			"Danios_Materiales": "-NDAÑOS MATERIALES-S83000-D0005",
-// 			"Robo_Total": "-NROBO TOTAL-S83000-D00010",
-// 			"RC_Bienes": "-NRESPONSABILIDAD CIVIL-S3000000-D0000",
-// 			"RC_Personas": "N/A",
-// 			"Defensa_Legal": "-NGASTOS LEGALES-S3000000-D0",
-// 			"Gastos_Medicos_Ocupantes": "-NGASTOS MÉDICOS-S200000-D0",
-// 			"Asistencia_Vial": "-NASISTENCIA VIAL-S8560-D0",
-// 			"RC_MuerteAccidental": "-NMUERTE DEL CONDUCTOR POR ACCIDENTE AUTOMOVILISTICO-S100000-D0",
-// 			"RC_USA": "-NRC EN EL EXTRANJERO-S1200000-D",
-// 			"Gestoria_Vial": "N/A",
-// 			"RC_Familiar": "N/A",
-// 			"Extencion_RC": "-NEXTENSIÓN DE RC-S3000000-D0",
-// 			"Cob_Cristales": "N/A",
-// 			"DescuentCotizacion": "30"
-// 		}
-// 	}],
-// 	"DatosCompra": null,
-// 	"Oportunidad": null,
-// 	"GeneraOT": false
-// }
-  // $scope.sendData={
-  //   edad: 25,
-  //   marca: 'CHEVROLET',
-  //   cp: '78250',
-  //   genero: 'MASCULINO',
-  //   tipo: 'PARTICULAR',
-  //   modelo: 2010,
-  //   descripcion: 'AVEO',
-  //   plan: 'AMPLIA',
-  //   periodo: 'MENSUAL',
-  //   grupo: 'YEGO'
-  // };
-  // $ionicLoading.show();
-  // SegurosData.getCotizacion($scope.sendData).then(function(response){
-  //   $scope.datos = response;
-  //   // console.log($scope.datos);
-  //   $ionicLoading.hide();
-  // }).catch(function(response){
-  //   $ionicLoading.hide();
-  //   console.log(response);
-  // });
-
   $scope.firstLim = true;
   $scope.firstRC = true;
 
@@ -989,6 +776,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
 .controller('GuiaCtrl', function($state, $scope, $rootScope, $stateParams, NgMap, $ionicLoading, $ionicNavBarDelegate) {
 
 })//END GUIA DE PRECIOS CONTROLLER
+
 // CUPONERA CONTROLLER
 .controller('CuponeraCtrl', function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicNavBarDelegate, $ionicPopup, CuponesData) {
   $ionicLoading.show();
@@ -1012,6 +800,7 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
     });
   };
 })//END CUPONERA CONTROLLER
+
 // PERFIL CONTROLLER
 .controller('PerfilCtrl', function($state, $scope, $window, NgMap, $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth) {
   $scope.$storage = $localStorage
@@ -1025,23 +814,6 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
     email: "asaf.eduardo@gmail.com"
   };
   $scope.perfil_cont = true;
-  $scope.garage_cont = false;
-  $scope.familia_cont = false;
-  $scope.changeProfileTab = function(tab){
-    if(tab === 'perfil'){
-      $scope.perfil_cont = true;
-      $scope.garage_cont = false;
-      $scope.familia_cont = false;
-    }else if(tab === 'garage'){
-      $scope.perfil_cont = false;
-      $scope.garage_cont = true;
-      $scope.familia_cont = false;
-    }else if(tab === 'familia'){
-      $scope.perfil_cont = false;
-      $scope.garage_cont = false;
-      $scope.familia_cont = true;
-    }
-  }
 
   $scope.signOutClick = function() {
     console.log('botón de cerrar Sesion');
@@ -1065,7 +837,47 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
       });
   };
 
-  $ionicModal.fromTemplateUrl('templates/modals/newcar.html', {
+})// END PERFIL CONTROLLER
+
+
+// AUTOS CONTROLLER
+.controller('AutosCtrl',
+function($state, $scope, $window,
+  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth,
+  SegurosData, AutosData,UserData, $cordovaCamera) {
+
+  $scope.$storage = $localStorage;
+
+  $scope.usrId = $scope.$storage.id;
+  var usrUid = $scope.$storage.headers.uid;
+  $scope.marcas = [];
+  $scope.modelos = [];
+  $scope.descripciones = [];
+
+  $scope.myCar = {};
+  $scope.allCars = {};
+
+  $scope.pruebaCar={
+    brand: "CHEVROLET",
+    model: "2016",
+    description: "AVEO",
+    owner_id: 1
+  }
+
+  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+
+  //obtener todos los autos del usuario
+  AutosData.getMisAutos($scope.usrId,usrUid).then(function(resp){
+    $scope.allCars = resp;
+    console.log(resp);
+    $ionicLoading.hide();
+  }).catch(function(resp){
+    console.log(resp);
+    $ionicLoading.hide();
+  });
+
+  // Cargar el modal
+  $ionicModal.fromTemplateUrl('templates/autos/newCar.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
@@ -1074,18 +886,197 @@ angular.module('starter.controllers', ['ngMap','ngStorage','ng-token-auth','ngCo
 
   $scope.newCar = function(){
     $scope.newCarModal.show();
-  }
-  $scope.saveCar = function(option){
-    if (option === 'cerrar') {
-      $scope.newCarModal.hide();
-    }else{
-      $scope.$storage.car = {marca: $scope.carData.marca, modelo: $scope.carData.modelo, ano: $scope.carData.ano};
-      console.log($scope.$storage.car);
-      $scope.newCarModal.hide();
-    }
+    // $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+
+    // SegurosData.getMarcas().then(function(response){
+    //   console.log(response);
+    //   $ionicLoading.hide();
+    //   var brands = JSON.parse(response);
+    //   $scope.marcas = brands.Marcas;
+    // }).catch(function(response){
+    //   $ionicLoading.hide();
+    //   console.log(response);
+    //   $ionicLoading.hide();
+    //   $scope.showAlert('fail',response);
+    // });
   }
 
-})
+  $scope.cerrarModal =  function(){
+    $scope.newCarModal.hide();
+  }
+
+  $scope.saveCar = function(){
+    $ionicLoading.show({templateUrl:'templates/enviando.html'});
+    $scope.$storage.car = {marca: $scope.myCar.marca, modelo: $scope.myCar.modelo, descripcion: $scope.myCar.descripcion};
+    console.log($scope.$storage.car);
+    // AutosData.nuevoAuto($scope.usrId,$scope.myCar).then(function(response){ //ORIGINAL
+    AutosData.nuevoAuto($scope.pruebaCar).then(function(response){ // PRUEBA
+      console.log(response);
+      $ionicLoading.hide();
+      $scope.newCarModal.hide();
+    }).catch(function(response){
+      console.log(response);
+      $ionicLoading.hide();
+    });
+  }
+
+  $scope.goForModels = function(brand){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    SegurosData.getModelos(brand).then(function(response){
+      $ionicLoading.hide();
+      var models = JSON.parse(response);
+      $scope.modelos = models.Modelos;
+    }).catch(function(response){
+      $ionicLoading.hide();
+      console.log(response);
+      // $scope.showAlert('fail',response);
+    });
+  }
+
+  $scope.goForDescriptions = function(brand,model){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    SegurosData.getDescripciones(brand,model).then(function(response){
+      $ionicLoading.hide();
+      var descriptions = JSON.parse(response);
+      $scope.descripciones = descriptions.Descripciones;
+    }).catch(function(response){
+      $ionicLoading.hide();
+      console.log(response);
+      // $scope.showAlert('fail',response);
+    });
+  }
+
+  $scope.takePicture = function() {
+    console.log('takePicture()')
+    var options = {
+      quality : 70,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      // targetWidth: 300,
+      // targetHeight: 300,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      console.log(options)
+      console.log(imageData)
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+  }
+
+  $scope.selectPicture = function() {
+    console.log('takePicture()')
+    var options = {
+      quality : 70,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 800,
+      targetHeight: 450,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      console.log(options)
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+  }
+
+  $scope.goSingleCar = function(car){
+    AutosData.setTheCar(car);
+    $state.go('app.autoSingle',{autoId:car.id});
+  }
+})// END AUTOS CONTROLLER
+
+// AUTOS SINGLE CONTROLLER
+.controller('AutoSingleCtrl',
+function($state, $stateParams, $scope, $rootScope, $window, NgMap,
+  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth, AutosData) {
+
+  $scope.usrId = $rootScope.userId;
+  var autoId = $stateParams.autoId;
+
+  if ($ionicHistory.backView() != null) {
+    var sourceState = $ionicHistory.backView().stateId;
+  }else{
+    var sourceState = 'none';
+  }
+
+  if(sourceState !== 'app.autos'){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    AutosData.getTheCarFromUrl($scope.usrId,autoId).then(function(response){
+      $scope.theCar = response;
+      console.log(response);
+      $ionicLoading.hide();
+    }).catch(function(response){
+      console.log(response);
+      $ionicLoading.hide();
+    });
+  }else{
+    $scope.theCar = AutosData.getTheCar();
+  }
+
+  console.log("AutoSingleCtrl User id:"+$rootScope.userId);
+  $scope.carId = $stateParams.id;
+  $scope.changeDriver = false;
+  $scope.conductores = [
+    {id: 1,name:"Armando Godinez"},
+    {id: 2,name:"Gilberto Sosa"},
+    {id: 3,name:"Alejandro Toro"},
+    {id: 4,name:"Asaf López"}];
+  $scope.myCar = {};
+
+  // Cargar el modal
+  $ionicModal.fromTemplateUrl('templates/autos/editCar.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.editCarModal = modal;
+  });
+
+  $scope.editCar = function(){
+    $scope.theCar.driver = {};
+    $scope.theCar.driver.name = "Asaf López";
+    $scope.editCarModal.show();
+  }
+
+  $scope.cerrarModal = function(){
+    $scope.editCarModal.hide();
+  }
+  $scope.theChange = function(){
+    $scope.changeDriver = !$scope.changeDriver;
+  }
+
+  $scope.updateCar = function(){
+    $ionicLoading.show({templateUrl:'templates/enviando.html'});
+    // AutosData.nuevoAuto($scope.usrId,$scope.myCar).then(function(response){ //ORIGINAL
+    AutosData.editarAuto($scope.myCar).then(function(response){ // PRUEBA
+      console.log(response);
+      $ionicLoading.hide();
+      $scope.newCarModal.hide();
+    }).catch(function(response){
+      console.log(response);
+      $ionicLoading.hide();
+    });
+  }
+
+})// END AUTOS SINGLE CONTROLLER
+
+
+// TEAM CONTROLLER
+.controller('TeamCtrl', function($state, $scope, $window, NgMap, $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth) {
+})// END TEAM CONTROLLER
+
+
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })

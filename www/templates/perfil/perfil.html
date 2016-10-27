@@ -1,4 +1,4 @@
-<ion-view id="perfil">
+<ion-view id="perfil" class="perfil">
   <ion-nav-bar class="bar-clear">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -13,13 +13,9 @@
       <h1 class="profile-element">{{profile.name}}</h1>
       <h2 class="profile-element">Familia: {{profile.family}}</h2>
     </div>
-    <div id="perfil-tabs" class="tabs tabs-striped tabs-top">
-      <a class="tab-item" ng-class="{'active':perfil_cont}" ng-click="changeProfileTab('perfil')">Perfil</a>
-      <a class="tab-item" ng-class="{'active':garage_cont}" ng-click="changeProfileTab('garage')">Garage</a>
-      <a class="tab-item" ng-class="{'active':familia_cont}" ng-click="changeProfileTab('familia')">Familia</a>
-    </div>
+
     <!-- PERFIL -->
-    <div id="perfil-cont" ng-show="perfil_cont">
+    <div id="perfil-cont">
       <div class="card">
         <div class="item item-text-wrap">
           <h2><strong>Nombre:</strong> {{profile.name}}</h2>
@@ -32,41 +28,7 @@
         Cerrar Sesión
       </button>
     </div>
-    <!-- GARAGE -->
-    <div id="garage-cont" ng-show="garage_cont">
-      <button ng-click="newCar()" class="button icon ion-ios-plus button-assertive"></button>
-      <div class="list card">
-        <div class="item auto-card">
-          <h2>{{$storage.car.modelo}}</h2>
-          <h3>{{$storage.car.ano}}</h3>
-          <h3>{{$storage.car.marca}}</3>
-          <a href="#" class="ion-android-more-vertical"></a>
-        </div>
-        <div class="item item-image">
-          <img src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
-        </div>
-      </div>
-      <div class="list card">
-        <div class="item auto-card">
-          <h2>Pretty Hate Machine</h2>
-          <p>Nine Inch Nails</p>
-          <a href="#" class="ion-android-more-vertical"></a>
-        </div>
-        <div class="item item-image">
-          <img src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
-        </div>
-      </div>
-      <div class="list card">
-        <div class="item auto-card">
-          <h2>Pretty Hate Machine</h2>
-          <p>Nine Inch Nails</p>
-          <a href="#" class="ion-android-more-vertical"></a>
-        </div>
-        <div class="item item-image">
-          <img src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
-        </div>
-      </div>
-    </div>
+
     <!-- FAMILIA -->
     <div id="familia-cont" ng-show="familia_cont">
       <button ng-click="newFam()" class="button icon ion-ios-plus button-assertive"></button>

@@ -3,6 +3,9 @@
 /* GENERAL
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+body{
+  margin-top: -20px;
+}
 body *{
   font-family: 'Roboto';
   color: white;
@@ -11,7 +14,7 @@ body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-vie
   background: #0d1927;
 }
 .view-container {
-    margin-top: -10px;
+  /*margin-top: -10px;*/
 }
 
 .scroll{
@@ -42,6 +45,19 @@ body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-vie
 .bar-dark .button.button-clear *{
   color: #92baf5;
 }
+button.button.button-icon.icon.s-icon {
+  min-height: auto;
+  height: 16px;
+}
+button.button.button-icon.icon.s-icon:before {
+  font-size: 15px;
+  line-height: 15px;
+}
+.button.m-icon:before{
+  font-size: 24px;
+  line-height: 32px;
+}
+
 .item p{
   color: white;
 }
@@ -66,14 +82,14 @@ ion-content.scroll-content.ionic-scroll.has-tabs-top {
 
 /* HEADER
 –––––––––––––––––––––––––––––*/
-ion-header-bar.bar-dark.bar.bar-header{
+.bar-dark.bar.bar-header{
   background: #0d1927;
   border-color: transparent;
   background-image: none;
   border-bottom-width: 0px;
   color: #92baf5;
 }
-ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:before{
+.bar.bar-dark .title, .bar.bar-dark .ion-navicon:before{
   color: #92baf5;
 }
 /* TABS
@@ -166,6 +182,13 @@ ion-header-bar.bar.bar-dark .title, ion-header-bar.bar.bar-dark .ion-navicon:bef
 }
 #the-side-menu ion-list:nth-of-type(1) {
   border-bottom: solid 1px #afafaf;
+}
+#the-side-menu .item .item-content >img {
+  position: absolute;
+  top: 12px;
+  left: 24px;
+  width: 100%;
+  max-width: 25px;
 }
 /* highway class
 –––––––––––––––––––––––––––––
@@ -567,10 +590,10 @@ img.menu-icon {
   overflow: visible;
   padding-left: .5em;
 }
-#seguros .list .item *,#guia .list .item *{
+#seguros .list .item *,#guia .list .item *, .perfil .list .item *{
   color: white;
 }
-#seguros .list .item select ,#guia .list .item select {
+#seguros .list .item select ,#guia .list .item select, .perfil .list .item select {
   background: #142840;
 }
 #seguros .item .img-left{
@@ -618,7 +641,7 @@ img.menu-icon {
   border-bottom: 1px solid #92baf5;
 }
 
-#seguros.seguros-compra .list .item{
+#seguros.seguros-compra .list .item, .perfil .list .item{
   width:100%;
   padding:0 1em;
 }
@@ -646,15 +669,15 @@ img.menu-icon {
 #seguros .item-radio .item-content {
   background: transparent;
 }
-#seguros .seguros-compra .item-radio.radio-custom .item-content{
+#seguros.seguros-compra.paso-0 .item-radio.radio-custom .item-content{
   overflow: visible;
   text-overflow: initial;
   white-space: normal;
 }
-#seguros .list .item.radio-custom{
+#seguros.seguros-compra.paso-0 .list .item.radio-custom{
   height:auto;
 }
-#seguros .paso-0 .item.radio-custom:nth-last-child(1){
+#seguros.seguros-compra.paso-0 .item.radio-custom:nth-last-child(1){
   display: none;
 }
 
@@ -668,20 +691,20 @@ img.menu-icon {
 /* PERFIL
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
-#perfil .has-header {
+#perfil.perfil ion-content.scroll-content.ionic-scroll.has-header {
   top: 0;
 }
-#perfil .header-item .left-buttons .ion-navicon {
+#perfil.perfil .header-item .left-buttons .ion-navicon {
   background: rgba(5, 89, 138, 0.49);
 }
 #perfil-tabs{
   position: relative;
   top:0;
 }
-#perfil #profile-card{
+.perfil #profile-card{
   align-items: center;
 }
-#perfil #profile-card img#profile-pic {
+.perfil #profile-card img#profile-pic {
   width: 60px;
   border: 1px solid white;
   border-radius: 50%;
@@ -690,24 +713,80 @@ img.menu-icon {
   margin: .5em;
   display: block;
 }
+.perfil #header-btn:before{
+  font-size: 24px;
+  color: #92baf5;
+}
+.perfil .list.card {
+    padding: 1em 0em;
+}
+.perfil .list.card .item {
+  background: white;
+  border: none;
+}
+.perfil .list.card .item *{
+  color: #0d1927;
+}
 /* GARAGE
 –––––––––––––––––––––––––––––*/
 #garage-cont .item.auto-card {
   position: relative;
 }
-#garage-cont a.ion-android-more-vertical {
+#garage-cont a.card-right-icon,#team-cont a.card-right-icon  {
   position: absolute;
-  top: 1em;
-  right: .7em;
+  top: 0;
+  right: 1em;
 }
-#garage-cont a.ion-android-more-vertical:before {
+#garage-cont a.card-right-icon:before ,#team-cont a.card-right-icon:before {
   font-size: 25px;
+}
+.auto-photo{
+  width: 100%;
+}
+.edit-photo-holder{
+  position: relative;
+  width:100%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.edit-photo-holder img{
+  width:100%;
+}
+.edit-photo-holder .button-holder{
+  position:absolute;
+  top:.5em;
+  left:.5em;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+.edit-photo-holder .button-holder button:nth-of-type(odd){
+  margin-bottom:.5em;
 }
 /* MODALS
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
 ion-content.scroll-content.ionic-scroll {
   top: 44px;
+}
+.platform-ios.platform-cordova:not(.fullscreen) .has-header{
+  top:64px;
+}
+
+/* TEAM
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+#team-cont h1 {
+  font-size: 24px;
+}
+#team-cont h1.divider{
+  margin: 1em .5em 1em;
+  padding-bottom: .3em;
+width: 100%;
+border-bottom: solid 1px white;
 }
 /* ANIMATIONS BEFORE
 –––––––––––––––––––––––––––––

@@ -14,10 +14,10 @@ angular.module('starter')
 
 .factory('UserData', function($http){
 
-    var url_u = 'https://stage-yego-backoffice.herokuapp.com/api/v1/users/';
+    var url_u = 'https://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
     return {
         getUserData: function(id,uid){
-            console.log('getUserData()');
+            console.log('getUserData('+id+','+uid+')');
             var ops = {
                 method: 'GET',
                 url: url_u+id,
@@ -50,10 +50,75 @@ angular.module('starter')
     }
 })
 
+.factory('AutosData', function($http){
+    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
+    var url2 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
+    var selected_car = {};
+
+    return {
+        getMisAutos: function(id,uid){
+            console.log('getMisAutos('+id+','+uid+')');
+            var ops = {
+                method: 'GET',
+                url: url+id+'/vehicles',
+                header: {
+                    'Uid': uid
+                }
+            }
+            console.log(ops)
+            return $http(ops).then(function(response){
+                var data = response.data;
+                return data;
+            });
+            // return $http.get(url+id+'/vehicles').then(function(response){
+            //     var data = response.data;
+            //     return data;
+            // });
+        },
+        nuevoAuto: function(obj){
+            console.log('nuevoAuto()');
+            console.log(obj);
+            var nvUrl = url+obj.owner_id+'/vehicles';
+            return $http.post(nvUrl,obj).then(function(response){
+                console.log('lo logramos!');
+                console.log(response)
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response)
+            });
+        },
+        editarAuto: function(obj){
+            console.log('editarAuto()');
+            console.log(obj);
+            var nvUrl = url+obj.owner_id+'/vehicles/'+obj.id;
+            return $http.patch(nvUrl,obj).then(function(response){
+                console.log('lo logramos!');
+                console.log(response)
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response)
+            });
+        },
+        setTheCar: function(obj){
+            selected_car = obj;
+        },
+        getTheCar: function(){
+            return selected_car;
+        },
+        getTheCarFromUrl: function(userId,autoId){
+            return $http.get(url+userId+'/vehicles/'+autoId).then(function(response){
+                var data = response.data;
+                return data;
+            });
+        }
+
+    }
+})
+
 .factory('LocationData', function($http){
-    var url_p = 'https://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//pais
-    var url_e = 'https://stage-yego-backoffice.herokuapp.com/api/v1/country/';//estado
-    var url_c = 'https://stage-yego-backoffice.herokuapp.com/api/v1/state/';//ciudad
+    var url_p = 'http://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//pais
+    var url_e = 'http://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//estado
+    var url_c = 'http://stage-yego-backoffice.herokuapp.com/api/v1/state/';//ciudad
 
     return{
         getCountries: function(){
@@ -64,14 +129,15 @@ angular.module('starter')
             });
         },
         getStates: function(countryId){
-            return $http.get(url_e+countryId+'/states/').then(function(response){
+            return $http.get(url_p+countryId+'/states/').then(function(response){
                 var data = response.data;
                 console.log(data);
                 return data;
             });
         },
-        getCities: function(stateId){
-            return $http.get(url_c+stateId+'/cities/').then(function(response){
+        getCities: function(countryId,stateId){
+            console.log('getCities('+countryId+','+stateId+')');
+            return $http.get(url_p+countryId+'/states/'+stateId+'/cities/').then(function(response){
                 var data = response.data;
                 console.log(data);
                 return data;
@@ -95,13 +161,21 @@ angular.module('starter')
 })
 
 .factory('EstablecimientosData', function($http){
-    var url = 'https://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/';
-    var url2 = 'https://stage-yego-backoffice.herokuapp.com/api/v1/categories';
-    var url3 = 'https://stage-yego-backoffice.herokuapp.com/api/v1/establishments/';
+    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/';
+    var url2 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/categories';
+    var url3 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/establishments/';
 
     var subcategorias = {};
 
     return {
+        getCategorias: function(){
+            console.log('Service: getCategorias()');
+            return $http.get(url2).then(function(response){
+                console.log(response);
+                var data = response.data;
+                return data;
+            });
+        },
         getEstablecimientosGral: function(){
             return $http.get(url+'2').then(function(response){
                 var data = response.data;
@@ -110,12 +184,6 @@ angular.module('starter')
         },
         getEstablecimientos: function(subcat){
             return $http.get(url+'2/subcategory/'+subcat).then(function(response){
-                var data = response.data;
-                return data;
-            });
-        },
-        getCategorias: function(){
-            return $http.get(url2).then(function(response){
                 var data = response.data;
                 return data;
             });
@@ -154,7 +222,7 @@ angular.module('starter')
 })
 
 .factory('CuponesData', function($http){
-    var url = 'https://stage-yego-backoffice.herokuapp.com/api/v1/cupons';
+    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/cupons';
     return {
         getCupones: function(){
             return $http.get(url).then(function(response){

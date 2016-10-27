@@ -1,0 +1,83 @@
+<ion-modal-view id="new-car-modal" class="perfil modal modal-new-car" view-title="Nuevo auto">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Nuevo Auto</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close" id="header-btn" ng-click="cerrarModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <div class="edit-photo-holder">
+      <img ng-show="imgURI === undefined" src="img/photo.jpg" alt="">
+      <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
+      <div class="button-holder">
+        <button ng-show="imgURI === undefined" class="button button-positive icon-right ion-camera m-icon"
+        ng-click="takePicture()">
+          Tomar foto
+        </button>
+        <button ng-show="imgURI === undefined" class="button button-positive icon-right ion-images m-icon"
+        ng-click="selectPicture()">
+          Elegir de galería
+        </button>
+        <button ng-show="imgURI !== undefined" class="button button-positive icon-right ion-camera m-icon"
+        ng-click="takePicture()">
+          Tomar otra
+        </button>
+        <button ng-show="imgURI !== undefined" class="button button-positive icon-right ion-images m-icon"
+        ng-click="selectPicture()">
+          Elegir otra
+        </button>
+      </div>
+    </div>
+    <form ng-submit="saveCar()" class="list">
+      <!-- marca -->
+      <label class="item item-input item-select">
+        <div class="input-label">Marca*</div>
+        <select ng-model="myCar.brand" id="brand" ng-change="goForModels(myCar.brand)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="marca in marcas" value="{{marca[0]}}">{{marca[0]}}</option>
+        </select>
+      </label>
+
+      <!-- Modelo -->
+      <label class="item item-input item-select">
+        <div class="input-label">Modelo*</div>
+        <select ng-model="myCar.model" id="model" ng-change="goForDescriptions(myCar.marca,myCar.model)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="modelo in modelos" value="{{modelo[0]}}">{{modelo[0]}}</option>
+        </select>
+      </label>
+
+      <!-- Descripcion -->
+      <label class="item item-input item-select" id="modelo-label">
+        <div class="input-label">Descripción*</div>
+        <select ng-model="myCar.description" id="description">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="de in descripciones" value="{{de[0]}}">{{de[0]}}</option>
+        </select>
+      </label>
+
+      <!-- colour -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Color</span>
+       <input type="text" ng-model="myCar.colour">
+      </label>
+      <!-- serial_number -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">No. Serie</span>
+       <input type="text" ng-model="myCar.serial_number">
+      </label>
+      <!-- driver_id -->
+      <label class="item item-input item-select"  ng-if="changeDriver">
+        <div class="input-label">Conductor</div>
+        <select ng-model="myCar.driver_id" id="driver_id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="conductor in conductores" value="{{conductor.id}}">{{conductor.name}}</option>
+        </select>
+      </label>
+
+      <!-- owner_id -->
+      <input type="text" style="display:none" ng-model="myCar.owner_id" ng-init="myCar.owner_id = usrId">
+      <button type="submit" class="button icon-right ion-ios-plus button-positive">Añadir</button>
+    </form>
+  </ion-content>
+</ion-modal-view>

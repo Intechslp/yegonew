@@ -250,6 +250,8 @@ angular.module('starter', [
       }
     }
   })
+  /* PERFIL
+  –––––––––––––––––––––––––––––––––––*/
   // PROFILE
   .state('app.perfil', {
     url: '/perfil',
@@ -257,6 +259,40 @@ angular.module('starter', [
       'menuContent': {
         templateUrl: "templates/perfil/perfil.html",
         controller: 'PerfilCtrl'
+      }
+    }
+  })
+/* AUTOS
+–––––––––––––––––––––––––––––––––––*/
+  // Autos General
+  .state('app.autos', {
+    url: '/autos',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/autos/autos.html",
+        controller: 'AutosCtrl'
+      }
+    }
+  })
+
+  // Autos single
+  .state('app.autoSingle', {
+    url: '/autos/:autoId',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/autos/autoSingle.html",
+        controller: 'AutoSingleCtrl'
+      }
+    }
+  })
+
+  // Team
+  .state('app.team', {
+    url: '/team',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/perfil/team.html",
+        controller: 'TeamCtrl'
       }
     }
   });

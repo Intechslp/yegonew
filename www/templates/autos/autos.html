@@ -1,0 +1,29 @@
+<ion-view id="autos" class="autos perfil" view-title="Mis Autos">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+      <button id="header-btn" class="button button-icon icon ion-ios-plus" ng-click="newCar()"></button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content>
+    <!-- GARAGE -->
+    <div id="garage-cont">
+      <div class="list card" ng-repeat="car in allCars">
+        <div class="item auto-card">
+          <h2>{{car.description}}</h2>
+          <h3>{{car.brand}}</h3>
+          <h3>{{car.model}}</h3>
+          <a class="card-right-icon ion-ios-eye" ng-click="goSingleCar(car)"></a>
+        </div>
+        <div class="item item-image">
+          <img src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
