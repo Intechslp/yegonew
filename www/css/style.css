@@ -22,26 +22,6 @@ body, ion-nav-view, ion-side-menus, ion-side-menu-content, ion-nav-view, ion-vie
   display: flex;
   flex-direction: column;
 }
-.button.button-positive {
-  color: #0d1927;
-  box-shadow: 1px 2px 2px #000;
-  background: #92baf5;
-  text-transform: uppercase;
-  height: 40px;
-  line-height: 35px;
-  min-height: 40px;
-  padding: 0 0.5em;
-}
-.button.button-positive.button-clear {
-  color:#92baf5;
-  font-weight: bold;
-  line-height: 20px;
-  padding: .7em;
-}
-.button.button-positive.button-clear.icon-right:before {
-    font-size: 20px;
-    line-height: 20px;
-}
 .bar-dark .button.button-clear *{
   color: #92baf5;
 }
@@ -93,6 +73,27 @@ p.info-label.npb{
 }
 p.info-label.bigger span.gray-info{
   font-size: 12px;
+}
+
+.button.button-positive {
+  color: #0d1927;
+  box-shadow: 1px 2px 2px #000;
+  background: #92baf5;
+  text-transform: uppercase;
+  height: 40px;
+  line-height: 35px;
+  min-height: 40px;
+  padding: 0 0.5em;
+}
+.button.button-positive.button-clear {
+  color:#92baf5 !important;
+  font-weight: bold;
+  line-height: 20px;
+  padding: .7em;
+}
+.button.button-positive.button-clear.icon-right:before {
+    font-size: 20px;
+    line-height: 20px;
 }
 
 /* HEADER
@@ -781,6 +782,35 @@ ion-content.scroll-content.ionic-scroll {
 /* TEAM
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+.invitations{
+}
+.invitations.list .item{
+  padding: 1em;
+}
+.invitations.list .item-divider{
+  background: #92baf5;
+  color:#0d1927;
+}
+.invitations span.inv-counter{
+  color:#92baf5;
+  background: #0d1927;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width:24px;
+  height:24px;
+  border-radius: 50%;
+  margin-left: 1em;
+}
+.invitations.list .item.item-text-wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.invitations.list .item.item-text-wrap .button{
+  align-self: flex-end;
+}
 .new-team{
   padding: 1em;
 }
@@ -790,6 +820,7 @@ ion-content.scroll-content.ionic-scroll {
 .new-team h3{
   font-size: 20px;
 }
+
 #team-cont h1 {
   font-size: 24px;
 }

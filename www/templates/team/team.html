@@ -13,6 +13,16 @@
   </ion-nav-bar>
   <ion-content>
     <!-- NO HAY UN EQUIPO -->
+    <div class="invitations list" ng-show="!theresTeam">
+      <div class="item item-divider">
+        Invitaciones pendientes <span class="inv-counter">{{requests.length}}</span>
+      </div>
+      <div class="item item-text-wrap" ng-repeat="request in requests">
+        <p><strong>{{request.family_admin.admin_name}}</strong> te ha invitado a ser parte su Yego® Team: <strong>{{request.family_admin.name}}</strong></p>
+        <button class="button button-positive button-clear" ng-click="acceptRequest(request.family_id)">Aceptar</button>
+      </div>
+
+    </div>
     <div class="new-team" ng-show="!theresTeam">
       <h2>¿No tienes Yego® Team?</h2>
       <h3>Crea uno:</h3>
@@ -37,7 +47,7 @@
       <h1 class="divider">Team Leader</h1>
       <div class="list card">
         <div class="item auto-card">
-          <h2>Asaf Eduardo López Govea</h2>
+          <h2>{{team.administrator.name}}</h2>
           <h1>Saporules</h1>
           <p>Kia Forte 2016</p>
           <a href="#" class="ion-android-more-vertical"></a>
@@ -48,9 +58,9 @@
       </div>
 
       <h1 class="divider">Integrantes</h1>
-      <div class="list card">
+      <div class="list card" ng-repeat="member in team.app_users">
         <div class="item auto-card">
-          <h2>Armando Benjamín Godínez Bravo</h2>
+          <h2>{{member.name+' '+member.lastnames}}</h2>
           <h1>GodinezB</h1>
           <p>Mazda 2 2016</p>
           <a href="#" class="ion-android-more-vertical"></a>
@@ -59,17 +69,5 @@
           <img src="http://www.omakase.mx/assets/img/staff/armando.jpg">
         </div>
       </div>
-      <div class="list card">
-        <div class="item auto-card">
-          <h2>David Alejandro Alonso Toro</h2>
-          <h1>AlejandroToro</h1>
-          <p>Nissan March 2017</p>
-          <a href="#" class="ion-android-more-vertical"></a>
-        </div>
-        <div class="item item-image">
-          <img src="http://www.omakase.mx/assets/img/staff/toro.jpg">
-        </div>
-      </div>
-    </div>
   </ion-content>
 </ion-view>

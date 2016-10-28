@@ -1106,14 +1106,16 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
 .controller('TeamCtrl',
 function($state, $scope, $rootScope,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
-  TeamData) {
+  TeamData,UserData) {
 
   $scope.userId = $rootScope.userId;
+  $scope.famData = {}
   $scope.team = {};
   $scope.theresTeam =  false;
   $scope.teamData = {};
   $scope.teamData.name = null;
   $scope.myGuest = {};
+  $scope.requests = {};
 
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
 
@@ -1121,6 +1123,14 @@ function($state, $scope, $rootScope,
     $ionicLoading.hide();
     if(response.length == 0){
       $scope.theresTeam = false;
+
+      TeamData.preguntarInvitacion($scope.userId).then(function(response){
+        console.log(response);
+        $scope.requests = response
+      }).catch(function(response){
+        console.log(response);
+      });
+
     }else if (response.length > 0){
       $scope.team = response[0];
       console.log('Team id: '+$scope.team.id)
@@ -1132,6 +1142,7 @@ function($state, $scope, $rootScope,
     console.log(response);
   });
 
+  // Crear nuevo Team
   $scope.newTeam = function(){
     if($scope.teamData.name !== null){
       $ionicLoading.show({templateUrl:'templates/enviando.html'});
@@ -1145,6 +1156,25 @@ function($state, $scope, $rootScope,
     }else{
       $scope.showAlert();
     }
+  }
+
+  //Aceptar petición para ser parte de un Team
+  $scope.acceptRequest = function(famId){
+    $scope.famData.family_id = famId;
+    $ionicLoading.show({templateUrl:'templates/enviando.html'})
+    UserData.updateUser($scope.userId,$scope.famData).then(function(response){
+
+      TeamData.eliminarInvitacion(famId).then(function(response){
+        console.log('lo logramos lo eliminamos!');
+        console.log(response)
+      }).catch(function(response){
+        console.log('no lo logramos, no se eliminó :(');
+        console.log(response)
+      });
+
+    }).catch(function(response){
+      console.log(response);
+    })
   }
 
   // Cargar el modal

@@ -46,6 +46,19 @@ angular.module('starter')
                 //do something exciting with the data
                 return data;
             });
+        },
+        updateUser: function(userId,obj){
+            console.log('updateUser()');
+            var finalUrl = url_u+userId;
+            console.log(finalUrl);
+            console.log(obj);
+            return $http.patch(finalUrl,obj).then(function(response){
+                console.log('lo logramos!');
+                console.log(response)
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response)
+            });
         }
     }
 })
@@ -130,10 +143,13 @@ angular.module('starter')
 .factory('TeamData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/';
     var urlInv = 'http://stage-yego-backoffice.herokuapp.com/api/v1/family_requests';
+    var urlPI = 'http://stage-yego-backoffice.herokuapp.com/api/v1/my_family_requests/';
 
     return {
         getTeam: function(usrId){
-            getUrl = url+usrId+'/families';
+            console.log('getTeam()');
+            var getUrl = url+usrId+'/families';
+            console.log(getUrl);
             return $http.get(getUrl).then(function(response){
                 var data = response.data;
                 return data;
@@ -160,6 +176,27 @@ angular.module('starter')
             }).catch(function(response){
                 console.log('no lo logramos :(');
                 console.log(response);
+            });
+        },
+        preguntarInvitacion: function(usrId){
+            console.log('preguntarInvitacion()');
+            var askUrl = urlPI+usrId;
+            console.log(askUrl);
+            return $http.get(askUrl).then(function(response){
+                var data = response.data;
+                return data;
+            });
+        },
+        eliminarInvitacion: function(famId){
+            console.log('eliminarInvitacion()');
+            var finalUrl = urlInv+famId;
+            log(finalUrl)
+            return $http.delete(finalUrl).then(function(response){
+                console.log('lo logramos!');
+                console.log(response)
+            }).catch(function(response){
+                console.log('no lo logramos :(');
+                console.log(response)
             });
         }
     }
