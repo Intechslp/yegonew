@@ -18,9 +18,9 @@
       <div id="profile-card" class="profile-card" style="background-image:url({{profile.carpic}})" ng-if="!completado">
         <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-show="!theres_picture">
         <img id="profile-pic" src="{{perfil.pic}}" alt="" class="profile-element" ng-show="theres_picture">
-        <h1 class="profile-element" ng-show="!theres_name">{{nombre}}</h1>
-        <h1 class="profile-element" ng-show="theres_name">{{nombre}}</h1>
-        <h2 class="profile-element"><strong>{{perfil.username}}</strong></h2>
+        <h1 class="profile-element">{{usuario.name}}</h1>
+        <h2 class="profile-element"><strong>{{usuario.username}}</strong></h2>
+        <h2 class="profile-element">TY: <strong>{{usuario.family_name}}</strong></h2>
       </div>
       <ion-list>
         <ion-item menu-close href="#/app/home">

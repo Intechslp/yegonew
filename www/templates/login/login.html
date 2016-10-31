@@ -35,7 +35,7 @@
           <a class="register-link" ng-click="showForm('register','open')">Registrarse</a>
         </div>
         <div class="col col-33">
-          <button type="submit" class="button button-positive" ng-click="btnClick('login','app.directorio')">Entrar</button>
+          <button type="submit" class="button button-positive" ng-click="loginClick()">Entrar</button>
         </div>
       </div>
       <div class="row enter-register recup-pass">
@@ -57,7 +57,7 @@
       <label class="item item-input item-icon-left">
         <i class="icon ion-ios-person"></i>
         <span class="input-label">
-          <input type="text" ng-model="registerData.user" placeholder="Nombre de Usuario">
+          <input type="text" ng-model="registerData.username" placeholder="Nombre de Usuario">
         </span>
       </label>
       <label class="item item-input">

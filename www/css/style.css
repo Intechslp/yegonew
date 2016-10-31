@@ -33,7 +33,7 @@ button.button.button-icon.icon.s-icon:before {
   font-size: 15px;
   line-height: 15px;
 }
-.button.m-icon:before{
+.m-icon:before{
   font-size: 24px;
   line-height: 32px;
 }
@@ -95,7 +95,9 @@ p.info-label.bigger span.gray-info{
     font-size: 20px;
     line-height: 20px;
 }
-
+ .nmb{
+   margin-bottom: 0;
+ }
 /* HEADER
 –––––––––––––––––––––––––––––*/
 .bar-dark.bar.bar-header{
@@ -612,7 +614,7 @@ img.menu-icon {
 #seguros .list .item select ,#guia .list .item select, .perfil .list .item select {
   background: #142840;
 }
-#seguros .item .img-left{
+#seguros .item .img-left, #login .item .item-left{
   width:100%;
   max-width:30px;
   position: absolute;
@@ -735,12 +737,14 @@ img.menu-icon {
 #garage-cont .item.auto-card {
   position: relative;
 }
-#garage-cont a.card-right-icon,#team-cont a.card-right-icon  {
+#garage-cont a.card-right-icon,#team-cont a.card-right-icon ,
+#perfil-cont a.card-right-icon  {
   position: absolute;
   top: 0;
   right: 1em;
 }
-#garage-cont a.card-right-icon:before ,#team-cont a.card-right-icon:before {
+#garage-cont a.card-right-icon:before ,#team-cont a.card-right-icon:before,
+#perfil-cont a.card-right-icon:before {
   font-size: 25px;
 }
 .auto-photo{
@@ -787,9 +791,16 @@ ion-content.scroll-content.ionic-scroll {
 .invitations.list .item{
   padding: 1em;
 }
-.invitations.list .item-divider{
+.invitations.list .item-divider,#team-cont .list .item-divider{
   background: #92baf5;
   color:#0d1927;
+  padding: 1em;
+}
+.invitations.list .item-divider,#team-cont .list .item-divider *{
+  color:#0d1927 !important;
+}
+#team-cont .item-divider h1{
+  font-size: 24px;
 }
 .invitations span.inv-counter{
   color:#92baf5;
@@ -821,14 +832,14 @@ ion-content.scroll-content.ionic-scroll {
   font-size: 20px;
 }
 
-#team-cont h1 {
-  font-size: 24px;
+#team-cont h2 {
+  font-size: 20px;
 }
-#team-cont h1.divider{
+#team-cont h2.divider{
   margin: 1em .5em 1em;
   padding-bottom: .3em;
-width: 100%;
-border-bottom: solid 1px white;
+  width: 100%;
+  border-bottom: solid 2px white;
 }
 /* ANIMATIONS BEFORE
 –––––––––––––––––––––––––––––

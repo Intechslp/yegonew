@@ -32,21 +32,6 @@ angular.module('starter')
                 return data;
             });
         },
-        getUserLength: function(id,uid){
-            console.log('getUserLength()');
-            var ops = {
-                method: 'GET',
-                url: url_u+id,
-                header: {
-                    'Uid': uid
-                }
-            }
-            return $http(ops).then(function(response){
-                var data = response.data.length;
-                //do something exciting with the data
-                return data;
-            });
-        },
         updateUser: function(userId,obj){
             console.log('updateUser()');
             var finalUrl = url_u+userId;
@@ -190,7 +175,7 @@ angular.module('starter')
         eliminarInvitacion: function(famId){
             console.log('eliminarInvitacion()');
             var finalUrl = urlInv+famId;
-            log(finalUrl)
+            console.log(finalUrl)
             return $http.delete(finalUrl).then(function(response){
                 console.log('lo logramos!');
                 console.log(response)

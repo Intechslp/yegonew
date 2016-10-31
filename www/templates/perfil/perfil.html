@@ -8,19 +8,22 @@
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <div id="profile-card" class="profile-card" style="background-image:url({{profile.carpic}})">
-      <img id="profile-pic" src="{{profile.pic}}" alt="" class="profile-element">
-      <h1 class="profile-element">{{profile.name}}</h1>
-      <h2 class="profile-element">Familia: {{profile.family}}</h2>
+    <div id="profile-card" class="profile-card" style="background-image:url('img/photo.jpg')">
+      <img ng-show="imgURI === undefined" id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-click="takePicture()">
+      <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
+      <h2 class="profile-element">{{usuario.username}}</h2>
     </div>
 
     <!-- PERFIL -->
     <div id="perfil-cont">
-      <div class="card">
+      <div class="list card">
         <div class="item item-text-wrap">
-          <h2><strong>Nombre:</strong> {{profile.name}}</h2>
-          <h3><strong>Familia:</strong> {{profile.family}}</h3>
-          <h3><strong>Correo:</strong> {{profile.email}}</h3>
+          <h2><strong>Nombre:</strong> {{usuario.name}}</h2>
+          <h2><strong>Apellidos:</strong> {{usuario.lastnames}}</h2>
+          <h2><strong>Yego Team:</strong> {{usuario.family_name}}</h2>
+          <h2><strong>Correo:</strong> {{usuario.email}}</h2>
+          <h2><strong>Auto Principal:</strong> {{usuario.vehicle.brand+' '+usuario.vehicle.description+' '+usuario.vehicle.model}}</h2>
+          <a class="card-right-icon ion-edit m-icon" ng-click="editUserModal()"></a>
         </div>
       </div>
       <button class="button button-clear button-positive icon icon-right ion-ios-close"

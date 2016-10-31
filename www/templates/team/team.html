@@ -11,7 +11,7 @@
       ng-click="abrirModal()" ng-show="theresTeam"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
-  <ion-content>
+  <ion-content class="has-header">
     <!-- NO HAY UN EQUIPO -->
     <div class="invitations list" ng-show="!theresTeam">
       <div class="item item-divider">
@@ -43,8 +43,13 @@
 
     <!-- YA HAY UN EQUIPO -->
     <div id="team-cont" ng-show="theresTeam">
-      <h1>{{team.name}}</h1>
-      <h1 class="divider">Team Leader</h1>
+      <div class="list">
+        <div class="item item-divider padding item-icon-right" >
+          <h1 class="title nmb">{{team.name}}</h1>
+          <i class="icon ion-ios-gear m-icon"></i>
+        </div>
+      </div>
+      <h2 class="divider">Administrador</h2>
       <div class="list card">
         <div class="item auto-card">
           <h2>{{team.administrator.name}}</h2>
@@ -57,7 +62,7 @@
         </div>
       </div>
 
-      <h1 class="divider">Integrantes</h1>
+      <h2 class="divider">Integrantes</h2>
       <div class="list card" ng-repeat="member in team.app_users">
         <div class="item auto-card">
           <h2>{{member.name+' '+member.lastnames}}</h2>

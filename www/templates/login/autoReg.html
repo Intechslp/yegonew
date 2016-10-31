@@ -15,7 +15,7 @@
       <!-- marca -->
       <label class="item item-input item-select">
         <div class="input-label">Marca</div>
-        <select ng-model="myCar.marca" id="marca" ng-change="goForModels(myCar.marca)">
+        <select ng-model="myCar.brand" id="marca" ng-change="goForModels(myCar.brand)">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option ng-repeat="marca in marcas" value="{{marca[0]}}">{{marca[0]}}</option>
         </select>
@@ -24,7 +24,7 @@
       <!-- año -->
       <label class="item item-input item-select">
         <div class="input-label">Año</div>
-        <select ng-model="myCar.ano" id="ano" ng-change="goForDescriptions(myCar.marca,myCar.ano)">
+        <select ng-model="myCar.model" id="ano" ng-change="goForDescriptions(myCar.brand,myCar.model)">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option ng-repeat="modelo in modelos" value="{{modelo[0]}}">{{modelo[0]}}</option>
         </select>
@@ -33,14 +33,29 @@
       <!-- Modelo -->
       <label class="item item-input item-select" id="modelo-label">
         <div class="input-label">Modelo</div>
-        <select ng-model="myCar.modelo" id="modelo">
+        <select ng-model="myCar.description" id="modelo">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option ng-repeat="de in descripciones" value="{{de[0]}}">{{de[0]}}</option>
         </select>
       </label>
 
+      <div class="edit-photo-holder">
+        <img ng-show="imgURI === undefined" src="img/photo.jpg" alt="">
+        <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
+        <div class="button-holder">
+          <button ng-show="imgURI === undefined" class="button button-positive icon-right ion-camera m-icon"
+          ng-click="takePicture()">
+            Tomar foto
+          </button>
+          <button ng-show="imgURI !== undefined" class="button button-positive icon-right ion-camera m-icon"
+          ng-click="takePicture()">
+            Tomar otra
+          </button>
+        </div>
+      </div>
+
       <!-- <button type="submit" class="button icon-right ion-ios-plus button-positive">Añadir</button> -->
     </form>
-    <a href="#/welcome" class="button button-positive">Continuar</a>
+    <a ng-click="saveCar()" class="button button-positive">Continuar</a>
   </ion-content>
 </ion-view>

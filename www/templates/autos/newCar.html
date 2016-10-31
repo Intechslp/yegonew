@@ -41,7 +41,7 @@
       <!-- Modelo -->
       <label class="item item-input item-select">
         <div class="input-label">Modelo*</div>
-        <select ng-model="myCar.model" id="model" ng-change="goForDescriptions(myCar.marca,myCar.model)">
+        <select ng-model="myCar.model" id="model" ng-change="goForDescriptions(myCar.brand,myCar.model)">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option ng-repeat="modelo in modelos" value="{{modelo[0]}}">{{modelo[0]}}</option>
         </select>

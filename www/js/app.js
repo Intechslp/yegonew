@@ -1,5 +1,11 @@
 // Ionic Starter App
-
+var cl = cloudinary.Cloudinary.new();
+cl.fromDocument();
+cl.config({
+  cloud_name: 'omakase',
+  api_key: '652759349695989',
+  api_secret: '501cteUDvB3OlgXUoqfs52spiAM'
+});
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -8,6 +14,7 @@ angular.module('starter', [
   'ionic',
   'ionic.service.core',
   'starter.controllers',
+  'starter.perfil.controllers',
   'ngStorage',
   'angularSoap',
   'ng-token-auth',

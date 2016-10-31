@@ -1,0 +1,83 @@
+{
+  "_args": [
+    [
+      {
+        "name": "cloudinary-core",
+        "raw": "cloudinary-core",
+        "rawSpec": "",
+        "scope": null,
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/Saporules/Projects/YegoNew/yegonew"
+    ]
+  ],
+  "_from": "cloudinary-core@latest",
+  "_id": "cloudinary-core@2.1.6",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/cloudinary-core",
+  "_nodeVersion": "5.11.1",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/cloudinary-core-2.1.6.tgz_1477494527948_0.6369260251522064"
+  },
+  "_npmUser": {
+    "email": "info@cloudinary.com",
+    "name": "cloudinary"
+  },
+  "_npmVersion": "3.8.6",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "cloudinary-core",
+    "raw": "cloudinary-core",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/cloudinary-core/-/cloudinary-core-2.1.6.tgz",
+  "_shasum": "c7127f19adb0814711844f89d84c274010bb8d59",
+  "_shrinkwrap": null,
+  "_spec": "cloudinary-core",
+  "_where": "/Users/Saporules/Projects/YegoNew/yegonew",
+  "author": {
+    "email": "info@cloudinary.com",
+    "name": "Cloudinary"
+  },
+  "bugs": {
+    "url": "https://github.com/cloudinary/cloudinary_js/issues"
+  },
+  "dependencies": {
+    "lodash": ">=3.0"
+  },
+  "description": "Cloudinary Client Side JS library. Cloudinary streamlines your web application’s image manipulation needs. Cloudinary's cloud-based servers automate image uploading, resizing, cropping, optimizing, sprite generation and more.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "c7127f19adb0814711844f89d84c274010bb8d59",
+    "tarball": "https://registry.npmjs.org/cloudinary-core/-/cloudinary-core-2.1.6.tgz"
+  },
+  "gitHead": "20a30a6997529a1ebbbdb05dfa1d98ca6382529e",
+  "homepage": "https://github.com/cloudinary/cloudinary_js",
+  "license": "MIT",
+  "main": "cloudinary-core.js",
+  "maintainers": [
+    {
+      "email": "info@cloudinary.com",
+      "name": "cloudinary"
+    }
+  ],
+  "name": "cloudinary-core",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudinary/pkg-cloudinary-core.git"
+  },
+  "scripts": {},
+  "version": "2.1.6"
+}

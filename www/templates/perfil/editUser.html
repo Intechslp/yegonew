@@ -1,0 +1,23 @@
+<ion-modal-view id="edit-user-modal" class="perfil modal modal-edit-user" view-title="Editar Auto">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Editar mi Información</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close" id="header-btn" ng-click="cerrarModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <form ng-submit="editUser()" class="list">
+      <!-- name -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Nombre</span>
+       <input type="text" ng-model="myUser.name" ng-init="myUser.name = usuario.name">
+      </label>
+      <!-- lastnames -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Apellidos</span>
+       <input type="text" ng-model="myUser.lastnames" ng-init="myUser.lastnames = usuario.lastnames">
+      </label>
+      <button type="submit" class="button button-positive">Actualizar</button>
+    </form>
+  </ion-content>
+</ion-modal-view>
