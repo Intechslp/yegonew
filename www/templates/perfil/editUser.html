@@ -6,6 +6,29 @@
   </div>
 
   <ion-content class="has-header">
+    <div class="edit-photo-holder">
+      <img ng-if="imgURI === undefined && myUser.imageurl === undefined" src="img/photo.jpg" alt="">
+      <img ng-if="imgURI === undefined && myUser.imageurl !== undefined" src="{{myUser.imageurl}}" alt="">
+      <img ng-if="imgURI !== undefined" ng-src="{{imgURI}}">
+      <div class="button-holder">
+        <button ng-if="imgURI === undefined && myUser.imageurl === undefined" class="button button-positive icon-right ion-camera m-icon"
+        ng-click="takePicture()">
+          Tomar foto
+        </button>
+        <button ng-if="imgURI === undefined && myUser.imageurl === undefined" class="button button-positive icon-right ion-images m-icon"
+        ng-click="selectPicture()">
+          Elegir de galería
+        </button>
+        <button ng-if="imgURI !== undefined && myUser.imageurl !== undefined" class="button button-positive icon-right ion-camera m-icon"
+        ng-click="takePicture()">
+          Tomar otra
+        </button>
+        <button ng-if="imgURI !== undefined && myUser.imageurl !== undefined" class="button button-positive icon-right ion-images m-icon"
+        ng-click="selectPicture()">
+          Elegir otra
+        </button>
+      </div>
+    </div>
     <form ng-submit="editUser()" class="list">
       <!-- name -->
       <label class="item item-input" id="codigo-label">
@@ -17,7 +40,51 @@
        <span class="input-label">Apellidos</span>
        <input type="text" ng-model="myUser.lastnames" ng-init="myUser.lastnames = usuario.lastnames">
       </label>
-      <button type="submit" class="button button-positive">Actualizar</button>
+
+      <!-- city_id changeCity == false -->
+      <label class="item item-input" ng-if="!changeCity">
+        <div class="input-label">Ciudad</div>
+        <span class="input-label">
+			    	<button class="button button-icon icon ion-edit s-icon" ng-click="theChange()"></button>
+				    {{usuario.city.name}}
+			    </span>
+      </label>
+
+      <!-- city_id changeCity == true -->
+      <label class="item item-divider" ng-if="changeCity">
+        <h2>Elige tu ubicación</h2>
+        <button class="button button-icon icon ion-close s-icon" ng-click="theChange()"></button>
+      </label>
+
+      <label class="item item-input item-select" ng-if="changeCity">
+        <i class="icon ion-ios-location"></i>
+        <div class="input-label">País</div>
+        <select name="pais" ng-model="country"
+        ng-options="p.name for p in paises track by p.id"
+        ng-change="loadStates(country.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select" ng-if="changeCity">
+        <div class="input-label">Estado</div>
+        <select name="estado" ng-model="state"
+        ng-options="e.name for e in estados track by e.id"
+        ng-change="loadCities(country.id, state.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select" ng-if="changeCity">
+        <div class="input-label">Ciudad</div>
+        <select name="ciudad" ng-model="myUser.city_id">
+        <!-- ng-options="c.name for c in ciudades track by c.id" -->
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="c in ciudades" value="{{c.id}}">{{c.name}}</option>
+        </select>
+      </label>
+      <div class="padding"><button type="submit" class="button button-block button-positive">Actualizar</button></div>
+
     </form>
   </ion-content>
 </ion-modal-view>

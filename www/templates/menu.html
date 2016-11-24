@@ -15,15 +15,21 @@
   <!-- Side Menu (left) -->
   <ion-side-menu side="left" id="the-side-menu">
     <ion-content>
-      <div id="profile-card" class="profile-card" style="background-image:url({{profile.carpic}})" ng-if="!completado">
+      <div id="profile-card" class="profile-card" style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})" ng-if="!completado" menu-close ng-click="goProfile()">
         <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-show="!theres_picture">
-        <img id="profile-pic" src="{{perfil.pic}}" alt="" class="profile-element" ng-show="theres_picture">
-        <h1 class="profile-element">{{usuario.name}}</h1>
-        <h2 class="profile-element"><strong>{{usuario.username}}</strong></h2>
-        <h2 class="profile-element">TY: <strong>{{usuario.family_name}}</strong></h2>
+        <img id="profile-pic" src="{{perfil.imageurl}}" alt="" class="profile-element" ng-show="theres_picture">
+        <a >
+          <h2 class="profile-element">Editar perfil <i class="icon ion-edit"></i></h2>
+        </a>
+      </div>
+      <div id="profile-card" class="profile-card" style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})" ng-if="completado">
+        <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-show="perfil.imageurl === undefined">
+        <img id="profile-pic" src="{{perfil.imageurl}}" alt="" class="profile-element" ng-show="perfil.imageurl !== undefined">
+        <h1 class="profile-element">{{perfil.name+' '+perfil.lastnames}}</h1>
+        <h2 class="profile-element">Yego Team: <strong>{{perfil.family_name}}</strong></h2>
       </div>
       <ion-list>
-        <ion-item menu-close href="#/app/home">
+        <ion-item menu-close href="#/app/directorio">
           <img src="img/inicio.png" alt="" />
           Inicio
         </ion-item>
@@ -31,9 +37,17 @@
           <img src="img/perfil.png" alt="" />
           Perfil
         </ion-item>
+        <ion-item menu-close href="#/app/cargas">
+          <img src="img/carga-dark.png" alt="" />
+          Cargas de Gasolina
+        </ion-item>
         <ion-item menu-close href="#/app/autos">
           <img src="img/auto.png" alt="" />
           Mis Autos
+        </ion-item>
+        <ion-item menu-close href="#/app/misSeguros">
+          <img src="img/seguro.png" alt="" />
+          Mis Seguros
         </ion-item>
         <ion-item menu-close href="#/app/team">
           <img src="img/team.png" alt="" />
@@ -41,11 +55,11 @@
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-item menu-close href="#/app/negocio">
+        <ion-item menu-close href="#/app/negocios">
           <img src="img/negocio.png" alt="" />
           Agregar Negocio
         </ion-item>
-        <ion-item menu-close href="#/app/info">
+        <ion-item menu-close href="#/app/about">
           <img src="img/info.png" alt="" />
           Acerca de Yego
         </ion-item>

@@ -9,7 +9,7 @@
   </ion-nav-bar>
   <ion-content>
     <div class="list">
-      <a class="item item-thumbnail-left" href="#" ng-repeat="cupon in cupones">
+      <a class="item item-thumbnail-left" ng-repeat="cupon in cupones" ng-click="goCupon(cupon)">
         <img src="img/logo-yego.png">
         <h2>{{cupon.title}}</h2>
         <p>Código: <strong>{{cupon.code}}</strong> </p>

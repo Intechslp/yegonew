@@ -5,7 +5,9 @@
   </ion-nav-bar>
   <ion-content>
     <div class="list">
-      <a class="item item-icon-left" href="#/app/directorio/{{subcat.name}}/{{subcat.id}}" ng-repeat="subcat in subcats">
+      <a class="item item-icon-left"
+      href="#/app/directorio/subcat/{{subcat.name}}/{{subcat.id}}"
+      ng-repeat="subcat in subcats">
         <img src="img/icons/subcats/{{subcat.id}}.png" alt="" class="icon subcat-img">
         <!-- <i class="icon ion-email"></i> -->
         {{subcat.name}}

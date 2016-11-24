@@ -26,6 +26,9 @@ angular.module('starter.login.controllers',
   $scope.$storage = $localStorage;
   $scope.loginData = {};
   $scope.registerData = {};
+  $scope.userData = {};
+  $scope.objU = {};
+  $scope.objU.app_user;
   $scope.btnCont = true;
   $scope.loginForm = true;
   $scope.registerForm = false;
@@ -49,6 +52,7 @@ angular.module('starter.login.controllers',
     }
   }
 
+  // Inicio de sesión
   $scope.loginClick = function (){
     $ionicLoading.show({templateUrl: 'templates/iniciando.html'});
     $auth.submitLogin($scope.loginData)
@@ -75,16 +79,21 @@ angular.module('starter.login.controllers',
     });
   }
 
+  // Registro de nuevo usuario
   $scope.regBtnClick = function() {
-    $scope.registerData.user_roles = {"add_role":"appuser"}
-    $auth.submitRegistration($scope.registerData)
-      .then(function(resp) {
+    if($scope.verifyRegistration()){
+      $ionicLoading.show({templateUrl: 'templates/enviando.html'});
+      console.log('verifyRegistration is true')
+
+      $scope.objU.app_user = $scope.userData;
+      console.log($scope.objU);
+      $auth.submitRegistration($scope.registerData).then(function(resp) {
         var sesion = JSON.parse(localStorage.auth_headers.replace("-","_"));
         $scope.$storage.headers = sesion;
         $scope.$storage.guest = false;
         $scope.$storage.id = resp.data.data.id;
 
-        UserData.getUserData(resp.data.data.id, $scope.$storage.headers.uid).then(function(response){
+        UserData.updateUser(resp.data.data.id, $scope.objU).then(function(response){
           $scope.$storage.user = response;
           $ionicLoading.hide();
           $state.go('location');
@@ -95,10 +104,46 @@ angular.module('starter.login.controllers',
 
       })
       .catch(function(resp) {
+        $ionicLoading.hide();
         $scope.showAlert2();
       });
+    }
 
   };
+
+
+  $scope.verifyRegistration = function(){
+    if($scope.registerData.email != null &&
+      $scope.userData.name != null &&
+      $scope.userData.lastnames != null &&
+      $scope.registerData.password != null &&
+      $scope.registerData.password_confirmation != null){
+      if($scope.registerData.password === $scope.registerData.password_confirmation){
+        if($scope.registerData.password.length >= 8 ){
+          return true;
+        }else{
+          $scope.customAlert(
+            'Error',
+            'la contraseña debe ser de 8 caractéres o más'
+          );
+          return false;
+        }
+      }else{
+        $scope.customAlert(
+          'Error',
+          'Las contraseñas no coinciden'
+        );
+        return false;
+      }
+    }else{
+      $scope.customAlert(
+        'Error',
+        'Debes de llenar todos los campos'
+      );
+      return false;
+    }
+  }
+
   $scope.guestClick = function(){
     console.log('guestClick');
     $scope.$storage.guest = true;
@@ -118,6 +163,14 @@ angular.module('starter.login.controllers',
       template: 'Algo ocurrió mientras intentabamos recuperar tus datos, intenta de nuevo'
     });
   };
+
+  // custom alert
+  $scope.customAlert = function(msj1,msj2){
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+  }
 
   $scope.insert = function(obj) {
       console.log($rootScope.db);
@@ -144,6 +197,9 @@ function ($scope, $state, $filter,
   $scope.state;
   $scope.city = {};
   $scope.usuarioData = {};
+  $scope.showState = false;
+  $scope.showCity = false;
+  $scope.showButton = false;
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
   LocationData.getCountries().then(function(resp){
@@ -156,6 +212,7 @@ function ($scope, $state, $filter,
   $scope.loadStates = function(paisId){
     console.log('loadStates()');
     console.log(paisId);
+    $scope.showState = true;
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     LocationData.getStates(paisId).then(function(resp){
       $scope.estados = resp;
@@ -167,6 +224,7 @@ function ($scope, $state, $filter,
   $scope.loadCities = function(paisId,estadoId){
     console.log('loadCities()');
     console.log(estadoId);
+    $scope.showCity = true;
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     LocationData.getCities(paisId,estadoId).then(function(resp){
       $scope.ciudades = resp;
@@ -176,18 +234,31 @@ function ($scope, $state, $filter,
     });
   }
 
+// Show the button to continue
+  $scope.showButtonFn = function(){
+    $scope.showButton = true;
+  }
+
+// go to Car registration
   $scope.goAuto = function(city){
+    console.log('goAuto()');
     $scope.usuarioData.city_id = city.id;
-    // console.log($scope.usuarioData);
+    console.log($scope.usuarioData);
     if($scope.$storage.guest){
+      console.log('guest is true');
       $state.$storage.guestUser = {};
       $state.$storage.guestUser.city_id = city.id;
       $state.go('welcome');
     }else{
+      console.log('guest is false');
       $ionicLoading.show({templateUrl: 'templates/enviando.html'});
-      UserData.updateUser($scope.$storage.id,$scope.usuarioData).then(function(){
+      UserData.updateUser($scope.$storage.id,$scope.usuarioData).then(function(resp){
+        $scope.$storage.user = resp;
+        $ionicLoading.hide();
         $state.go('autoReg');
-      }).catch(function(){
+      }).catch(function(resp){
+        $ionicLoading.hide();
+        console.log(resp);
         $scope.showAlert('Error','Hubo un problema al envar tus datos, intenta más tarde');
       });
 
@@ -208,11 +279,16 @@ function ($scope, $state, $filter,
 
 // AUTOREG CONTROLLER
 .controller('AutoRegCtrl',
-function ($scope, $state, $filter, $localStorage, $ionicLoading, SegurosData, UserData, AutosData) {
+function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
+  SegurosData, UserData, AutosData, ImageUploadFactory) {
+
+  $scope.$storage = $localStorage;
+  $scope.userId = $scope.$storage.user.id;
   $scope.marcas = [];
   $scope.modelos = [];
   $scope.descripciones = [];
-
+  $scope.objV = {};
+  $scope.objV.vehicle={};
   $scope.myCar = {};
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
@@ -254,18 +330,89 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, SegurosData, Us
     });
   }
 
-  $scope.$storage = $localStorage;
-
   $scope.saveCar = function(){
+    console.log('saveCar()');
     $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    AutosData.nuevoAuto($scope.myCar).then(function(response){ //ORIGINAL
-    // AutosData.nuevoAuto($scope.pruebaCar).then(function(response){ // PRUEBA
-      console.log(response);
+    if($scope.imgRegAuto !== undefined){
+      ImageUploadFactory.uploadImage($scope.imgRegAuto, 'yegoapp').then(function(result){
+        $scope.url = result.url;
+        $scope.myCar.imageurl = $scope.url;
+        console.log($scope.myCar);
+        $scope.objV.vehicle = $scope.myCar;
+        // Una vez subida la foto, se suben los datos del auto
+        AutosData.nuevoAuto($scope.objV).then(function(response){
+          console.log(response);
+
+          UserData.getUserData($scope.$storage.id).then(function(resp){
+            $scope.$storage.user = resp;
+            console.log(resp);
+            $ionicLoading.hide();
+          }).catch(function(resp){
+            console.log(resp);
+            $ionicLoading.hide();
+          });
+          $state.go('welcome');
+        }).catch(function(response){
+          console.log(response);
+          $ionicLoading.hide();
+        });
+
+      }).catch(function(err) {
+        $ionicLoading.hide();
+        console.log('ImageUploadFactory().catch');
+        // Do something with the error here
+        console.log(err);
+        $cordovaCamera.cleanup();
+      });
+    }else{
+      console.log('A LA VERGA PINCHE APP :3')
       $ionicLoading.hide();
-      $state.go('welcome');
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
+    }
+  }
+
+  // Abre la camara para tomar foto
+  $scope.takePicture = function($event) {
+    console.log('takePicture()')
+    var options = {
+      quality : 70,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 800,
+      targetHeight: 450,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true
+    };
+    // $event.stopPropagation();
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      console.log(options)
+      // console.log(imageData)
+      $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+  }
+
+  $scope.selectPicture = function() {
+    console.log('selectPicture()')
+    var options = {
+      quality : 70,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 800,
+      targetHeight: 450,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      console.log(options)
+      $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // An error occured. Show a message to the user
     });
   }
 

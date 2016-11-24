@@ -7,25 +7,62 @@
     <img src="img/default-local.jpg" alt="" class="main-img">
     <div class="row">
       <div class="col">
-        <h1>{{single.business}}</h1>
-        <div class="rate-bar">
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <p>0 (0)</p>
+        <h1>{{single.business.name}}</h1>
+        <div class="inner-row">
+            <div class="rate-bar" ng-click="toggleRating()">
+              <i ng-repeat="star in editableRating" class="icon {{star.icon}}"></i>
+              <p>{{single.review_score}} (0)</p>
+            </div>
+            <button ng-if="single.lat != null" ng-click="openModal()"
+            class="button button-positive button-clear button-icon icon-right ion-ios-location">
+              mapa
+            </button>
         </div>
+        <h3 ng-if="single.description != null">Descripción:</h3>
+        <p>{{single.business.description}}</p>
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col single-data">
         <h3>Datos</h3>
-        <p>{{single.street | capitalize:true}}</p>
-        <p>{{single.city | capitalize:true}}</p>
-        <p>{{single.zipcode | capitalize:true}}</p>
-        <p>{{single.telephone}}</p>
-        <p>{{single.schedule}}</p>
+        <p ng-if="single.neighborhood != null && single.number_i != null">
+          <i class="icon ion-location"></i>
+          {{single.street+' '+single.number_e+' Int. '+single.number_i+' '+single.neighborhood | capitalize:true}}
+        </p>
+
+        <p ng-if="single.neighborhood != null && single.number_i == null">
+          <i class="icon ion-location"></i>
+          {{single.street+' '+single.number_e+' '+single.neighborhood | capitalize:true}}
+        </p>
+
+        <p ng-if="single.neighborhood == null && single.number_i == null">
+          <i class="icon ion-location"></i>
+          {{single.street+' '+single.number_e | capitalize:true}}
+        </p>
+
+        <p><i class="icon ion-android-time"></i>{{single.schedule}}</p>
+
+        <p><i class="icon ion-ios-telephone"></i>{{single.phone}}</p>
+
+        <p
+        ng-if="single.business.email !== undefined || single.business.email === ''">
+          <i class="icon ion-ios-email"></i>
+          <a href="mailto:{{single.business.email}}">{{single.business.email}}</a>
+        </p>
+
+        <p
+        ng-if="single.business.website !== undefined || single.business.website === ''">
+          <i class="icon ion-monitor"></i>
+          <a ng-click="openInAppBrowser(single.business.website)">{{single.business.website}}</a>
+        </p>
+        <p ng-if="single.business.facebook !== undefined || single.business.facebook === ''">
+          <i class="icon ion-social-facebook"></i>
+          <a ng-click="openInAppBrowser('http://facebook.com/'+single.business.facebook)">{{single.business.facebook}}</a>
+        </p>
+        <p ng-if="single.business.twitter !== undefined || single.business.twitter === ''">
+          <i class="icon ion-social-twitter"></i>
+          <a ng-click="openInAppBrowser('http://twitter.com/'+single.business.twitter)">{{single.business.twitter}}</a>
+        </p>
       </div>
     </div>
     <div class="row">
@@ -36,5 +73,24 @@
         </ul>
       </div>
     </div>
+
+    <!-- This div contains: a list with 5 elements (stars) and in front of it
+      an invisible slider (opacity:0) to surve as the input listener for the rating-->
+      <div class="stars-rating-cont" ng-show="setRating">
+        <div class="item stars-rating">
+          <button ng-click="toggleRating()"
+          class="button button-positive button-clear icon-button ion-close"></button>
+          <ul>
+            <li ng-repeat="star in editableRating">
+                <i class="icon {{star.icon}}"></i>
+            </li>
+          </ul>
+          <div class="item range">
+            <input type="range" ng-model="rating"  ng-change="updateStars(rating)" min="0" max="10">
+          </div>
+          <button class="button button-positive button-block"
+            ng-click="enviarCalif(rating)">Calificar</button>
+        </div>
+      </div>
   </ion-content>
 </ion-view>

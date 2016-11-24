@@ -1,4 +1,4 @@
-<ion-view id="autos-single" class="autos perfil auto-single" view-title="{{theCar.description}}">
+<ion-view id="autos-single" cache-view="false" class="autos perfil auto-single" view-title="{{theCar.description}}">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -11,7 +11,9 @@
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <img class="auto-photo" src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
+    <img class="auto-photo" src="img/photo.jpg" ng-show="theCar.imageurl === undefined">
+    <img class="auto-photo" src="{{theCar.imageurl}}" ng-show="theCar.imageurl !== undefined">
+
     <div id="garage-cont">
       <div class="list card">
         <div class="item auto-card">
@@ -21,6 +23,9 @@
           <h2>Conductor: {{theCar.driver.name}}</h2>
           <h3>Color: {{theCar.colour}}</h3>
           <h3>No. Serie: {{theCar.serial_number}}</h3>
+          <h3 ng-show="theCar.main == 1">Auto Principal: Sí</h3>
+          <h3 ng-show="theCar.main == 0">Auto Principal: No</h3>
+
         </div>
       </div>
       <button class="button button-positive button-clear icon-right ion-trash-a m-icon"

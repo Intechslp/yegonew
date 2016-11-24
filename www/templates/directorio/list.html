@@ -5,7 +5,8 @@
   </ion-nav-bar>
   <ion-content>
     <div class="list">
-      <a class="item  item-thumbnail-right"  ng-repeat="negocio in negocios" ng-click="lol({{negocio.id}})">
+      <a class="item  item-thumbnail-right"  ng-repeat="negocio in negocios"
+      ng-click="goSingle({{negocio.id}})">
         <img src="img/logo-yego.png" alt="">
         <h2>{{negocio.business | capitalize:true}}</h2>
         <div class="rate-bar">

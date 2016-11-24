@@ -1,11 +1,13 @@
 angular.module('starter.controllers',
-['starter.perfil.controllers','starter.login.controllers','starter.seguro.controllers',
-'ngMap','ngStorage','ng-token-auth','ngCordova'])
+['starter.perfil.controllers','starter.autos.controllers','starter.cargas.controllers',
+'starter.negocios.controllers','starter.login.controllers',
+'starter.seguro.controllers','ngMap','ngStorage','ng-token-auth','ngCordova'])
 
 // APP CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('AppCtrl',
-function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory, $localStorage) {
+function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
+  $ionicHistory, $localStorage, $auth, UserData) {
 
   /*
   With the new view caching in Ionic, Controllers are only called
@@ -15,13 +17,39 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
   $scope.$on('$ionicView.enter', function(e) {
   });
   */
+  $auth.validateUser().then(function(resp){
+    console.log('usuario válido')
+  }).catch(function(resp){
+    $window.localStorage.clear();
+    $ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
+    $state.go('login');
+  });
 
   $scope.$storage = $localStorage;
   $scope.perfil = $scope.$storage.user;
+  console.log($scope.perfil);
   $rootScope.userId = $scope.$storage.id;
 
+  if($scope.$storage.usrImg != null){
+    $scope.imgURI = $scope.$storage.usrImg
+  }
+
+  if($scope.$storage.vehicImg != null){
+    $scope.imgURI2 = $scope.$storage.vehicImg
+  }
+
+  // console.log('Nombre: '+$scope.perfil.name)
+  if($scope.perfil.name == null){
+    $scope.completado = false;
+    // console.log('perfil completado: '+$scope.completado);
+  }else{
+    $scope.completado = true;
+    // console.log('perfil completado: '+$scope.completado);
+  }
+
   $rootScope.usuario = $scope.$storage.user;
-  console.log($scope.usuario);
+  // console.log($scope.usuario);
 
   $scope.changeTab = function(state){
     $state.go(state);
@@ -30,6 +58,9 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
       disableAnimate: true
     });
   }
+  $scope.goProfile = function(){
+    $state.go('app.perfil');
+  }
 
 }) // END APP CONTROLLER
 //**********
@@ -37,70 +68,111 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
 
 // DIRECTORIO CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('DirectorioCtrl', function($scope, $state, $filter, NegociosData, $ionicLoading, $ionicPopup, $localStorage, EstablecimientosData) {
+.controller('DirectorioCtrl',
+function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ionicPopup,
+  $ionicHistory,$localStorage, EstablecimientosData, NegociosData) {
+//Comprobación de sesión
+var my_timeout = $timeout(function(){
+  //en caso de que la petición tarde demasiado se cancela el loading
+  $ionicLoading.hide();
+  $window.localStorage.clear();
+  $ionicHistory.clearCache();
+  $ionicHistory.clearHistory();
+  $state.go('login');
+  console.log('Time Out :(')
+},7000);
+
+  $auth.validateUser().then(function(resp){
+    $timeout.cancel(my_timeout);
+    console.log('usuario válido')
+  }).catch(function(resp){
+    $ionicLoading.hide();
+    $window.localStorage.clear();
+    $ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
+    $state.go('login');
+  });
+// Declaración de variables
   $scope.$storage = $localStorage;
   $scope.tabsState = true;
   $scope.closeBtn = false;
   $scope.searchList = false;
-  // $scope.names=$scope.datapointsList ;
+  $scope.negocios = {};
   $scope.adn = {};
-	$scope.srchchange = function () {
-    console.log('search changed');
-    $scope.searchList = false;
-    $scope.names = null;
-    var filtervalue = [];
-		var serachData=$scope.negocios;
-		//console.log(serachData);
-    for (var i = 0; i <serachData.length; i++) {
-      var fltvar = $filter('uppercase')($scope.adn.item);
-      var jsval = $filter('uppercase')(serachData[i].name);
-      if (jsval.indexOf(fltvar) >= 0) {
-          filtervalue.push(serachData[i]);
-      }
-    }
-    // console.log("last");
-    //console.log(filtervalue);
-    $scope.names = filtervalue;
-    $scope.searchList = true;
-    console.log("srchchange searchList = "+$scope.searchList);
-
-  };
-
-  $scope.ressetserach = function () {
-    $scope.searchList=false;
-    console.log("ressetserach searchList = "+$scope.searchList);
-    $scope.adn.item = "";
-    $scope.names = $scope.negocios;
-  }
+  $scope.userCity = $scope.$storage.user.city.id;
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
+// Obtener la lista de establecimientos general
+  EstablecimientosData.getEstablecimientosGral($scope.userCity).then(function(resp){
+    $scope.negocios = resp;
+    $ionicLoading.hide();
+  }).catch(function(resp){
+    // console.log(resp);
+    $ionicLoading.hide();
+  });
+
+// Obtener la lista de categorías
   EstablecimientosData.getCategorias().then(function(response){
     $scope.categories = response;
-    console.log($scope.categories);
+    EstablecimientosData.setCategorias(response);
     $ionicLoading.hide();
   }).catch(function(response){
-    console.log(response);
+    // console.log(response);
     $ionicLoading.hide();
   });
 
   if($scope.$storage.subcats === undefined){
     $scope.subcats = {};
-    // console.log('undefined');
   }else{
     $scope.subcats = $scope.$storage.subcats;
-    // console.log('defined');
-    // console.log($scope.subcats);
-
   }
 
+// función para la búsqueda rápida
+	$scope.srchchange = function () {
+    $scope.searchList = false;
+    $scope.names = null;
+    var filtervalue = [];
+		var searchData = $scope.negocios;
+    var fltvar;
+    var jsval;
+    for (var i = 0; i < searchData.length; i++) {
+      if($scope.adn.item.length > 2){
+        fltvar = $filter('uppercase')($scope.adn.item);
+        jsval = $filter('uppercase')(searchData[i].business);
+        if (jsval.indexOf(fltvar) >= 0) {
+          filtervalue.push(searchData[i]);
+        }
+      }
+    }
+    $scope.names = filtervalue;
+    $scope.searchList = true;
+  };
+
+// función que cambia el estado del botón de cerrar la búsqueda rápida
+  $scope.searchClick = function(){
+    $scope.tabsState = !$scope.tabsState;
+    $scope.closeBtn = !$scope.closeBtn;
+  }
+
+// función que resetea la busqueda
+  $scope.resetSearch = function () {
+    $scope.searchList=false;
+    $scope.adn.item = "";
+    $scope.names = $scope.negocios;
+  }
+
+// Función para ir a la categoría deseada una vez que se le dió click
   $scope.goCategory = function(id,name){
-    console.log('goCategory('+id+','+name+')');
     $scope.category = id;
     $scope.the_cat = $filter('filter')($scope.categories,{id:$scope.category});
     $scope.subcats = $scope.the_cat[0].subcategories;
     EstablecimientosData.setSubcategorias($scope.subcats);
     $state.go('app.dirCat',{catName: name});
+  }
+
+  $scope.goSingle = function(negId){
+    $state.go('app.dirSingle',{singleId:negId});
   }
 
   $scope.showAlert = function(res, response) {
@@ -122,6 +194,8 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
 .controller('DirCatCtrl', function($state, $scope, $rootScope, $stateParams, NgMap, $ionicLoading, $localStorage,EstablecimientosData) {
   $scope.catName = $stateParams.catName;
   $scope.subcats = EstablecimientosData.getSubcategorias();
+  console.log('subcategorias:')
+  console.log($scope.subcats);
   $scope.goList = function(id){
     EstablecimientosData.setList(id);
   }
@@ -130,20 +204,25 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
 
 // DIRECTORIO LISTA CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('DirListCtrl', function($state, $scope, $stateParams, $ionicLoading, EstablecimientosData) {
+.controller('DirListCtrl', function($state, $scope, $stateParams, $localStorage,
+   $ionicLoading, EstablecimientosData) {
   $ionicLoading.show();
+  // VARS
+  $scope.$storage = $localStorage;
   $scope.negocios = {};
+  $scope.userCity = $scope.$storage.user.city.id;
   var subcat = $stateParams.subcatId;
   $scope.subcatName = $stateParams.subcatName;
-  EstablecimientosData.getEstablecimientos(subcat).then(function(response){
+
+  EstablecimientosData.getEstablecimientos(subcat, $scope.userCity).then(function(response){
     $scope.negocios= response;
     $ionicLoading.hide();
   }).catch(function(response){
     $ionicLoading.hide();
   });
-  $scope.lol = function(lol){
+  $scope.goSingle = function(negId){
     // console.log(lol);
-    $state.go('app.dirSingle',{singleId:lol});
+    $state.go('app.dirSingle',{singleId:negId});
   }
 
 })//END DIRECTORIO LISTA CONTROLLER
@@ -152,20 +231,102 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
 
 // DIRECTORIO SINGLE CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('DirSingleCtrl', function($state, $scope, $stateParams, $ionicLoading, EstablecimientosData) {
-  // console.log('DirSingleCtrl');
-  $ionicLoading.show();
+.controller('DirSingleCtrl',
+function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal,
+  $rootScope, $ionicPopup, NgMap,EstablecimientosData, ratingToStars, RatingData) {
+  // $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
   $scope.single = {};
+  $scope.setRating = false;
+  $scope.rating = 5;
+  $scope.comoLlegar = true;
+  $scope.objR = {};
+  $scope.objR.review= {};
+  $scope.userId = $rootScope.userId;
   var singleId = $stateParams.singleId;
-  // console.log($stateParams);
+
   EstablecimientosData.getSingle(singleId).then(function(response){
     $ionicLoading.hide();
-    console.log(response);
     $scope.single = response;
+    $scope.rating = $scope.single.review_score*2;
+    $scope.updateStars($scope.rating);
+    $scope.marker = {
+      title:$scope.single.business.name,
+      lat:$scope.single.lat,
+      lng:$scope.single.lng
+    };
+    console.log(response)
   }).catch(function(response){
     $ionicLoading.hide();
-    console.log(response);
   });
+
+// rating
+  $scope.editableRating = ratingToStars.getStarsForPoi($scope.rating/2);
+  $scope.updateStars = function (rating){
+    $scope.editableRating = ratingToStars.getStarsForPoi(rating/2);
+  }
+  // $scope.staticRating = ratingToStars.getStarsForPoi(3.5);
+  $scope.toggleRating = function(){
+    $scope.setRating = !$scope.setRating;
+  }
+  $scope.enviarCalif = function(rating){
+    $scope.objR.review.app_user_id = $scope.userId;
+    $scope.objR.review.establishment_id = $scope.single.id;
+    $scope.objR.review.rate = rating/2;
+    console.log($scope.objR);
+    RatingData.postRating($scope.objR).then(function(resp){
+      console.log(resp);
+      $scope.showAlert(
+        '¡Éxito!',
+        'Gracias por tu retroalimentación, esto nos ayuda a todos para mejorar. Sigue utilizando Yego App'
+      );
+    }).catch(function(resp){
+      console.log(resp);
+    });
+  }
+
+// modal de mapa
+  $ionicModal.fromTemplateUrl('templates/directorio/map.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modalMapa = modal;
+  });
+  $scope.openModal = function() {
+    $scope.modalMapa.show();
+    $ionicLoading.show();
+    NgMap.getMap().then(function(map) {
+      $scope.map = map;
+      $ionicLoading.hide();
+    });
+    $scope.callbackFunc = function(param) {
+      $scope.myself = $scope.map.getCenter();
+      // console.log($scope.myself);
+    };
+    console.log($scope.marker);
+  };
+  $scope.closeModal = function() {
+    $scope.modalMapa.hide();
+  };
+  $scope.comoLlegarFn = function(){
+    $scope.comoLlegar = true;
+  }
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+
+    alertPopup.then(function(res) {
+      $scope.toggleRating();
+    });
+  };
+
+  $scope.openInAppBrowser = function(url){
+   // Open in app browser
+   window.open(url,'_blank');
+  };
+
 })//END DIRECTORIO SINGLE CONTROLLER
 //**********
 
@@ -211,6 +372,13 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
     console.log(response);
     $scope.showAlert();
   });
+
+  $scope.goCupon = function(obj){
+    console.log('Go Cupon');
+    console.log(obj);
+    CuponesData.setCupon(obj);
+    $state.go('app.cupon');
+  }
   $scope.showAlert = function() {
     var alertPopup = $ionicPopup.alert({
       title: 'Ups!',
@@ -225,424 +393,33 @@ function($scope, $rootScope, $filter, $ionicModal, $timeout,$state,$ionicHistory
 //**********
 
 
-// AUTOS CONTROLLER
+// CUPON CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('AutosCtrl',
-function($state, $scope, $window,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth,
-  SegurosData, AutosData,UserData, $cordovaCamera/*, ImageUploadService*/) {
+.controller('CuponCtrl', function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicNavBarDelegate, $ionicPopup, CuponesData) {
+  $scope.cupon = CuponesData.getCupon();
 
-  $scope.$storage = $localStorage;
-
-  $scope.usrId = $scope.$storage.id;
-  var usrUid = $scope.$storage.headers.uid;
-  $scope.marcas = [];
-  $scope.modelos = [];
-  $scope.descripciones = [];
-
-  $scope.myCar = {};
-  $scope.allCars = {};
-
-  $scope.pruebaCar={
-    brand: "CHEVROLET",
-    model: "2016",
-    description: "AVEO",
-    owner_id: 1
-  }
-
-  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-
-  //obtener todos los autos del usuario
-  AutosData.getMisAutos($scope.usrId,usrUid).then(function(resp){
-    $scope.allCars = resp;
-    console.log(resp);
-    $ionicLoading.hide();
-  }).catch(function(resp){
-    console.log(resp);
-    $ionicLoading.hide();
-  });
-
-  // Cargar el modal
-  $ionicModal.fromTemplateUrl('templates/autos/newCar.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.newCarModal = modal;
-  });
-
-  $scope.newCar = function(){
-    $scope.newCarModal.show();
-    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-
-    SegurosData.getMarcas().then(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-      var brands = JSON.parse(response);
-      $scope.marcas = brands.Marcas;
-    }).catch(function(response){
-      $ionicLoading.hide();
-      console.log(response);
-      $ionicLoading.hide();
-      $scope.showAlert('fail',response);
-    });
-  }
-
-  $scope.cerrarModal =  function(){
-    $scope.newCarModal.hide();
-  }
-
-  $scope.saveCar = function(){
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    // $scope.$storage.car = {marca: $scope.myCar.marca, modelo: $scope.myCar.modelo, descripcion: $scope.myCar.descripcion};
-    // console.log($scope.imgURI);
-
-    // ImageUploadService.uploadImage($scope.imgURI).then(function(result){
-    //   console.log('ImageUploadService().then');
-    //   var url = result.secure_url || '';
-    //   var urlSmall;
-    //   if(result && result.eager[0]){
-    //     urlSmall = result.eager[0].secure_url;
-    //   }else{
-    //     urlSmall = '';
-    //   }
-    //   console.log('urlSmall: '+urlSmall);
-    //   // Do something with the results here.
-    //   console.log(result);
-    //   $cordovaCamera.cleanup();
-    // }).catch(function(err) {
-    //   console.log('ImageUploadService().catch');
-    //   // Do something with the error here
-    //   console.log(err);
-    //   $cordovaCamera.cleanup();
-    // });
-    AutosData.nuevoAuto($scope.myCar).then(function(response){ //ORIGINAL
-    // AutosData.nuevoAuto($scope.pruebaCar).then(function(response){ // PRUEBA
-      console.log(response);
-      $ionicLoading.hide();
-      $scope.newCarModal.hide();
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-    });
-  }
-
-  $scope.goForModels = function(brand){
-    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-    SegurosData.getModelos(brand).then(function(response){
-      $ionicLoading.hide();
-      var models = JSON.parse(response);
-      $scope.modelos = models.Modelos;
-    }).catch(function(response){
-      $ionicLoading.hide();
-      console.log(response);
-      // $scope.showAlert('fail',response);
-    });
-  }
-
-  $scope.goForDescriptions = function(brand,model){
-    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-    SegurosData.getDescripciones(brand,model).then(function(response){
-      $ionicLoading.hide();
-      var descriptions = JSON.parse(response);
-      $scope.descripciones = descriptions.Descripciones;
-    }).catch(function(response){
-      $ionicLoading.hide();
-      console.log(response);
-      // $scope.showAlert('fail',response);
-    });
-  }
-
-  $scope.takePicture = function() {
-    console.log('takePicture()')
-    var options = {
-      quality : 70,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.JPEG,
-      // targetWidth: 300,
-      // targetHeight: 300,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
-    };
-
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
-      // console.log(imageData)
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
-      // An error occured. Show a message to the user
-    });
-  }
-
-  $scope.selectPicture = function() {
-    console.log('takePicture()')
-    var options = {
-      quality : 70,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 800,
-      targetHeight: 450,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
-    };
-
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
-      // An error occured. Show a message to the user
-    });
-  }
-
-  $scope.goSingleCar = function(car){
-    AutosData.setTheCar(car);
-    $state.go('app.autoSingle',{autoId:car.id});
-  }
-})// END AUTOS CONTROLLER
-//**********
-
-
-// AUTOS SINGLE CONTROLLER
-//–––––––––––––––––––––––––––––––––––––––––––––
-.controller('AutoSingleCtrl',
-function($state, $stateParams, $scope, $rootScope, $window, NgMap,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
-  $auth, AutosData) {
-
-  $scope.usrId = $rootScope.userId;
-  var autoId = $stateParams.autoId;
-
-  if ($ionicHistory.backView() != null) {
-    var sourceState = $ionicHistory.backView().stateId;
-  }else{
-    var sourceState = 'none';
-  }
-
-  if(sourceState !== 'app.autos'){
-    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-    AutosData.getTheCarFromUrl($scope.usrId,autoId).then(function(response){
-      $scope.theCar = response;
-      console.log(response);
-      $ionicLoading.hide();
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-    });
-  }else{
-    $scope.theCar = AutosData.getTheCar();
-  }
-
-  console.log("AutoSingleCtrl User id:"+$rootScope.userId);
-  $scope.carId = $stateParams.id;
-  $scope.changeDriver = false;
-  $scope.conductores = [
-    {id: 1,name:"Armando Godinez"},
-    {id: 2,name:"Gilberto Sosa"},
-    {id: 3,name:"Alejandro Toro"},
-    {id: 4,name:"Asaf López"}];
-  $scope.myCar = {};
-
-  // Cargar el modal
-  $ionicModal.fromTemplateUrl('templates/autos/editCar.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.editCarModal = modal;
-  });
-
-  $scope.editCar = function(){
-    $scope.theCar.driver = {};
-    $scope.theCar.driver.name = "Asaf López";
-    $scope.editCarModal.show();
-  }
-
-  $scope.cerrarModal = function(){
-    $scope.editCarModal.hide();
-  }
-  $scope.theChange = function(){
-    $scope.changeDriver = !$scope.changeDriver;
-  }
-
-  $scope.updateCar = function(){
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    // AutosData.nuevoAuto($scope.usrId,$scope.myCar).then(function(response){ //ORIGINAL
-    AutosData.editarAuto($scope.myCar).then(function(response){ // PRUEBA
-      console.log(response);
-      $ionicLoading.hide();
-      $scope.newCarModal.hide();
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-    });
-  }
-
-  // A confirm dialog
-  $scope.deleteCarConfirm = function() {
-    var confirmPopup = $ionicPopup.confirm({
-     title: '¿Eliminar '+$scope.theCar.description+' '+$scope.theCar.model+'?',
-     template: 'Una vez eliminado no se podra acceder al automovil ni a los servicios relacionados.'
-    });
-
-    confirmPopup.then(function(res) {
-     if(res) {
-       console.log('adios carrito');
-       $scope.deleteCar();
-     } else {
-       console.log('dice mi mamá que siempre no :3');
-     }
-    });
-  };
-
-  $scope.deleteCar = function(){
-    $ionicLoading.show({templateUrl:'templates/eliminando.html'});
-    AutosData.borrarAuto($scope.theCar).then(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-      $state.go('app.autos');
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-    });
-  }
-
-})// END AUTOS SINGLE CONTROLLER
-//**********
-
-
-// TEAM CONTROLLER
-//–––––––––––––––––––––––––––––––––––––––––––––
-.controller('TeamCtrl',
-function($state, $scope, $rootScope,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
-  TeamData,UserData) {
-
-  $scope.userId = $rootScope.userId;
-  $scope.famData = {}
-  $scope.team = {};
-  $scope.theresTeam =  false;
-  $scope.teamData = {};
-  $scope.teamData.name = null;
-  $scope.myGuest = {};
-  $scope.requests = {};
-
-  $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
-
-  TeamData.getTeam($scope.userId).then(function(response){
-    $ionicLoading.hide();
-    if(response.length == 0){
-      $scope.theresTeam = false;
-
-      TeamData.preguntarInvitacion($scope.userId).then(function(response){
-        console.log(response);
-        $scope.requests = response
-      }).catch(function(response){
-        console.log(response);
-      });
-
-    }else if (response.length > 0){
-      $scope.team = response[0];
-      console.log('Team id: '+$scope.team.id)
-      $scope.theresTeam = true;
-    }
-    console.log(response);
-  }).catch(function(response){
-    $ionicLoading.hide();
-    console.log(response);
-  });
-
-  // Crear nuevo Team
-  $scope.newTeam = function(){
-    if($scope.teamData.name !== null){
-      $ionicLoading.show({templateUrl:'templates/enviando.html'});
-      TeamData.crearTeam($scope.teamData).then(function(response){
-        $state.go('app.team', $stateParams, {reload: true, inherit: false})
-        $ionicLoading.hide();
-      }).catch(function(response){
-        console.log(response);
-        $ionicLoading.hide();
-      })
-    }else{
-      $scope.showAlert();
-    }
-  }
-
-  //Aceptar petición para ser parte de un Team
-  $scope.acceptRequest = function(famId){
-    $scope.famData.family_id = famId;
-    $ionicLoading.show({templateUrl:'templates/enviando.html'})
-    UserData.updateUser($scope.userId,$scope.famData).then(function(response){
-
-      TeamData.eliminarInvitacion(famId).then(function(response){
-        console.log('lo logramos lo eliminamos!');
-        console.log(response)
-      }).catch(function(response){
-        console.log('no lo logramos, no se eliminó :(');
-        console.log(response)
-      });
-
-    }).catch(function(response){
-      console.log(response);
-    })
-  }
-
-  // Cargar el modal
-  $ionicModal.fromTemplateUrl('templates/team/invitation.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.sendInvitationModal = modal;
-  });
-
-  $scope.abrirModal = function(){
-    $scope.myGuest.family_id = $scope.team.id;
-    $scope.sendInvitationModal.show();
-  }
-
-  $scope.cerrarModal  = function(){
-    $scope.sendInvitationModal.hide();
-  }
-
-  // An alert dialog
   $scope.showAlert = function() {
-   var alertPopup = $ionicPopup.alert({
-     title: 'Error',
-     template: 'Asegurate de ponerle un nombre a tu Yego® Team'
-   });
-  };
-
-  $scope.sendInvitation = function(){
-    $ionicLoading.show({templateUrl:'templates/enviando.html'})
-    TeamData.enviarInvitacion($scope.myGuest).then(function(response){
-      $ionicLoading.hide();
-      $scope.showAlertSuccess();
-      console.log(response);
-    }).catch(function(response){
-      $ionicLoading.hide();
-      console.log(response);
+    var alertPopup = $ionicPopup.alert({
+      title: 'Ups!',
+      template: 'Hubo un error accediendo a la base de datos'
     });
-  }
 
-  // An alert dialog
-  $scope.showAlertSuccess = function() {
-   var alertPopup = $ionicPopup.alert({
-     title: '¡Genial!',
-     template: 'Tu invitación a sido enviada'
-   });
-   alertPopup.then(function(res) {
-     $scope.sendInvitationModal.hide();
-     console.log('ayossss');
-   });
+    alertPopup.then(function(res) {
+      // console.log('Thank you for not eating my delicious ice cream cone');
+    });
   };
-
-})// END TEAM CONTROLLER
+})//END CUPON CONTROLLER
 //**********
 
+// ABOUT CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('AboutCtrl', function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicNavBarDelegate, $ionicPopup, CuponesData) {
+
+})//END ABOUT CONTROLLER
+//**********
 .filter('capitalize', function() {
   return function(input, all) {
     var reg = (all) ? /([^\W_]+[^\s-]*) */g : /([^\W_]+[^\s-]*)/;
-    return (!!input) ? input.replace(reg, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
+    return (!!input && input != null && typeof(input) == 'string') ? input.replace(reg, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
   }
 });

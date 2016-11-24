@@ -8,7 +8,7 @@
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button id="header-btn" class="button button-icon icon ion-person-add"
-      ng-click="abrirModal()" ng-show="theresTeam"></button>
+      ng-click="abrirModal()" ng-show="theresTeam" ></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="has-header">
@@ -52,13 +52,12 @@
       <h2 class="divider">Administrador</h2>
       <div class="list card">
         <div class="item auto-card">
-          <h2>{{team.administrator.name}}</h2>
-          <h1>Saporules</h1>
-          <p>Kia Forte 2016</p>
+          <h2>{{team.administrator.name+team.administrator.lastnames}}</h2>
+          <p>{{team.administrator.car}}</p>
           <a href="#" class="ion-android-more-vertical"></a>
         </div>
         <div class="item item-image">
-          <img src="http://www.omakase.mx/assets/img/staff/asaf.jpg">
+          <img src="img/photo.jpg">
         </div>
       </div>
 
@@ -66,12 +65,11 @@
       <div class="list card" ng-repeat="member in team.app_users">
         <div class="item auto-card">
           <h2>{{member.name+' '+member.lastnames}}</h2>
-          <h1>GodinezB</h1>
-          <p>Mazda 2 2016</p>
           <a href="#" class="ion-android-more-vertical"></a>
         </div>
         <div class="item item-image">
-          <img src="http://www.omakase.mx/assets/img/staff/armando.jpg">
+          <img src="img/photo.jpg" ng-if="member.imageurl === undefined">
+          <img src="{{member.imageurl}}" ng-if="member.imageurl !== undefined">
         </div>
       </div>
   </ion-content>

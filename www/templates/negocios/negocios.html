@@ -1,0 +1,41 @@
+<ion-view id="negocios" cache-view="false" class="perfil negocios" view-title="Negocios">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+
+    <!-- YA HAY NEGOCIOS -->
+    <div id="negocios-cont" ng-show="theresNegocio">
+      <div class="item item-divider">
+        Mis Negocios
+      </div>
+      <div class="list card" ng-repeat="negocio in negocios">
+        <div class="item auto-card">
+          <h1>{{negocio.name}}</h1>
+          <h2>{{negocio.description}}</h2>
+
+          <label class="status-label">{{negocio.status}}</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- NO HAY NEGOCIOS -->
+
+    <div class="new-negocio padding">
+      <h3 ng-show="!theresNegocio">No hay negocios :(</h3>
+      <button class="button button-positive button-clear icon-right border-bottom"
+      ng-click="abrirModalNeg(1)">
+        Agregar negocio
+      </button>
+      <button class="button button-positive button-clear icon-right"
+      ng-click="abrirModalNeg(0)">
+        Recomendar negocio
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

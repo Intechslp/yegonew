@@ -1,0 +1,54 @@
+<ion-modal-view id="new-carga-modal" class="cargas modal modal-new-carga"
+  view-title="Nueva Carga">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Nueva Carga</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+        id="header-btn" ng-click="closeModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <form ng-submit="nuevaCarga()" class="list">
+      <!-- fuel_id -->
+      <label class="item item-input item-select">
+        <div class="input-label">Gasolina</div>
+        <select ng-model="carga.fuel_id" id="fuel_id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="gasolina in gasolinas" value="{{gasolina.id}}">{{gasolina.name}}</option>
+        </select>
+      </label>
+      <!-- gas_station_id -->
+      <label class="item item-input item-select">
+        <div class="input-label">Gasolinera</div>
+        <select ng-model="carga.gas_station_id" id="gas_station_id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="gasolinera in gasolineras" value="{{gasolinera.id}}">{{gasolinera.name}}</option>
+        </select>
+      </label>
+
+      <!-- quantity -->
+      <label class="item item-input" id="quantity">
+       <span class="input-label">Cantidad Lts.</span>
+       <input type="number" step="0.01" min="0" ng-model="carga.quantity">
+      </label>
+
+      <!-- price -->
+      <label class="item item-input" id="price">
+       <span class="input-label">Costo</span>
+       <input type="number" step="0.01" min="0" ng-model="carga.price">
+      </label>
+      <!-- kilometers -->
+      <label class="item item-input" id="kilometers">
+       <span class="input-label">Kilometros</span>
+       <input type="tel" min="0" ng-model="carga.kilometers">
+      </label>
+
+      <!-- vehicle_id -->
+      <input type="text" style="display:none" ng-model="carga.vehicle_id" ng-init="carga.vehicle_id = carId">
+
+      <div class="padding">
+        <button type="submit" class="button button-block button-positive">Añadir carga</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

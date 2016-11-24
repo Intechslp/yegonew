@@ -1,4 +1,4 @@
-<ion-view id="perfil" class="perfil">
+<ion-view  hide-back-button="true" id="perfil" cache-view="false" class="perfil">
   <ion-nav-bar class="bar-clear">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -8,9 +8,21 @@
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <div id="profile-card" class="profile-card" style="background-image:url('img/photo.jpg')">
-      <img ng-show="imgURI === undefined" id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-click="takePicture()">
-      <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
+    <div id="profile-card" class="profile-card" style="background-image:url('img/photo.jpg')" ng-show="usuario.driver_of_vehicles[0].imageurl === undefined">
+      <div ng-show="usuario.imageurl === undefined" class="profile-element" ng-click="takePicture()">
+        <img id="profile-pic" src="img/camera.jpg">
+      </div>
+
+      <img ng-show="usuario.imageurl !== undefined" ng-src="{{usuario.imageurl}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
+      <h2 class="profile-element">{{usuario.username}}</h2>
+    </div>
+
+    <div id="profile-card" class="profile-card" style="background-image:url({{usuario.driver_of_vehicles[0].imageurl}})" ng-show="usuario.driver_of_vehicles[0].imageurl !== undefined">
+      <div ng-show="usuario.imageurl === undefined" class="profile-element" ng-click="takePicture()">
+        <img id="profile-pic" src="img/camera.jpg">
+      </div>
+
+      <img ng-show="usuario.imageurl !== undefined" ng-src="{{usuario.imageurl}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
       <h2 class="profile-element">{{usuario.username}}</h2>
     </div>
 
@@ -23,6 +35,7 @@
           <h2><strong>Yego Team:</strong> {{usuario.family_name}}</h2>
           <h2><strong>Correo:</strong> {{usuario.email}}</h2>
           <h2><strong>Auto Principal:</strong> {{usuario.vehicle.brand+' '+usuario.vehicle.description+' '+usuario.vehicle.model}}</h2>
+          <h2><strong>Ciudad:</strong> {{usuario.city.name}}</h2>
           <a class="card-right-icon ion-edit m-icon" ng-click="editUserModal()"></a>
         </div>
       </div>

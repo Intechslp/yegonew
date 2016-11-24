@@ -1,4 +1,4 @@
-<ion-view id="autos" class="autos perfil" view-title="Mis Autos">
+<ion-view id="autos" cache-view="false" class="autos perfil" view-title="Mis Autos">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -10,18 +10,25 @@
       <button id="header-btn" class="button button-icon icon ion-ios-plus" ng-click="newCar()"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
-  <ion-content>
+  <ion-content class="has-header padding-top">
     <!-- GARAGE -->
-    <div id="garage-cont">
-      <div class="list card" ng-repeat="car in allCars">
-        <div class="item auto-card">
-          <h2>{{car.description}}</h2>
-          <h3>{{car.brand}}</h3>
-          <h3>{{car.model}}</h3>
-          <a class="card-right-icon ion-ios-eye" ng-click="goSingleCar(car)"></a>
+    <div id="garage-cont padding-top">
+      <div class="car-card" ng-repeat="car in allCars" ng-click="goSingleCar(car)">
+        <div class="car-item item-image">
+          <img src="img/photo.jpg" ng-show="car.imageurl === undefined">
+          <img src="{{car.imageurl}}" ng-show="car.imageurl !== undefined">
         </div>
-        <div class="item item-image">
-          <img src="http://icdn8.digitaltrends.com/image/2016-lancer-gt-970x647-c.jpg">
+        <div class="car-item padding">
+          <p>{{car.description}}</br>
+          {{car.brand}}</br>
+          {{car.model}}</p>
+          <p ng-if="car.kilometers !== null">km: {{car.kilometers}}</p>
+          <i ng-if="car.main == 1"
+          class="card-right-icon ion-ios-star">
+          </i>
+          <i ng-if="car.main == 0"
+          class="card-right-icon ion-ios-star-outline">
+          </i>
         </div>
       </div>
     </div>

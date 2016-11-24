@@ -6,7 +6,7 @@ angular.module('starter.seguro.controllers',
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('SegurosCtrl', function($state, $scope, $stateParams, $ionicLoading, SegurosData, $ionicNavBarDelegate, $ionicPopup) {
   $ionicNavBarDelegate.showBackButton(false);
-  // $scope.brands = {};
+  $scope.brands = {};
   $scope.master = {}
   $scope.marcas = [];
   $scope.sendData = {};
@@ -331,5 +331,54 @@ angular.module('starter.seguro.controllers',
 .controller('SegComp4Ctrl', function($scope, $stateParams, $ionicLoading, SegurosData) {
   $scope.sendData = SegurosData.getDataForRC();
 })// END SEGUROS COMPRA PASO 4 CONTROLLER
+//**********
+
+// MIS SEGUROS CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('MisSegurosCtrl',
+function($scope, $stateParams, $localStorage, $ionicLoading, $ionicModal,
+  AutosData,MisSegurosData) {
+
+  $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
+  $scope.$storage = $localStorage;
+  $scope.usrId = $scope.$storage.id;
+  var usrUid = $scope.$storage.headers.uid;
+  $scope.misAutos = [];
+  $scope.objS = {};
+  $scope.objS.insurance = {};
+  $scope.seguro = {};
+  $scope.elAuto = {};
+
+  AutosData.getMisAutos($scope.usrId, usrUid).then(function(resp){
+    $scope.misAutos = resp;
+    console.log(resp);
+    $ionicLoading.hide();
+  }).catch(function(resp){
+    console.log(resp);
+    $ionicLoading.hide();
+  });
+
+// se declara el modal para dar de alta una carga de gasolina
+  $ionicModal.fromTemplateUrl('templates/misSeguros/newMiSeguro.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+// funcion para abrir el modal
+  $scope.openModal = function(miauto) {
+    $scope.elAuto = miauto;
+    console.log($scope.elAuto);
+    $scope.modal.show();
+  };
+
+// funcion para cerrar el modal
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+    $state.go('app.cargas', $stateParams, {reload: true, inherit: false});
+  };
+
+})// END MIS SEGUROS CONTROLLER
 //**********
 ;

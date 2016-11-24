@@ -17,6 +17,12 @@
        <span class="input-label">No. Serie</span>
        <input type="text" ng-model="myCar.serial_number" ng-init="myCar.serial_number = theCar.serial_number" placeholder="{{theCar.serial_number}}">
       </label>
+
+      <!-- main -->
+      <ion-checkbox ng-model="principal" ng-change="changePrincipal(principal)">
+        Este es mi auto Principal
+      </ion-checkbox>
+
       <!-- driver_id changeDriver == false -->
       <label class="item item-input" ng-if="!changeDriver">
         <div class="input-label">Conductor</div>
@@ -45,7 +51,9 @@
       <input type="text" style="display:none" ng-model="myCar.owner_id" ng-init="myCar.owner_id = usrId">
       <!-- car id -->
       <input type="text" style="display:none" ng-model="myCar.id" ng-init="myCar.id = theCar.id">
-      <button type="submit" class="button button-positive">Actualizar</button>
+      <div class="padding">
+        <button type="submit" class="button button-block button-positive">Actualizar</button>
+      </div>
     </form>
   </ion-content>
 </ion-modal-view>

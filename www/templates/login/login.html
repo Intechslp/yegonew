@@ -19,7 +19,7 @@
       <label class="item item-input item-icon-left">
         <i class="icon ion-ios-person"></i>
         <span class="input-label">
-          <input type="text" ng-model="loginData.email" placeholder="Nombre de Usuario">
+          <input type="text" ng-model="loginData.email" placeholder="Correo electrónico">
         </span>
       </label>
 
@@ -54,27 +54,32 @@
           <h2>Registro</h2>
         </div>
       </div>
-      <label class="item item-input item-icon-left">
-        <i class="icon ion-ios-person"></i>
-        <span class="input-label">
-          <input type="text" ng-model="registerData.username" placeholder="Nombre de Usuario">
-        </span>
-      </label>
       <label class="item item-input">
         <span class="input-label item-icon-left">
           <i class="icon ion-ios-email"></i>
-          <input type="email" ng-model="registerData.email" placeholder="Email">
+          <input type="email" ng-model="registerData.email" placeholder="Email*">
+        </span>
+      </label>
+      <label class="item item-input item-icon-left">
+        <i class="icon ion-ios-person"></i>
+        <span class="input-label">
+          <input type="text" ng-model="userData.name" placeholder="Nombre*">
+        </span>
+      </label>
+      <label class="item item-input item-icon-left">
+        <span class="input-label">
+          <input type="text" ng-model="userData.lastnames" placeholder="Apellido*">
         </span>
       </label>
       <label class="item item-input">
         <span class="input-label item-icon-left">
           <i class="icon ion-ios-locked"></i>
-          <input type="password" ng-model="registerData.password" placeholder="Contraseña">
+          <input type="password" ng-model="registerData.password" placeholder="Contraseña*">
         </span>
       </label>
       <label class="item item-input">
         <span class="input-label item-icon-left">
-          <input type="password" ng-model="registerData.password_confirmation" placeholder="Confirmar contraseña">
+          <input type="password" ng-model="registerData.password_confirmation" placeholder="Confirmar contraseña*">
         </span>
       </label>
       <div class="row enter-register">

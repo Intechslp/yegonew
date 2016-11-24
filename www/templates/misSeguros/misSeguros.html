@@ -1,0 +1,43 @@
+<ion-view id="mis-seguros" cache-view="false" class="mis-seguros" view-title="Mis Seguros">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+    <div class="info-block padding" ng-repeat="miauto in misAutos" ng-click="openModal(miauto)">
+      <img class="info-block-item" src="img/icons/modelo.png" alt="" />
+      <div class="info-block-item info-block-data">
+        <h2>{{miauto.brand+' '+miauto.description+' '+miauto.model; }}</h2>
+        <p>No tiene seguro <br>
+          <span class="blue-span">Añadir seguro</span>
+        </p>
+      </div>
+    </div>
+    <div ng-if="cargas_registradas.length == 0" class="padding">
+      <h4>Aun no has registrado cargas de gasolina</h4>
+    </div>
+    <div class="list" ng-if="cargas_registradas.length > 0">
+      <div class="item carga-block" ng-click="goResumen()">
+        <img class="carga-img" src="img/carga-light.png" alt="">
+        <div class="month-data">
+          <h3>Noviembre 2016</h3>
+          <p>Litros Consumidos: <span class="blue-span">0.0</span><br>
+            Gasto Total: <span class="blue-span">$0.00</span>
+          </p>
+        </div>
+      </div>
+      <div class="item carga-block">
+        <img class="carga-img" src="img/carga-light.png" alt="">
+        <div class="month-data">
+          <h3>Noviembre 2016</h3>
+          <p>Litros Consumidos: <span class="blue-span">0.0</span><br>
+            Gasto Total: <span class="blue-span">$0.00</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,43 @@
+<ion-modal-view id="new-carga-modal" class="cargas modal modal-new-carga"
+  view-title="Nueva Carga">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Alta Seguro</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+        id="header-btn" ng-click="closeModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <form ng-submit="nuevaCarga()" class="list">
+      <!-- company -->
+      <label class="item item-input" id="company">
+       <span class="input-label">Compañía</span>
+       <input type="text" ng-model="seguro.company">
+      </label>
+      <!-- policy_number -->
+      <label class="item item-input" id="company">
+       <span class="input-label">Compañía</span>
+       <input type="text" ng-model="seguro.company">
+      </label>
+
+      <!-- renewal -->
+      <label class="item item-input" id="renewal">
+       <span class="input-label">Renueva</span>
+       <input type="date" ng-model="seguro.renewal">
+      </label>
+
+      <!-- contact_phone -->
+      <label class="item item-input" id="contact_phone">
+       <span class="input-label">Tel. Contacto</span>
+       <input type="tel"ng-model="seguro.contact_phone">
+      </label>
+
+      <!-- vehicle_id -->
+      <input type="text" style="display:none" ng-model="seguro.vehicle_id" ng-init="seguro.vehicle_id = elAuto.id">
+
+      <div class="padding">
+        <button class="button button-block button-positive">Añadir seguro</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

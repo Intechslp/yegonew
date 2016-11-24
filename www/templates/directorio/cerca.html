@@ -1,0 +1,29 @@
+<ion-view id="cerca" view-title="Cerca de mi">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+    <ng-map class="rescate-map" center='current-position'
+      map-type-control="false" street-view-control="false"
+      geo-fallback-center="[22.153843, -100.979790]"
+      geo-callback="callbackFunc('you')">
+      <marker ng-repeat="marker in markers"
+      title="{{marker.title}}"
+      position="{{marker.pos}}">
+      </marker>
+      <marker position="{{myself}}" title="Hello World!"
+        icon="{
+          url:'img/pos.png',
+          scaledSize:[14,14],
+          origin: [0,0],
+          anchor: [7,7]
+          }" >
+      </marker>
+    </ng-map>
+  </ion-content>
+</ion-view>

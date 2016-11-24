@@ -10,7 +10,7 @@
     <img id="login-logo" src="img/logo-yego.png" alt="" class="logo" ng-class="{'register-active':registerForm,'login-active':loginForm}">
     <!-- LOGIN -->
 
-    <form ng-submit="saveCar('save')" class="list">
+    <form class="list">
 
       <!-- marca -->
       <label class="item item-input item-select">
@@ -39,17 +39,30 @@
         </select>
       </label>
 
+      <!-- Main -->
+      <input type="number" ng-model="myCar.main" ng-init="myCar.main = 1" style ="display:none">
+      <!-- owner_id -->
+      <input type="number" ng-model="myCar.owner_id" ng-init="myCar.owner_id = userId" style ="display:none">
+
       <div class="edit-photo-holder">
-        <img ng-show="imgURI === undefined" src="img/photo.jpg" alt="">
-        <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
+        <img ng-show="imgRegAuto === undefined" src="img/photo.jpg" alt="">
+        <img ng-show="imgRegAuto !== undefined" ng-src="{{imgRegAuto}}">
         <div class="button-holder">
-          <button ng-show="imgURI === undefined" class="button button-positive icon-right ion-camera m-icon"
-          ng-click="takePicture()">
-            Tomar foto
+          <button ng-show="imgRegAuto === undefined"
+          class="button button-positive button-icon ion-camera m-icon"
+          ng-click="takePicture($event)">
           </button>
-          <button ng-show="imgURI !== undefined" class="button button-positive icon-right ion-camera m-icon"
+          <button ng-show="imgRegAuto === undefined"
+          class="button button-positive button-icon ion-images m-icon"
+          ng-click="selectPicture()">
+          </button>
+          <button ng-show="imgRegAuto !== undefined"
+          class="button button-positive button-icon ion-camera m-icon"
           ng-click="takePicture()">
-            Tomar otra
+          </button>
+          <button ng-show="imgRegAuto !== undefined"
+          class="button button-positive button-icon ion-images m-icon"
+          ng-click="selectPicture()">
           </button>
         </div>
       </div>

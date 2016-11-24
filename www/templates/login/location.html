@@ -26,7 +26,7 @@
         </select>
       </label>
 
-      <label class="item item-input item-select" disabled>
+      <label class="item item-input item-select" ng-show="showState">
         <div class="input-label">Estado</div>
         <select name="estado" ng-model="state"
         ng-options="e.name for e in estados track by e.id"
@@ -34,10 +34,11 @@
           <option value="" disabled selected hidden>-- Selecciona --</option>
         </select>
       </label>
-      <label class="item item-input item-select">
+      <label class="item item-input item-select" ng-show="showCity">
         <div class="input-label">Ciudad</div>
         <select name="ciudad" ng-model="city"
-        ng-options="c.name for c in ciudades track by c.id">
+        ng-options="c.name for c in ciudades track by c.id"
+        ng-change="showButtonFn()">
           <option value="" disabled selected hidden>-- Selecciona --</option>
         </select>
       </label>
@@ -45,7 +46,7 @@
         <div class="col col-50">
         </div>
         <div class="col col-50">
-          <button ng-click="goAuto(city)" class="button button-positive">Continuar</button>
+          <button ng-click="goAuto(city)" class="button button-positive" ng-show="showButton">Continuar</button>
         </div>
       </div>
 

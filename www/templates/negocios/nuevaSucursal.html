@@ -1,0 +1,116 @@
+<ion-modal-view id="new-car-modal"
+  class="perfil modal modal-new-car" view-title="Nuevo sucursal">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Nueva Sucursal</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModalSuc()">
+      </button>
+  </div>
+  <ion-content class="has-header">
+    <form ng-submit="enviarSucursal()" class="list">
+      <!-- street -->
+      <label class="item item-input" id="street">
+       <span class="input-label">Calle*</span>
+       <input type="text" ng-model="mySucursal.street" placeholder="ej. Siempre viva">
+      </label>
+
+      <!-- number_e -->
+      <label class="item item-input" id="number_e">
+       <span class="input-label">Nº Ext.*</span>
+       <input type="number" ng-model="mySucursal.number_e" placeholder="ej. 000">
+      </label>
+
+      <!-- number_i -->
+      <label class="item item-input" id="number_i">
+       <span class="input-label">Nº Int.*</span>
+       <input type="number" ng-model="mySucursal.number_i" placeholder="ej. 0 ó A">
+      </label>
+
+      <!-- neighborhood -->
+      <label class="item item-input" id="neighborhood">
+       <span class="input-label">Colonia*</span>
+       <input type="text" ng-model="mySucursal.neighborhood" placeholder="ej. Balcones del Valle">
+      </label>
+
+      <!-- zipcode -->
+      <label class="item item-input" id="zipcode">
+       <span class="input-label">C.P.*</span>
+       <input type="number" ng-model="mySucursal.zipcode" placeholder="ej. 75555">
+      </label>
+
+      <!-- Pais -->
+      <label class="item item-input item-select">
+        <i class="icon ion-ios-location"></i>
+        <div class="input-label">País*</div>
+        <select name="pais" ng-model="country"
+        ng-options="p.name for p in paises track by p.id"
+        ng-change="loadStates(country.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <!-- estado -->
+      <label class="item item-input item-select" ng-show="showState">
+        <div class="input-label">Estado*</div>
+        <select name="estado" ng-model="state"
+        ng-options="e.name for e in estados track by e.id"
+        ng-change="loadCities(country.id, state.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <!-- ciudad -->
+      <label class="item item-input item-select" ng-show="showCity">
+        <div class="input-label">Ciudad*</div>
+        <select name="ciudad" ng-model="city"
+        ng-options="c.name for c in ciudades track by c.id"
+        ng-change="asignarCiudad(city)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <!-- schedule -->
+      <label class="item item-input" id="schedule">
+       <span class="input-label">Horario</span>
+       <input type="text" ng-model="mySucursal.schedule" placeholder="ej. lunes a viernes de 8am a 9pm">
+      </label>
+
+      <!-- ubicación -->
+      <!-- <label class="item item-button-right" id="neighborhood">
+        Seleccionar Ubicacion
+        <button class="button button-positive">
+          <i class="icon ion-ios-location"></i>
+        </button>
+      </label> -->
+
+      <!-- lat -->
+      <!-- <label class="item item-input" id="lat">
+       <span class="input-label">Laitud</span>
+       <input type="text" ng-model="mySucursal.lat" placeholder="">
+      </label> -->
+
+      <!-- lng -->
+      <!-- <label class="item item-input" id="lng">
+       <span class="input-label">Longitud</span>
+       <input type="text" ng-model="mySucursal.lng" placeholder="">
+      </label> -->
+
+      <ion-checkbox ng-repeat="servicio in servicios"
+      ng-model="mySucursal.service_ids[$index]" ng-value="servicio.id">{{servicio.name}}</ion-checkbox>
+
+
+      <!-- business_id -->
+      <input type="text" style="display:none" ng-model="mySucursal.business_id"
+      ng-init="mySucursal.business_id = negocioID">
+
+
+      <div class="padding">
+        <button type="submit"
+        class="button button-block icon-right ion-ios-plus button-positive">
+          Enviar a Revisión
+        </button>
+      </div>
+
+    </form>
+  </ion-content>
+</ion-modal-view>

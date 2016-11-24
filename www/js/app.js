@@ -35,39 +35,13 @@ angular.module('starter', [
       StatusBar.styleBlackTranslucent();
     }
 
-    // $rootScope.db = $cordovaSQLite.openDB("yego.db");
-    // $cordovaSQLite.execute(db,
-    //   "CREATE TABLE IF NOT EXISTS user (id integer primary key, usrId integer, username text, family text,firstname text, lastname text, pic text, carpic text, guest integer)"
-    // );
-
-    // function displayMessage (message) {
-    //   navigator.notification.alert(message, null, ‘CodePush’, ‘OK’);
-    // }
-    // window.codePush.sync(function (syncStatus) {
-    //   switch (syncStatus) {
-    //     case SyncStatus.APPLY_SUCCESS:
-    //       //Success
-    //       return;
-    //     case SyncStatus.UP_TO_DATE:
-    //       displayMessage(“The application is up to date.”);
-    //       break;
-    //     case SyncStatus.UPDATE_IGNORED:
-    //       displayMessage(“The user decided not to install the optional
-    //       update.”);
-    //       break;
-    //     case SyncStatus.ERROR:
-    //       displayMessage(“An error occurred while checking for
-    //       updates”);
-    //       break;
-    //   }
-    // });
-
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $authProvider) {
   $authProvider.configure({
-    apiUrl: 'https://stage-yego-backoffice.herokuapp.com/api/v1',
+    apiUrl: 'https://stage-yego-backoffice.herokuapp.com/api/v1',// stage
+    // apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',// production
     storage: 'localStorage'
   });
 
@@ -127,7 +101,7 @@ angular.module('starter', [
   })
   // DIRECTORIO LISTA DE NEGOCIOS
   .state('app.dirList', {
-    url: '/directorio/:subcatName/:subcatId',
+    url: '/directorio/subcat/:subcatName/:subcatId',
     views: {
       'menuContent': {
         templateUrl: "templates/directorio/list.html",
@@ -150,7 +124,7 @@ angular.module('starter', [
     url: '/cerca',
     views: {
       'menuContent': {
-        templateUrl: 'templates/cerca.html',
+        templateUrl: 'templates/directorio/cerca.html',
         controller: 'CercaCtrl'
       }
     }
@@ -257,6 +231,16 @@ angular.module('starter', [
       }
     }
   })
+  // CUPON single
+  .state('app.cupon',{
+    url: '/cupon',
+    views: {
+      'menuContent':{
+        templateUrl: 'templates/cuponera/cupon.html',
+        controller: 'CuponCtrl'
+      }
+    }
+  })
   /* PERFIL
   –––––––––––––––––––––––––––––––––––*/
   // PROFILE
@@ -304,7 +288,97 @@ angular.module('starter', [
         controller: 'TeamCtrl'
       }
     }
-  });
+  })
+
+  /* NEGOCIOS
+  –––––––––––––––––––––––––––––––––––*/
+  // lista de negocios
+  .state('app.negocios', {
+    url: '/negocios',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/negocios/negocios.html",
+        controller: 'NegociosCtrl'
+      }
+    }
+  })
+  // negocio single
+  .state('app.singleNegocio', {
+    url: '/negocios/:idNeg',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/negocios/singleNegocio.html",
+        controller: 'SingleNegocioCtrl'
+      }
+    }
+  })
+  // lista de sucursales
+  .state('app.sucursales', {
+    url: '/negocios/:idNeg/sucursales',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/negocios/sucursales.html",
+        controller: 'SucursalesCtrl'
+      }
+    }
+  })
+  // sucursales single
+  .state('app.singleSucursal', {
+    url: '/negocios/:idNeg/sucursales/:idSuc',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/negocios/singleSucursal.html",
+        controller: 'singleSucursalCtrl'
+      }
+    }
+  })
+  /* ACERCA DE
+  –––––––––––––––––––––––––––––––––––*/
+  // about
+  .state('app.about', {
+    url: '/about',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/about.html",
+        controller: 'AboutCtrl'
+      }
+    }
+  })
+
+  /* CARGAS DE GASOLINA
+  –––––––––––––––––––––––––––––––––––*/
+  // cargas
+  .state('app.cargas', {
+    url: '/cargas',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/cargas/cargas.html",
+        controller: 'CargasCtrl'
+      }
+    }
+  })
+  // cargas single
+  .state('app.resumenMes', {
+    url: '/cargas/:cargaId',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/cargas/resumenMes.html",
+        controller: 'ResumenMesCtrl'
+      }
+    }
+  })
+  /* MIS SEGUROS
+  –––––––––––––––––––––––––––––––––––*/
+  // mis seguros
+  .state('app.misSeguros', {
+    url: '/misSeguros',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/misSeguros/misSeguros.html",
+        controller: 'MisSegurosCtrl'
+      }
+    }
+  })
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

@@ -1,0 +1,74 @@
+<ion-modal-view id="new-car-modal"
+  class="perfil modal modal-new-car" view-title="Nuevo negocio">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Nuevo Negocio</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModalNeg()">
+      </button>
+  </div>
+  <ion-content class="has-header">
+    <form ng-submit="enviarNegocio()" class="list">
+      <!-- name -->
+      <label class="item item-input" id="name">
+       <span class="input-label">Nombre*</span>
+       <input type="text" ng-model="myNegocio.name" placeholder="Nombre del negocio">
+      </label>
+
+      <!-- description -->
+      <label class="item item-input" id="description">
+       <span class="input-label">Descripción*</span>
+       <input type="text" ng-model="myNegocio.description" placeholder="Lo que hace el negocio">
+      </label>
+
+      <!-- Categoría -->
+      <label class="item item-input item-select">
+        <div class="input-label">Categoría*</div>
+        <select ng-model="category" id="categoria" ng-change="goForSubs(category)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="categoria in categorias" value="{{categoria.id}}">{{categoria.name}}</option>
+        </select>
+      </label>
+      <!-- SubCategoría -->
+      <!-- <label class="item item-input item-select" ng-show="showSubcategory">
+        <div class="input-label">Subcategoría*</div>
+        <select ng-model="myNegocio.subcategory_ids[0]" id="subcategoria">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="subcategoria in subcategorias" value="{{subcategoria.id}}">{{subcategoria.name}}</option>
+        </select>
+      </label> -->
+      <!-- website -->
+      <label class="item item-input" id="website">
+       <span class="input-label">Sitio web <span class="greyspan">http://</span></span>
+       <input type="text" ng-model="myNegocio.website" placeholder="elnegocio.com">
+      </label>
+      <!-- email -->
+      <label class="item item-input" id="email">
+       <span class="input-label">Email</span>
+       <input type="email" ng-model="myNegocio.email" placeholder="ejemplo@negocio.com">
+      </label>
+      <!-- facebook -->
+      <label class="item item-input" id="facebook">
+        <span class="input-label">facebook.com/</span>
+        <input type="text" ng-model="myNegocio.facebook" placeholder="elfacebook">
+      </label>
+      <!-- twitter -->
+      <label class="item item-input" id="twitter">
+        <span class="input-label">twitter.com/</span>
+        <input type="text" ng-model="myNegocio.twitter" placeholder="eltwitter">
+      </label>
+      <!-- app_user_id -->
+      <input type="text" style="display:none" ng-model="myNegocio.app_user_id"
+      ng-init="myNegocio.app_user_id = userId" ng-if="negocioPropio == true">
+      <!-- status -->
+      <input type="text" style="display:none" ng-model="myNegocio.status"
+      ng-init="myNegocio.status = 'pendiente'">
+      <div class="padding">
+        <button type="submit"
+        class="button button-block icon-right ion-ios-plus button-positive">
+          Continuar a Sucursal
+        </button>
+      </div>
+
+    </form>
+  </ion-content>
+</ion-modal-view>
