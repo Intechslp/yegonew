@@ -1,4 +1,4 @@
-angular.module('starter.autos.controllers',
+ angular.module('starter.autos.controllers',
 ['starter.controllers','starter.login.controllers','starter.seguro.controllers',
 'starter.autos.controllers',
 'ngMap','ngStorage','ng-token-auth','ngCordova'])
@@ -8,7 +8,7 @@ angular.module('starter.autos.controllers',
 .controller('AutosCtrl',
 function($state, $scope, $window, $rootScope, $stateParams,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth,
-  SegurosData, AutosData,UserData, $cordovaCamera, ImageUploadFactory) {
+  SegurosData, AutosData, UserData, TeamData, $cordovaCamera, ImageUploadFactory) {
 
   // Comprobación de sesión
   $auth.validateUser().then(function(resp){
@@ -21,7 +21,6 @@ function($state, $scope, $window, $rootScope, $stateParams,
   });
 
   $scope.$storage = $localStorage;
-
   $scope.usrId = $scope.$storage.id;
   var usrUid = $scope.$storage.headers.uid;
   $scope.marcas = [];
@@ -38,7 +37,6 @@ function($state, $scope, $window, $rootScope, $stateParams,
   //obtener todos los autos del usuario
   AutosData.getMisAutos($scope.usrId,usrUid).then(function(resp){
     $scope.allCars = resp;
-    console.log(resp);
     $ionicLoading.hide();
   }).catch(function(resp){
     console.log(resp);
@@ -76,29 +74,57 @@ function($state, $scope, $window, $rootScope, $stateParams,
   }
 
   $scope.saveCar = function(){
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    $scope.$storage.car = {marca: $scope.myCar.marca, modelo: $scope.myCar.modelo, descripcion: $scope.myCar.descripcion};
+    if($scope.comprobarAuto()){
+      $ionicLoading.show({templateUrl:'templates/enviando.html'});
+      if($scope.imgURI2 !== undefined){
+        ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp').then(function(result){
+          $scope.url = result.url;
+          $scope.myCar.imageurl = $scope.url;
+          $scope.objV.vehicle = $scope.myCar;
+          AutosData.nuevoAuto($scope.objV).then(function(response){ //ORIGINAL
+            $ionicLoading.hide();
+            $cordovaCamera.cleanup();
+            $scope.cerrarModal();
+          }).catch(function(response){
+            console.log(response);
+            $ionicLoading.hide();
+          });
 
-    ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp').then(function(result){
-      $scope.url = result.url;
-      $scope.myCar.imageurl = $scope.url;
-      $scope.objV.vehicle = $scope.myCar;
-      AutosData.nuevoAuto($scope.objV).then(function(response){ //ORIGINAL
-        $ionicLoading.hide();
-        $cordovaCamera.cleanup();
-        $scope.cerrarModal();
-      }).catch(function(response){
-        console.log(response);
-        $ionicLoading.hide();
-      });
-
-    }).catch(function(err) {
-      $ionicLoading.hide();
-      console.log('ImageUploadFactory().catch');
-      // Do something with the error here
-      console.log(err);
-      $cordovaCamera.cleanup();
-    });
+        }).catch(function(err) {
+          $ionicLoading.hide();
+          console.log('ImageUploadFactory().catch');
+          // Do something with the error here
+          console.log(err);
+          $cordovaCamera.cleanup();
+        });
+      }else{
+        $scope.objV.vehicle = $scope.myCar;
+        AutosData.nuevoAuto($scope.objV).then(function(response){ //ORIGINAL
+          $ionicLoading.hide();
+          $cordovaCamera.cleanup();
+          $scope.cerrarModal();
+        }).catch(function(response){
+          console.log(response);
+          $ionicLoading.hide();
+        });
+      }
+    }else{
+      $scope.showAlert(
+        'Error',
+        'Debes de llenar al menos los campos requeridos (*)'
+      );
+    }
+  }
+  $scope.comprobarAuto = function(){
+    if(
+      $scope.myCar.brand !== null ||
+      $scope.myCar.model !== null ||
+      $scope.myCar.description !== null
+    ){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   $scope.goForModels = function(brand){
@@ -176,6 +202,13 @@ function($state, $scope, $window, $rootScope, $stateParams,
     AutosData.setTheCar(car);
     $state.go('app.autoSingle',{autoId:car.id});
   }
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+     title: msj1,
+     template: msj2
+    });
+  }
 })// END AUTOS CONTROLLER
 //**********
 
@@ -185,9 +218,10 @@ function($state, $scope, $window, $rootScope, $stateParams,
 .controller('AutoSingleCtrl',
 function($state, $stateParams, $scope, $rootScope, $window, NgMap,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
-  $auth, AutosData) {
+  $auth, AutosData,TeamData) {
 
   $scope.usrId = $rootScope.userId;
+  $scope.teamId = $rootScope.user.family_id;
   var autoId = $stateParams.autoId;
 
   if ($ionicHistory.backView() != null) {
@@ -195,12 +229,11 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
   }else{
     var sourceState = 'none';
   }
-
+  console.log(sourceState);
   if(sourceState !== 'app.autos'){
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     AutosData.getTheCarFromUrl($scope.usrId,autoId).then(function(response){
       $scope.theCar = response;
-      console.log(response);
       $ionicLoading.hide();
     }).catch(function(response){
       console.log(response);
@@ -208,17 +241,11 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
     });
   }else{
     $scope.theCar = AutosData.getTheCar();
+    console.log($scope.theCar);
   }
-
-  console.log("AutoSingleCtrl User id:"+$rootScope.userId);
   $scope.carId = $stateParams.id;
   $scope.principal;
   $scope.changeDriver = false;
-  $scope.conductores = [
-    {id: 1,name:"Armando Godinez"},
-    {id: 2,name:"Gilberto Sosa"},
-    {id: 3,name:"Alejandro Toro"},
-    {id: 4,name:"Asaf López"}];
   $scope.objV = {};
   $scope.objV.vehicle = {};
   $scope.myCar = {};
@@ -240,12 +267,27 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
   }
   $scope.theChange = function(){
     $scope.changeDriver = !$scope.changeDriver;
+    if ($scope.changeDriver) {
+      $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
+      TeamData.getTeam($scope.teamId).then(function(resp){
+        $scope.teammates = resp[0].app_users;
+        console.log(resp);
+        $ionicLoading.hide();
+      }).catch(function(resp){
+        console.log(resp);
+        $ionicLoading.hide();
+      });
+    }
   }
   $scope.changePrincipal = function(principal){
     console.log(principal);
     if (principal){
       $scope.myCar.main = 1;
       $scope.myCar.driver_id = $scope.usrId;
+      console.log($scope.theCar.imageurl);
+      console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
+      $scope.$storage.user.driver_of_vehicles[0].imageurl = $scope.theCar.imageurl;
+      console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
     }else{
       $scope.myCar.main = 0;
     }
@@ -253,6 +295,7 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
 
   $scope.updateCar = function(){
     $scope.objV.vehicle = $scope.myCar;
+    console.log($scope.objV);
     $ionicLoading.show({templateUrl:'templates/enviando.html'});
 
     // AutosData.nuevoAuto($scope.usrId,$scope.myCar).then(function(response){ //ORIGINAL

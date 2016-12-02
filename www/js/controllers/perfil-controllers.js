@@ -6,12 +6,11 @@ angular.module('starter.perfil.controllers',
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('PerfilCtrl',
 function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage,
-  $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup,$cordovaCamera,
+  $timeout, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaCamera,
   UserData, LocationData, ImageUploadFactory) {
   $scope.$storage = $localStorage;
   $scope.usuario = $scope.$storage.user;
   $scope.userId = $rootScope.userId;
-  console.log($scope.usuario);
   $scope.carData = {};
   $scope.famData = {};
   $scope.myUser = {};
@@ -19,19 +18,7 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
   $scope.country = {};
   $scope.state = {};
   $scope.city = {};
-
-  if($scope.$storage.usrImg !== undefined){
-    console.log('undefined usrImg');
-    $scope.imgURI = $scope.$storage.usrImg
-  }
-  if($scope.$storage.usrImg !== null){
-    console.log('null usrImg');
-    $scope.imgURI = $scope.$storage.usrImg
-  }
-  if($scope.$storage.vehicImg != null){
-    $scope.imgURI2 = $scope.$storage.vehicImg;
-  }
-
+  $scope.notImage = 'img/camera.jpg';
 
   // Se crea el modal de edición de Usuario
   $ionicModal.fromTemplateUrl('templates/perfil/editUser.html', {
@@ -43,15 +30,7 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
 
   // Abrir modal para editar usuario
   $scope.editUserModal = function(){
-    console.log($scope.changeCity);
     $scope.editModal.show();
-    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-    LocationData.getCountries().then(function(resp){
-      $scope.paises = resp;
-      $ionicLoading.hide();
-    }).catch(function(resp){
-      $ionicLoading.hide();
-    });
   }
 
   // Cerrar modal para editar usuario
@@ -101,6 +80,15 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
   // Muestra las opciones para cambiar la ciudad
   $scope.theChange = function(){
     $scope.changeCity = !$scope.changeCity;
+    if($scope.changeCity){
+      $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+      LocationData.getCountries().then(function(resp){
+        $scope.paises = resp;
+        $ionicLoading.hide();
+      }).catch(function(resp){
+        $ionicLoading.hide();
+      });
+    }
   }
   // Manda llamar los estados en función del país
   $scope.loadStates = function(paisId){
@@ -126,7 +114,6 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
 
   // Abre la camara para tomar foto
   $scope.takePicture = function() {
-    console.log('takePicture()')
     var options = {
       quality : 70,
       destinationType : Camera.DestinationType.DATA_URL,
@@ -140,11 +127,9 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
-      // console.log(imageData)
       $scope.imgURI = "data:image/jpeg;base64," + imageData;
     }, function(err) {
-      // An error occured. Show a message to the user
+      console.log(err);
     });
   }
 
@@ -158,23 +143,21 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
 
 
   $scope.signOutClick = function() {
-    console.log('botón de cerrar Sesion');
     $ionicLoading.show();
-    $auth.signOut()
-      .then(function(resp) {
+    $auth.signOut().then(function(resp) {
         // handle success response
-        console.log(resp);
-        console.log("adiós sesión jajajajaja >:)");
-        $ionicLoading.hide();
         $window.localStorage.clear();
-        $ionicHistory.clearCache();
-        $ionicHistory.clearHistory();
-        $state.go('login');
+        $ionicHistory.clearCache().then(function() {
+          $ionicHistory.clearHistory();
+          $ionicHistory.nextViewOptions({ disableBack: true, historyRoot: true });
+          $ionicLoading.hide();
+          $timeout(function () {
+            $state.go('login');
+          },500)
+        });
       })
       .catch(function(resp) {
-        // handle error response
         console.log(resp);
-        console.log("cerrar Sesión incorrecto");
         $ionicLoading.hide();
       });
   };
@@ -203,12 +186,9 @@ function($state, $scope, $rootScope,$stateParams,
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
 
   TeamData.getTeam($scope.userId).then(function(response){
-    console.log(response);
     if(response.length == 0){
       $scope.theresTeam = false;
-      console.log('There\'s a team: '+$scope.theresTeam);
       TeamData.preguntarInvitacion($scope.userId).then(function(response){
-        console.log(response);
         $scope.requests = response;
         $ionicLoading.hide();
       }).catch(function(response){
@@ -218,7 +198,6 @@ function($state, $scope, $rootScope,$stateParams,
 
     }else if (response.length > 0){
       $scope.team = response[0];
-      console.log('Team id: '+$scope.team.id)
       $scope.theresTeam = true;
       $ionicLoading.hide();
     }
@@ -244,21 +223,17 @@ function($state, $scope, $rootScope,$stateParams,
   }
 
   //Aceptar petición para ser parte de un Team
-  $scope.acceptRequest = function(famId){
+  $scope.acceptRequest = function(famId,reqId){
     $scope.famData.family_id = famId;
     $ionicLoading.show({templateUrl:'templates/enviando.html'})
     UserData.updateUser($scope.userId,$scope.famData).then(function(response){
-
-      TeamData.eliminarInvitacion(famId).then(function(response){
-        console.log('lo logramos lo eliminamos!');
-        console.log(response)
+      $ionicLoading.hide();
+      TeamData.eliminarInvitacion(reqId).then(function(response){
+        $state.go('app.team', $stateParams, {reload: true, inherit: false});
       }).catch(function(response){
-        console.log('no lo logramos, no se eliminó :(');
-        console.log(response)
       });
-
     }).catch(function(response){
-      console.log(response);
+      $ionicLoading.hide();
     })
   }
 
@@ -270,13 +245,29 @@ function($state, $scope, $rootScope,$stateParams,
     $scope.sendInvitationModal = modal;
   });
 
+  // Cargar el modal de opciones
+  $ionicModal.fromTemplateUrl('templates/team/options.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.optionsModal = modal;
+  });
+
   $scope.abrirModal = function(){
     $scope.myGuest.family_id = $scope.team.id;
     $scope.sendInvitationModal.show();
   }
-
   $scope.cerrarModal  = function(){
     $scope.sendInvitationModal.hide();
+  }
+
+  $scope.abrirModalOpciones = function(){
+    $scope.myGuest.family_id = $scope.team.id;
+    $scope.optionsModal.show();
+  }
+  $scope.cerrarModalOpciones  = function(){
+    $scope.optionsModal.hide();
+    $state.go('app.team', $stateParams, {reload: true, inherit: false});
   }
 
   // An alert dialog
@@ -292,10 +283,54 @@ function($state, $scope, $rootScope,$stateParams,
     TeamData.enviarInvitacion($scope.myGuest).then(function(response){
       $ionicLoading.hide();
       $scope.showAlertSuccess();
-      console.log(response);
     }).catch(function(response){
       $ionicLoading.hide();
-      console.log(response);
+    });
+  }
+
+  // funcion para comprobar si el usuario es administrador del team yego
+
+  $scope.isTeamAdmin = function(userId){
+    if($scope.theresTeam){
+      if(userId == $scope.team.administrator.id){
+        return true;
+      }else{
+        return false
+      }
+    }else{
+      return false
+    }
+  }
+
+  //funcion para eliminar el yego Team si eres administrador
+  $scope.eliminarTeam = function(){
+    $ionicLoading.show();
+    TeamData.eliminarTeam($scope.team).then(function(resp){
+      $ionicLoading.hide();
+      $scope.showAlertEditable(
+        'Yego Team Eliminado','Tu Yego Team ha sido eliminado',true);
+    }).catch(function(resp){
+      $scope.showAlertEditable(
+        'Error','Algo salió mal, intenta más tarde',true);
+      console.log(resp);
+      $ionicLoading.hide();
+    });
+  }
+
+  //funcion para abandonar el yego Team
+  $scope.abandonarTeam = function(){
+    $ionicLoading.show();
+    $scope.teamNil = {};
+    $scope.teamNil.family_id = null;
+    UserData.updateUser($scope.userId,$scope.teamNil).then(function(resp){
+      $ionicLoading.hide();
+      $scope.showAlertEditable(
+        'Saliste del Team','Has abandonado el team, crea uno nuevo o únete a otro',true);
+    }).catch(function(resp){
+      $scope.showAlertEditable(
+        'Error','Algo salió mal, intenta más tarde',true);
+      console.log(resp);
+      $ionicLoading.hide();
     });
   }
 
@@ -307,8 +342,45 @@ function($state, $scope, $rootScope,$stateParams,
    });
    alertPopup.then(function(res) {
      $scope.sendInvitationModal.hide();
-     console.log('ayossss');
    });
+  };
+
+  // A confirm dialog
+  $scope.showConfirm = function(tipo) {
+    if(tipo == 'abandonar'){
+      var confirmPopup = $ionicPopup.confirm({
+        title: '¿Abandonar '+$scope.team.name+'?',
+        template: '¿Estás seguro de querer abandonar este Yego Team?'
+      });
+    }else{
+      var confirmPopup = $ionicPopup.confirm({
+        title: '¿Eliminar '+$scope.team.name+'?',
+        template: '¿Estás seguro de querer eliminar este Yego Team? Una vez eliminado no se podrán recuperar los datos'
+      });
+    }
+   confirmPopup.then(function(res) {
+     if(res) {
+       if(tipo == 'abandonar'){
+         $scope.abandonarTeam();
+       }else{
+         $scope.eliminarTeam();
+       }
+     } else {
+     }
+   });
+  };
+
+  // An alert dialog
+  $scope.showAlertEditable = function(msj1,msj2,close) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+    alertPopup.then(function(res) {
+      if(close){
+        $scope.cerrarModalOpciones();
+      }
+    });
   };
 
 })// END TEAM CONTROLLER

@@ -32,9 +32,6 @@ ion-view.highway.pane:before {
   display: flex;
   flex-direction: column;
 }
-#negocios .scroll{
-  border-top: 2px solid #92baf5;
-}
 .bar-dark .button.button-clear *{
   color: #92baf5;
 }
@@ -129,6 +126,10 @@ p.info-label.bigger span.gray-info{
 .bar.bar-dark .title, .bar.bar-dark .ion-navicon:before{
   color: #92baf5;
 }
+#header-btn:before{
+  font-size: 24px;
+  color: #92baf5;
+}
 /* TABS
 –––––––––––––––––––––––––––––*/
 
@@ -186,6 +187,26 @@ p.info-label.bigger span.gray-info{
 #profile-card *{
   color:white;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+#profile-card ion-item.only-link {
+  background-color: transparent !important;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  display: inherit;
+}
+#profile-card ion-item.only-link a {
+  padding: 0;
+  margin:0;
+  background-color: transparent;
+}
+#profile-card ion-item.only-link a >img {
+  position: relative !important;
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  max-width: 50px !important;
 }
 #profile-card img#profile-pic{
   border-radius: 50%;
@@ -552,6 +573,17 @@ img.menu-icon {
 #mapa-modal .item-divider h1{
   font-size: 15px;
 }
+.single-services li{
+  padding: .5em 3em;
+  position: relative;
+}
+.single-services li > img{
+  position:absolute;
+  top: 5px;
+  left: 10px;
+  width: 100%;
+  max-width: 22px;
+}
 
 
 
@@ -827,10 +859,6 @@ img.menu-icon {
   top:-10px;
   right:10px;
 }
-#garage-cont button.button.icon, #family-cont button.button.icon {
-  margin: .5em;
-  display: block;
-}
 .perfil #header-btn:before{
   font-size: 24px;
   color: #92baf5;
@@ -850,7 +878,12 @@ img.menu-icon {
 }
 /* GARAGE
 –––––––––––––––––––––––––––––*/
-#garage-cont .item.auto-card {
+#garage-cont{
+  width: 100%;
+  max-width: 320px;
+  margin:auto;
+}
+#garage-cont .car-item {
   position: relative;
 }
 
@@ -862,20 +895,22 @@ img.menu-icon {
 #garage-cont i.card-right-icon:before {
   font-size: 25px;
 }
+.car-card-cont{
+  display: inline-block;
+  width:48%;
+  margin-top: .5em;
+  margin-right: 3.6%;
+}
 .car-card{
   background: #92baf5;
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin: 1em 0;
+  flex-direction: column;
+  width:100%;
 }
-.car-card *{
-  color: #0d1927;
+.car-card .car-item{
+  width:100%;
 }
-.car-item{
-  width:50%;
-}
-.car-item.item-image{
+.car-card .car-item.item-image{
   overflow:hidden;
   position: relative;
   min-height: 112px;
@@ -886,6 +921,23 @@ img.menu-icon {
   top: -10%;
   left: -25%;
 }
+.car-card-cont:nth-of-type(odd){
+  margin-right: 0;
+}
+.car-card-cont:nth-of-type(1){
+  width: 100%;
+  margin-right:0;
+}
+.car-card-cont:nth-of-type(1) .car-card{
+  flex-direction: row;
+}
+.car-card *{
+  color: #0d1927;
+}
+.car-card-cont:nth-of-type(1) .car-item{
+  width:50%;
+}
+
 .auto-photo{
   width: 100%;
 }
@@ -911,6 +963,9 @@ img.menu-icon {
 }
 .edit-photo-holder .button-holder button:nth-of-type(odd){
   margin-bottom:.5em;
+}
+#new-car-modal input{
+  background: #1a314e;padding-left: .8em;
 }
 /* MODALS
 –––––––––––––––––––––––––––––
@@ -975,6 +1030,9 @@ ion-content.scroll-content.ionic-scroll {
 .new-team h3{
   font-size: 20px;
 }
+#team.perfil.team input, #team-invitacion.perfil.team-invitacion input{
+  background: #1a314e;padding-left: .8em;
+}
 
 #team-cont h2 {
   font-size: 20px;
@@ -988,6 +1046,10 @@ ion-content.scroll-content.ionic-scroll {
 /* ABOUT
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
+
+.about .padding {
+  padding: 20px;
+}
 .about p{
   text-align: center;
 }

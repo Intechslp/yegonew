@@ -1,0 +1,50 @@
+<ion-modal-view id="new-carga-modal" class="cargas modal modal-new-carga"
+  view-title="Nueva Carga">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Editar Seguro</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+        id="header-btn" ng-click="closeModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <div class="info-block padding">
+      <img class="info-block-item" src="{{elAuto.imageurl}}" alt="" />
+      <div class="info-block-item info-block-data">
+        <h2>{{elAuto.brand+' '+elAuto.description+' '+elAuto.model }}</h2>
+      </div>
+    </div>
+    <form class="list">
+      <!-- company -->
+      <label class="item item-input" id="company">
+       <span class="input-label">Compañía*</span>
+       <input type="text" ng-model="seguro.company"
+       ng-init="seguro.company = elAuto.insurances[0].company">
+      </label>
+      <!-- policy_number -->
+      <label class="item item-input" id="policy_number">
+       <span class="input-label">Nº de Póliza*</span>
+       <input type="text" ng-model="seguro.policy_number"
+       ng-init="seguro.policy_number = elAuto.insurances[0].policy_number">
+      </label>
+
+      <!-- renewal -->
+      <label class="item item-input" id="renewal">
+       <span class="input-label">Fecha de Vencimiento*</span>
+       <input type="date" ng-model="seguro.renewal"
+       ng-init="seguro.renewal = seguroDate">
+      </label>
+
+      <!-- contact_phone -->
+      <label class="item item-input" id="contact_phone">
+       <span class="input-label">Tel. Contacto</span>
+       <input type="tel"ng-model="seguro.contact_phone"
+       ng-init="seguro.contact_phone = elAuto.insurances[0].contact_phone">
+      </label>
+
+      <div class="padding">
+        <button ng-click="editarSeguro()" class="button button-block button-positive">Editar seguro</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

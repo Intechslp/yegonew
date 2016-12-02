@@ -1,0 +1,27 @@
+<ion-modal-view id="team-invitacion" class="perfil team-invitacion">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Opciones</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModalOpciones()">
+      </button>
+  </div>
+  <ion-content>
+    <div id="team-cont" ng-show="theresTeam">
+      <div class="list">
+        <div class="item item-divider padding item-icon-right" >
+          <h1 class="title nmb">{{team.name}}</h1>
+        </div>
+        <div class="item" ng-if="isTeamAdmin(userId)">
+          <button class="button button-positive button-clear" ng-click="showConfirm('eliminar')">
+            Eliminar este Yego® Team
+          </button>
+        </div>
+        <div class="item" ng-if="!isTeamAdmin(userId)">
+          <button class="button button-positive button-clear" ng-click="showConfirm('abandonar')">
+            Salir de este Yego® Team
+          </button>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

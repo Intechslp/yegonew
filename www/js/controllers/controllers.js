@@ -17,39 +17,27 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
   $scope.$on('$ionicView.enter', function(e) {
   });
   */
+
+  $scope.$on('$ionicView.beforeEnter', function(e){
+    console.log("hello");
+    $rootScope.doRefresh();
+  });
   $auth.validateUser().then(function(resp){
-    console.log('usuario válido')
   }).catch(function(resp){
     $window.localStorage.clear();
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     $state.go('login');
   });
-
-  $scope.$storage = $localStorage;
-  $scope.perfil = $scope.$storage.user;
-  console.log($scope.perfil);
-  $rootScope.userId = $scope.$storage.id;
-
-  if($scope.$storage.usrImg != null){
-    $scope.imgURI = $scope.$storage.usrImg
+  $rootScope.doRefresh = function(){
+    console.log('doRefresh');
+    $scope.$storage = $localStorage;
+    $scope.perfil = $scope.$storage.user;
+    console.log($scope.perfil);
+    $rootScope.userId = $scope.$storage.id;
+    $rootScope.usuario = $scope.$storage.user;
+    // console.log($scope.usuario);
   }
-
-  if($scope.$storage.vehicImg != null){
-    $scope.imgURI2 = $scope.$storage.vehicImg
-  }
-
-  // console.log('Nombre: '+$scope.perfil.name)
-  if($scope.perfil.name == null){
-    $scope.completado = false;
-    // console.log('perfil completado: '+$scope.completado);
-  }else{
-    $scope.completado = true;
-    // console.log('perfil completado: '+$scope.completado);
-  }
-
-  $rootScope.usuario = $scope.$storage.user;
-  // console.log($scope.usuario);
 
   $scope.changeTab = function(state){
     $state.go(state);
@@ -71,6 +59,10 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 .controller('DirectorioCtrl',
 function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ionicPopup,
   $ionicHistory,$localStorage, EstablecimientosData, NegociosData) {
+    $scope.$on('$ionicView.afterEnter', function(e){
+      console.log("afterEnter");
+      navigator.splashscreen.hide();
+    });
 //Comprobación de sesión
 var my_timeout = $timeout(function(){
   //en caso de que la petición tarde demasiado se cancela el loading
@@ -422,4 +414,14 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
     var reg = (all) ? /([^\W_]+[^\s-]*) */g : /([^\W_]+[^\s-]*)/;
     return (!!input && input != null && typeof(input) == 'string') ? input.replace(reg, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
   }
-});
+})
+.filter('removeNWC', [function() {
+    return function(string) {
+        if (!angular.isString(string)) {
+            return string;
+        }
+        var string2 = string.replace(/[\s]/g, '');
+        var string3 = string2.replace('/', '');
+        return string3;
+    };
+}]);

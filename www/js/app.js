@@ -28,12 +28,14 @@ angular.module('starter', [
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleBlackTranslucent();
     }
+    setTimeout(function() {
+      window.splashscreen.hide();
+    }, 300);
 
   });
 })
@@ -44,6 +46,7 @@ angular.module('starter', [
     // apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',// production
     storage: 'localStorage'
   });
+  $ionicConfigProvider.backButton.previousTitleText(false);
 
   // STATE PROVIDER
   $stateProvider
@@ -376,6 +379,15 @@ angular.module('starter', [
       'menuContent': {
         templateUrl: "templates/misSeguros/misSeguros.html",
         controller: 'MisSegurosCtrl'
+      }
+    }
+  })
+  .state('app.miSeguroSingle', {
+    url: '/miSeguroSingle',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/misSeguros/miSeguro.html",
+        controller: 'MiSeguroSingleCtrl'
       }
     }
   })

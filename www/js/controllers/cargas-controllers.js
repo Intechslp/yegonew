@@ -6,11 +6,10 @@ angular.module('starter.cargas.controllers',
 // CARGAS CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('CargasCtrl',
-function($state, $scope, $window, $rootScope, $stateParams,
+function($state, $scope, $window, $rootScope, $stateParams, $filter,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup, $auth,
   GasolinasData) {
 
-  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
   // Comprobación de sesión
   $auth.validateUser().then(function(resp){
   }).catch(function(resp){
@@ -22,72 +21,47 @@ function($state, $scope, $window, $rootScope, $stateParams,
   });
 
   $scope.$storage = $localStorage;
-  elCarro = $scope.$storage.user.driver_of_vehicles[0];
-  userId = $scope.$storage.user.id;
-  $scope.mainCar = elCarro.brand+' '+elCarro.description+' '+elCarro.model;
-  $scope.carId = $scope.$storage.user.driver_of_vehicles[0].id;
-  $scope.objG = {};
-  $scope.objG.fuel_refill = {};
-  $scope.carga = {};
-  $scope.meses = [];
+  var elCarro = $scope.$storage.user.driver_of_vehicles[0];
+  var userId = $scope.$storage.user.id;
+  if(elCarro !== undefined){
+    console.log('El carro está definido');
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    $scope.mainCar = elCarro.brand+' '+elCarro.description+' '+elCarro.model;
+    $scope.carId = $scope.$storage.user.driver_of_vehicles[0].id;
+    $scope.theresCar = true;
+    $scope.objG = {};
+    $scope.objG.fuel_refill = {};
+    $scope.carga = {};
+    $scope.meses = [];
+    $scope.cargaTotal = [];
+    $scope.costoTotal = [];
 
-  $scope.usrId = $scope.$storage.id;
-  var usrUid = $scope.$storage.headers.uid;
+    $scope.usrId = $scope.$storage.id;
+    var usrUid = $scope.$storage.headers.uid;
 
-  GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
-    console.log(resp);
-    $scope.cargas_registradas = resp;
-    console.log($scope.cargas_registradas.length);
-    $scope.mes = Object.keys($scope.cargas_registradas);
-    console.log($scope.mes)
-    $ionicLoading.hide();
-  }).catch(function(resp){
-    console.log(resp);
-    $ionicLoading.hide();
-  });
-
-  $scope.setMonth = function(key){
-
-    switch (key) {
-      case "1":
-        return 'Enero'
-        break;
-      case "2":
-        return 'Febrero'
-        break;
-      case "3":
-        return 'Marzo'
-        break;
-      case "4":
-        return 'Abril'
-        break;
-      case "5":
-        return 'Mayo'
-        break;
-      case "6":
-        return 'Junio'
-        break;
-      case "7":
-        return 'Julio'
-        break;
-      case "8":
-        return 'Agosto'
-        break;
-      case "9":
-        return 'Septiembre'
-        break;
-      case "10":
-        return 'Octubre'
-        break;
-      case "11":
-        return 'Noviembre'
-        break;
-      case "12":
-        return 'Diciembre'
-        break;
-      default:
-
-    }
+    GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
+      console.log(resp);
+      $scope.theMonths = _.groupBy(resp, 'month_year');
+      console.log($scope.theMonths);
+      for (var prop in $scope.theMonths) {
+        if ($scope.theMonths.hasOwnProperty(prop)) {
+          var cargaSum = 0;
+          var costoSum = 0;
+          for (var i = 0; i < $scope.theMonths[prop].length; i++) {
+            cargaSum += $scope.theMonths[prop][i].quantity;
+            costoSum += $scope.theMonths[prop][i].price;
+          }
+          $scope.cargaTotal.push(cargaSum);
+          $scope.costoTotal.push(costoSum);
+        }
+      }
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      console.log(resp);
+      $ionicLoading.hide();
+    });
+  }else{
+    $scope.theresCar = false;
   }
 
 
@@ -181,8 +155,19 @@ function($state, $scope, $window, $rootScope, $stateParams,
   }
 
 // funcion que envía al resumen de cargas del mes
-  $scope.goResumen = function(){
+  $scope.goResumen = function(key,month,indx){
+    console.log(month);
+    GasolinasData.setSingleMonth(key,month,$scope.cargaTotal[indx],$scope.costoTotal[indx]);
     $state.go('app.resumenMes', {cargaId: 1});
+  }
+
+// funcion para comprobar si el objeto está vacío
+  $scope.objectIsEmpty = function(){
+    if(angular.equals($scope.theMonths, {}) ){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   $scope.showAlert = function(msj1,msj2) {
@@ -199,9 +184,10 @@ function($state, $scope, $window, $rootScope, $stateParams,
 // CARGAS SINGLE CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('ResumenMesCtrl',
-function($state, $scope, $window, $rootScope, $stateParams,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, AutosData,UserData, $cordovaCamera, ImageUploadFactory) {
+function($state, $scope, $window, $rootScope, $stateParams, $ionicLoading,
+  $localStorage, $ionicModal, $ionicHistory, GasolinasData) {
 
+$scope.theMonth = GasolinasData.getSingleMonth();
 
 })// END CARGAS SINGLE CONTROLLER
 //**********

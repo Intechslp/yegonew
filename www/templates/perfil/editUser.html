@@ -11,22 +11,10 @@
       <img ng-if="imgURI === undefined && myUser.imageurl !== undefined" src="{{myUser.imageurl}}" alt="">
       <img ng-if="imgURI !== undefined" ng-src="{{imgURI}}">
       <div class="button-holder">
-        <button ng-if="imgURI === undefined && myUser.imageurl === undefined" class="button button-positive icon-right ion-camera m-icon"
-        ng-click="takePicture()">
-          Tomar foto
-        </button>
-        <button ng-if="imgURI === undefined && myUser.imageurl === undefined" class="button button-positive icon-right ion-images m-icon"
-        ng-click="selectPicture()">
-          Elegir de galería
-        </button>
-        <button ng-if="imgURI !== undefined && myUser.imageurl !== undefined" class="button button-positive icon-right ion-camera m-icon"
-        ng-click="takePicture()">
-          Tomar otra
-        </button>
-        <button ng-if="imgURI !== undefined && myUser.imageurl !== undefined" class="button button-positive icon-right ion-images m-icon"
-        ng-click="selectPicture()">
-          Elegir otra
-        </button>
+        <button class="button button-positive button-icon ion-camera m-icon"
+        ng-click="takePicture()"></button>
+        <button class="button button-positive button-icon ion-images m-icon"
+        ng-click="selectPicture()"></button>
       </div>
     </div>
     <form ng-submit="editUser()" class="list">
@@ -83,7 +71,7 @@
           <option ng-repeat="c in ciudades" value="{{c.id}}">{{c.name}}</option>
         </select>
       </label>
-      <div class="padding"><button type="submit" class="button button-block button-positive">Actualizar</button></div>
+      <div class="padding"><button type="submit" class="button button-block button-positive">Aceptar cambios</button></div>
 
     </form>
   </ion-content>

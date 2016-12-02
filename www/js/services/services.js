@@ -11,7 +11,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ USER DATA
+–––––––––––––––––––––––*/
 .factory('UserData', function($http){
 
     var url_u = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
@@ -19,7 +23,6 @@ angular.module('starter')
     return {
         registerUser: function(obj){
           return $http.post(url_u,obj).then(function(response){
-            console.log(response)
             var data = response.data;
             return data;
           }).catch(function(response){
@@ -27,37 +30,33 @@ angular.module('starter')
           });
         },
         getUserData: function(id,uid){
-            console.log('getUserData('+id+','+uid+')');
             var ops = {
                 method: 'GET',
                 url: url_u+id,
-                header: {
-                    'Uid': uid
-                }
+                header: {'Uid': uid}
             }
             return $http(ops).then(function(response){
                 var data = response.data;
                 console.log(data);
-                //do something exciting with the data
                 return data;
             });
         },
         updateUser: function(userId,obj){
-            console.log('updateUser()');
             var finalUrl = url_u+userId;
             return $http.patch(finalUrl,obj).then(function(response){
-                console.log('lo logramos!');
-                console.log(response)
                 var data = response.data;
                 return data;
             }).catch(function(response){
-                console.log('no lo logramos :(');
                 console.log(response)
             });
         }
     }
 })
-
+/***************
+****************
+****************
+ TEAM DATA
+–––––––––––––––––––––––*/
 .factory('TeamData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
@@ -68,62 +67,54 @@ angular.module('starter')
 
     return {
         getTeam: function(usrId){
-            console.log('getTeam()');
             var getUrl = url+usrId+'/families';
-            console.log(getUrl);
             return $http.get(getUrl).then(function(response){
                 var data = response.data;
                 return data;
             });
         },
         crearTeam: function(teamData){
-            console.log('crearTeam()');
-            console.log(teamData);
             var ctUrl = url+teamData.administrator_id+'/families';
-            console.log(ctUrl);
             return $http.post(ctUrl,teamData).then(function(response){
-                console.log('lo logramos!');
-                console.log(response);
             }).catch(function(response){
-                console.log('no lo logramos :(');
+                console.log(response);
+            });
+        },
+        eliminarTeam: function(team){
+            var ctUrl = url+team.administrator.id+'/families/'+team.id;
+            return $http.delete(ctUrl).then(function(response){
+            }).catch(function(response){
                 console.log(response);
             });
         },
         enviarInvitacion: function(obj){
-            console.log('enviarInvitacion()');
-            console.log(obj);
             return $http.post(urlInv,obj).then(function(response){
-                console.log('lo logramos, enviamos la invitación!');
-                console.log(response);
             }).catch(function(response){
-                console.log('no lo logramos :(');
                 console.log(response);
             });
         },
         preguntarInvitacion: function(usrId){
-            console.log('preguntarInvitacion()');
             var askUrl = urlPI+usrId;
-            console.log(askUrl);
             return $http.get(askUrl).then(function(response){
                 var data = response.data;
                 return data;
             });
         },
-        eliminarInvitacion: function(famId){
-            console.log('eliminarInvitacion()');
-            var finalUrl = urlInv+famId;
-            console.log(finalUrl)
+        eliminarInvitacion: function(reqId){
+            var finalUrl = urlInv+reqId;
             return $http.delete(finalUrl).then(function(response){
-                console.log('lo logramos!');
                 console.log(response)
             }).catch(function(response){
-                console.log('no lo logramos :(');
                 console.log(response)
             });
         }
     }
 })
-
+/***************
+****************
+****************
+ LOCATION DATA
+–––––––––––––––––––––––*/
 .factory('LocationData', function($http){
     var url_p = 'http://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//pais // stage
     // var url_p = 'http://production-yego-backoffice.herokuapp.com/api/v1/countries/';//pais // production
@@ -157,7 +148,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ SEGUROS DATA
+–––––––––––––––––––––––*/
 .factory('SomeDataFactory', function($http){
     var url = 'http://private-3c6f3-tracto.apiary-mock.com/resumen';
 
@@ -171,7 +166,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ ESTABLECIMIENTOS DATA
+–––––––––––––––––––––––*/
 .factory('EstablecimientosData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/'; //stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/city_establishments/'; //production
@@ -225,7 +224,11 @@ angular.module('starter')
     }
 
 })
-
+/***************
+****************
+****************
+ NEGOCIOS DATA
+–––––––––––––––––––––––*/
 .factory('NegociosData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/businesses'; // stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/businesses'; // production
@@ -264,7 +267,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ SERVICIOS DATA
+–––––––––––––––––––––––*/
 .factory('ServiciosData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/services'; // stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/services'; // production
@@ -278,21 +285,59 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ MIS SEGUROS DATA
+–––––––––––––––––––––––*/
 .factory('MisSegurosData', function($http){
-    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/services'; // stage
-    // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/services'; // production
+    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/insurances/'; // stage
+    // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/insurances/'; // production
+
+    var theCar = {};
     return {
-        getServicios: function(){
-            console.log('getServicios()');
+        getInsurance: function(insuranceId){
+            console.log('getInsurance()');
           return $http.get(url).then(function(response){
               var data = response.data;
               return data;
           });
+        },
+        newInsurance: function(objS){
+            console.log('newInsurance()');
+            console.log(objS);
+            return $http.post(url,objS).then(function(response){
+              var data = response.data;
+              return data;
+              console.log('lo logramos');
+            }).catch(function(err){
+              console.log(err);
+            });
+        },
+        editInsurance: function(insId,objS){
+            console.log('editInsurance()');
+            console.log(objS);
+            return $http.patch(url+insId,objS).then(function(response){
+              var data = response.data;
+              return data;
+              console.log('lo logramos');
+            }).catch(function(err){
+              console.log(err);
+            });
+        },
+        setTheCar: function(objC){
+            theCar = objC;
+        },
+        getTheCar: function(){
+            return theCar;
         }
     }
 })
-
+/***************
+****************
+****************
+ GASOLINAS DATA
+–––––––––––––––––––––––*/
 .factory('GasolinasData', function($http){
     var url_fuels = 'http://stage-yego-backoffice.herokuapp.com/api/v1/fuels/'; // stage
     // var url_fuels = 'http://production-yego-backoffice.herokuapp.com/api/v1/fuels/'; // production
@@ -300,7 +345,53 @@ angular.module('starter')
     // var url_gas_stations = 'http://production-yego-backoffice.herokuapp.com/api/v1/gas_stations/'; // production
     var url_fuel_refills = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
     // var url_fuel_refills = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
+
+
+    var porMeses = function(refills){
+        var allRefills = [];
+        var years = [];
+        var months = [];
+        for(var i = 0 ; i < refills.length; i++){
+            var date = new Date(refills[i].created_at);
+            date.setHours(date.getHours()+6);
+            refills[i].month = date.getMonth();
+            refills[i].month_name = setMonthName(date.getMonth());
+            refills[i].year = date.getFullYear();
+            refills[i].month_year = setMonthName(date.getMonth())+' '+date.getFullYear();
+        }
+        return refills;
+    }
+
+    var setMonthName = function(key){
+        switch (key) {
+          case 0:return 'Enero'; break;
+          case 1:return 'Febrero'; break;
+          case 2:return 'Marzo'; break;
+          case 3:return 'Abril'; break;
+          case 4:return 'Mayo'; break;
+          case 5:return 'Junio'; break;
+          case 6:return 'Julio'; break;
+          case 7:return 'Agosto'; break;
+          case 8:return 'Septiembre'; break;
+          case 9:return 'Octubre'; break;
+          case 10:return 'Noviembre'; break;
+          case 11:return 'Diciembre'; break;
+          default: return 'N/A'; break;
+        }
+    }
+
+    var monthRefills = {};
+
     return {
+        setSingleMonth: function(key,month,carga,costo){
+            monthRefills.name = key;
+            monthRefills.data = month;
+            monthRefills.refill = carga;
+            monthRefills.cost = costo;
+        },
+        getSingleMonth: function(){
+            return monthRefills;
+        },
         getFuels: function(){
             console.log('getFuels()');
           return $http.get(url_fuels).then(function(response){
@@ -320,12 +411,12 @@ angular.module('starter')
             });
         },
         getFuelRefills: function(userId,carId){
-            console.log('getFuelRefills()');
-            return $http.get(
-                url_fuel_refills+userId+'/vehicles/'+carId+'/fuel_refills/'
-            ).then(function(response){
-              var data = response.data;
-              return data;
+            console.log('getFuelRefills('+userId+','+carId+')');
+            var urlFinal = url_fuel_refills+userId+'/vehicles/'+carId+'/fuel_refills/'
+            console.log(urlFinal);
+            return $http.get(urlFinal).then(function(response){
+                var data = porMeses(response.data);
+                return data;
           }).catch(function(err){
               console.log(err);
           });
@@ -345,6 +436,11 @@ angular.module('starter')
 
     }
 })
+/***************
+****************
+****************
+ RATING DATA
+–––––––––––––––––––––––*/
 .factory('RatingData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/reviews/'; // stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/reviews/'; // production
@@ -370,7 +466,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ CUPONES DATA
+–––––––––––––––––––––––*/
 .factory('CuponesData', function($http){
     var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/cupons'; // stage
     // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/cupons'; // production
@@ -395,7 +495,11 @@ angular.module('starter')
         }
     }
 })
-
+/***************
+****************
+****************
+ SEGUROS DATA
+–––––––––––––––––––––––*/
 .factory('SegurosData', ['$soap',function($soap){
     var user = "Yego";
     var pass = "WS_Yego#2016";

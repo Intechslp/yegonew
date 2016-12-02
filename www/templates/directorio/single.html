@@ -65,11 +65,14 @@
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row" ng-if="single.services.length > 0">
       <div class="col">
         <h3>Servicios</h3>
-        <ul>
-          <li ng-repeat="service in single.services">{{service}}</li>
+        <ul class="single-services">
+          <li ng-repeat="service in single.services">
+            <img src="img/icons/servicios/{{ service | removeNWC }}.png" alt="">
+            {{service}}
+          </li>
         </ul>
       </div>
     </div>

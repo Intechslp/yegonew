@@ -336,8 +336,8 @@ angular.module('starter.seguro.controllers',
 // MIS SEGUROS CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('MisSegurosCtrl',
-function($scope, $stateParams, $localStorage, $ionicLoading, $ionicModal,
-  AutosData,MisSegurosData) {
+function($scope, $state, $stateParams, $localStorage, $ionicLoading, $ionicPopup,
+  $ionicModal, AutosData, MisSegurosData) {
 
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
   $scope.$storage = $localStorage;
@@ -351,10 +351,8 @@ function($scope, $stateParams, $localStorage, $ionicLoading, $ionicModal,
 
   AutosData.getMisAutos($scope.usrId, usrUid).then(function(resp){
     $scope.misAutos = resp;
-    console.log(resp);
     $ionicLoading.hide();
   }).catch(function(resp){
-    console.log(resp);
     $ionicLoading.hide();
   });
 
@@ -369,16 +367,165 @@ function($scope, $stateParams, $localStorage, $ionicLoading, $ionicModal,
 // funcion para abrir el modal
   $scope.openModal = function(miauto) {
     $scope.elAuto = miauto;
-    console.log($scope.elAuto);
     $scope.modal.show();
   };
 
 // funcion para cerrar el modal
   $scope.closeModal = function() {
     $scope.modal.hide();
-    $state.go('app.cargas', $stateParams, {reload: true, inherit: false});
+    $state.go('app.misSeguros', $stateParams, {reload: true, inherit: false});
   };
 
+// funcion para añadir nueva información de seguros
+  $scope.nuevoSeguro = function(){
+    if($scope.comprobarCampos()){
+      $ionicLoading.show({templateUrl:'templates/enviando.html'});
+      $scope.seguro.vehicle_id = $scope.elAuto.id
+      $scope.objS.insurance = $scope.seguro;
+      MisSegurosData.newInsurance($scope.objS).then(function(resp){
+        $scope.showAlert(
+          '¡Éxito!',
+          'El seguro de tu auto '+$scope.elAuto.brand+' '+$scope.elAuto.description+
+          ' '+$scope.elAuto.model+' ha sido registrado.'
+        );
+        $ionicLoading.hide();
+        $scope.closeModal();
+      }).catch(function(resp){
+        console.log(resp);
+        $ionicLoading.hide();
+        $scope.showAlert(
+          'Error',
+          'Algo ocurrió mientras tratabamos de enviar tu seguro, intenta más tarde'
+        );
+      });
+    }else{
+      $scope.showAlert(
+        'Error', 'Debes completar al menos los campos requeridos para continuar'
+      );
+    }
+  }
+// función para comprobar que los campos esten llenos
+  $scope.comprobarCampos = function(){
+    if(
+      $scope.seguro.company !== undefined &&
+      $scope.seguro.policy_number !== undefined &&
+      ($scope.seguro.renewal !== undefined || $scope.seguro.renewal != null)
+    ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+     title: msj1,
+     template: msj2
+    });
+  }
+// función para ver los detalles del seguro
+  $scope.goSigle = function(miauto){
+    if (miauto.insurances.length > 0) {
+      MisSegurosData.setTheCar(miauto);
+      $state.go('app.miSeguroSingle');
+    }
+  }
+
 })// END MIS SEGUROS CONTROLLER
+//**********
+
+// MI SEGURO SINGLE CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('MiSeguroSingleCtrl',
+function($scope, $state, $stateParams, $localStorage, $ionicLoading, $ionicPopup,
+  $ionicModal, AutosData, MisSegurosData) {
+  $scope.$storage = $localStorage;
+  $scope.usrId = $scope.$storage.id;
+  var usrUid = $scope.$storage.headers.uid;
+  $scope.misAutos = [];
+  $scope.objS = {};
+  $scope.objS.insurance = {};
+  $scope.seguro = {};
+  $scope.elAuto = {};
+  $scope.newInfo ={};
+
+  $scope.elAuto = MisSegurosData.getTheCar();
+  $scope.seguroDate = new Date(angular.copy($scope.elAuto.insurances[0].renewal));
+  $scope.seguroDate.setHours($scope.seguroDate.getHours()+8 );
+  $scope.newInfo = $scope.elAuto.insurances[0];
+
+// se declara el modal para dar de alta una carga de gasolina
+  $ionicModal.fromTemplateUrl('templates/misSeguros/editMiSeguro.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+// funcion para abrir el modal
+  $scope.openModal = function() {
+    $scope.modal.show();
+  };
+
+// funcion para cerrar el modal
+  $scope.closeModal = function() {
+    $scope.elAuto.insurances[0].renewal = $scope.newInfo.renewal;
+    $scope.elAuto.insurances[0].company = $scope.newInfo.company;
+    $scope.elAuto.insurances[0].contact_phone = $scope.newInfo.contact_phone;
+    $scope.elAuto.insurances[0].policy_number = $scope.newInfo.policy_number;
+    $scope.modal.hide();
+  };
+
+// funcion para añadir nueva información de seguros
+  $scope.editarSeguro = function(){
+    if($scope.comprobarCampos()){
+      $ionicLoading.show({templateUrl:'templates/enviando.html'});
+      $scope.seguro.vehicle_id = $scope.elAuto.id;
+      $scope.objS.insurance = $scope.seguro;
+      MisSegurosData.editInsurance($scope.elAuto.insurances[0].id,$scope.objS).then(function(resp){
+        $scope.newInfo = resp;
+        $scope.showAlert(
+          '¡Éxito!',
+          'El seguro de tu auto '+$scope.elAuto.brand+' '+$scope.elAuto.description+
+          ' '+$scope.elAuto.model+' ha sido actualizado.'
+        );
+        $ionicLoading.hide();
+        $scope.closeModal();
+      }).catch(function(resp){
+        console.log(resp);
+        $ionicLoading.hide();
+        $scope.showAlert(
+          'Error',
+          'Algo ocurrió mientras tratabamos de enviar tu seguro, intenta más tarde'
+        );
+      });
+    }else{
+      $scope.showAlert(
+        'Error', 'Debes completar al menos los campos requeridos para continuar'
+      );
+    }
+  }
+// función para comprobar que los campos esten llenos
+  $scope.comprobarCampos = function(){
+    if(
+      $scope.seguro.company !== undefined &&
+      $scope.seguro.policy_number !== undefined &&
+      ($scope.seguro.renewal !== undefined || $scope.seguro.renewal != null)
+    ){
+      console.log('true');
+      return true;
+    }else{
+      console.log('false');
+      return false;
+    }
+  }
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+     title: msj1,
+     template: msj2
+    });
+  }
+
+})// END MI SEGURO SINGLE CONTROLLER
 //**********
 ;

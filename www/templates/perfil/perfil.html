@@ -8,22 +8,19 @@
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content>
-    <div id="profile-card" class="profile-card" style="background-image:url('img/photo.jpg')" ng-show="usuario.driver_of_vehicles[0].imageurl === undefined">
-      <div ng-show="usuario.imageurl === undefined" class="profile-element" ng-click="takePicture()">
-        <img id="profile-pic" src="img/camera.jpg">
+    <div id="profile-card"
+      class="profile-card"
+      style="background-image:url({{usuario.driver_of_vehicles[0].imageurl}})">
+
+      <div ng-if="usuario.imageurl === undefined || usuario.imageurl == null"
+        class="profile-element"
+        ng-click="editUserModal()">
+        <img id="profile-pic" ng-src="{{notImage}}"/>
       </div>
 
-      <img ng-show="usuario.imageurl !== undefined" ng-src="{{usuario.imageurl}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
-      <h2 class="profile-element">{{usuario.username}}</h2>
-    </div>
-
-    <div id="profile-card" class="profile-card" style="background-image:url({{usuario.driver_of_vehicles[0].imageurl}})" ng-show="usuario.driver_of_vehicles[0].imageurl !== undefined">
-      <div ng-show="usuario.imageurl === undefined" class="profile-element" ng-click="takePicture()">
-        <img id="profile-pic" src="img/camera.jpg">
+      <div ng-if="usuario.imageurl !== undefined && usuario.imageurl != null" class="profile-element">
+        <img id="profile-pic" ng-src="{{usuario.imageurl}}">
       </div>
-
-      <img ng-show="usuario.imageurl !== undefined" ng-src="{{usuario.imageurl}}" id="profile-pic" alt="" class="profile-element" ng-click="takePicture()">
-      <h2 class="profile-element">{{usuario.username}}</h2>
     </div>
 
     <!-- PERFIL -->

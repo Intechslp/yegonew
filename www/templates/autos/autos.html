@@ -1,34 +1,40 @@
-<ion-view id="autos" cache-view="false" class="autos perfil" view-title="Mis Autos">
+<ion-view id="autos" cache-view="false" class="autos perfil"
+  view-title="Mis Autos">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="left">
-      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      <button class="button button-icon button-clear ion-navicon"
+      menu-toggle="left">
       </button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-      <button id="header-btn" class="button button-icon icon ion-ios-plus" ng-click="newCar()"></button>
+      <button id="header-btn" class="button button-icon icon ion-ios-plus"
+      ng-click="newCar()"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
-  <ion-content class="has-header padding-top">
+  <ion-content class="has-header">
     <!-- GARAGE -->
-    <div id="garage-cont padding-top">
-      <div class="car-card" ng-repeat="car in allCars" ng-click="goSingleCar(car)">
-        <div class="car-item item-image">
-          <img src="img/photo.jpg" ng-show="car.imageurl === undefined">
-          <img src="{{car.imageurl}}" ng-show="car.imageurl !== undefined">
-        </div>
-        <div class="car-item padding">
-          <p>{{car.description}}</br>
-          {{car.brand}}</br>
-          {{car.model}}</p>
-          <p ng-if="car.kilometers !== null">km: {{car.kilometers}}</p>
-          <i ng-if="car.main == 1"
-          class="card-right-icon ion-ios-star">
-          </i>
-          <i ng-if="car.main == 0"
-          class="card-right-icon ion-ios-star-outline">
-          </i>
+    <div id="garage-cont">
+      <div class="car-card-cont"
+      ng-repeat="car in allCars | orderBy:'main': true">
+        <div class="car-card" ng-click="goSingleCar(car)">
+          <div class="car-item item-image">
+            <img src="img/photo.jpg" ng-show="car.imageurl === undefined">
+            <img src="{{car.imageurl}}" ng-show="car.imageurl !== undefined">
+          </div>
+          <div class="car-item padding">
+            <p>{{car.description}}</br>
+            {{car.brand}}</br>
+            {{car.model}}</p>
+            <p ng-if="car.kilometers !== null">km: {{car.kilometers}}</p>
+            <i ng-if="car.main == 1"
+            class="card-right-icon ion-ios-star">
+            </i>
+            <i ng-if="car.main == 0"
+            class="card-right-icon ion-ios-star-outline">
+            </i>
+          </div>
         </div>
       </div>
     </div>

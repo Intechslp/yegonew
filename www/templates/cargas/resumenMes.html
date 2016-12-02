@@ -1,4 +1,4 @@
-<ion-view id="resumen-mes" cache-view="false" class="cargas" view-title="Resumen Noviembre">
+<ion-view id="resumen-mes" cache-view="false" class="cargas" view-title="Resumen">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -15,30 +15,21 @@
     <div class="info-block padding">
       <img class="info-block-item" src="img/carga-light.png" alt="" />
       <div class="info-block-item info-block-data">
-        <h2>Resumen Noviembre 2016</h2>
-        <p>Litros Consumidos: <span class="blue-span">0.0 Lts.</span><br>
-          Gasto Total: <span class="blue-span">$0.00</span>
+        <h2>Resumen {{theMonth.name}}</h2>
+        <p>Litros Consumidos: <span class="blue-span">{{theMonth.refill}} Lts.</span><br>
+          Gasto Total: <span class="blue-span">${{theMonth.cost}}</span>
         </p>
       </div>
     </div>
     <div class="list">
-      <div class="item carga-block">
+      <div class="item carga-block" ng-repeat="refill in theMonth.data">
         <div class="month-data">
-          <h3>Carga del 18/11/2016</h3>
-          <p>Gasolinera: <span class="blue-span">0.0</span><br>
-            Gasolina: <span class="blue-span">Tipo</span><br>
-            Cantidad: <span class="blue-span">0.0 Lts.</span><br>
-            Precio: <span class="blue-span">$0.00</span>
-          </p>
-        </div>
-      </div>
-      <div class="item carga-block">
-        <div class="month-data">
-          <h3>Carga del 11/11/2016</h3>
-          <p>Gasolinera: <span class="blue-span">Nombre</span><br>
-            Gasolina: <span class="blue-span">Tipo</span><br>
-            Cantidad: <span class="blue-span">0.0 Lts.</span><br>
-            Precio: <span class="blue-span">$0.00</span>
+          <h3>Carga del {{refill.created_at | date : 'd MMM, y'}}</h3>
+          <p>Gasolinera: <span class="blue-span">{{refill.gas_station.name}}</span><br>
+            Gasolina: <span class="blue-span">{{refill.fuel.name}}</span>
+            Cantidad: <span class="blue-span">{{refill.quantity}} Lts.</span><br>
+            Precio: <span class="blue-span">${{refill.price}}</span>
+            Precio por Litro: <span class="blue-span">${{refill.price/refill.quantity | number: 2}} MXN/Lt.</span>
           </p>
         </div>
       </div>

@@ -13,18 +13,15 @@
   </ion-side-menu-content>
 
   <!-- Side Menu (left) -->
-  <ion-side-menu side="left" id="the-side-menu">
+  <ion-side-menu side="left" id="the-side-menu" cache-view="false">
     <ion-content>
-      <div id="profile-card" class="profile-card" style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})" ng-if="!completado" menu-close ng-click="goProfile()">
-        <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-show="!theres_picture">
-        <img id="profile-pic" src="{{perfil.imageurl}}" alt="" class="profile-element" ng-show="theres_picture">
-        <a >
-          <h2 class="profile-element">Editar perfil <i class="icon ion-edit"></i></h2>
-        </a>
-      </div>
-      <div id="profile-card" class="profile-card" style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})" ng-if="completado">
-        <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element" ng-show="perfil.imageurl === undefined">
-        <img id="profile-pic" src="{{perfil.imageurl}}" alt="" class="profile-element" ng-show="perfil.imageurl !== undefined">
+      <div id="profile-card" class="profile-card"
+        style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})">
+        <ion-item class="only-link" menu-close href="#/app/perfil" ng-show="perfil.imageurl == null">
+          <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element">
+        </ion-item>
+        <img id="profile-pic" src="{{perfil.imageurl}}" alt=""
+          class="profile-element" ng-show="perfil.imageurl != null">
         <h1 class="profile-element">{{perfil.name+' '+perfil.lastnames}}</h1>
         <h2 class="profile-element">Yego Team: <strong>{{perfil.family_name}}</strong></h2>
       </div>

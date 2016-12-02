@@ -32,12 +32,15 @@
 			    </span>
       </label>
       <!-- driver_id changeDriver == true -->
+      <label class="item item-divider" ng-if="changeDriver">
+        <h2>Elige al conductor</h2>
+        <button class="button button-icon icon ion-close s-icon" ng-click="theChange()"></button>
+      </label>
       <label class="item item-input item-select"  ng-if="changeDriver">
         <div class="input-label">Conductor</div>
-        <button class="button button-icon icon ion-close s-icon" ng-click="theChange()"></button>
         <select ng-model="myCar.driver_id" id="driver_id" ng-init>
           <option value="" disabled selected hidden>-- Selecciona --</option>
-          <option ng-repeat="conductor in conductores" value="{{conductor.id}}">{{conductor.name}}</option>
+          <option ng-repeat="mate in teammates" value="{{mate.id}}">{{mate.name+' '+mate.lastnames}}</option>
         </select>
       </label>
 
@@ -52,7 +55,7 @@
       <!-- car id -->
       <input type="text" style="display:none" ng-model="myCar.id" ng-init="myCar.id = theCar.id">
       <div class="padding">
-        <button type="submit" class="button button-block button-positive">Actualizar</button>
+        <button type="submit" class="button button-block button-positive">Aceptar Cambios</button>
       </div>
     </form>
   </ion-content>

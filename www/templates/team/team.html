@@ -8,7 +8,7 @@
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button id="header-btn" class="button button-icon icon ion-person-add"
-      ng-click="abrirModal()" ng-show="theresTeam" ></button>
+      ng-click="abrirModal()" ng-if="isTeamAdmin(userId)"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="has-header">
@@ -19,22 +19,26 @@
       </div>
       <div class="item item-text-wrap" ng-repeat="request in requests">
         <p><strong>{{request.family_admin.admin_name}}</strong> te ha invitado a ser parte su Yego® Team: <strong>{{request.family_admin.name}}</strong></p>
-        <button class="button button-positive button-clear" ng-click="acceptRequest(request.family_id)">Aceptar</button>
+        <button class="button button-positive button-clear" ng-click="acceptRequest(request.family_id,request.id)">Aceptar</button>
       </div>
 
     </div>
     <div class="new-team" ng-show="!theresTeam">
       <h2>¿No tienes Yego® Team?</h2>
       <h3>Crea uno:</h3>
+      <p for="" class="info-label">
+        <span class="gray-info">Escribe el nombre de tu Yego® Team y da clic en Crear</span>
+      </p>
       <form action="" class="list">
         <!-- name -->
         <label class="item item-input" id="codigo-label">
-         <span class="input-label">Nombre* </span>
+         <span class="input-label">Nombre:* </span>
          <input type="text" ng-model="teamData.name">
         </label>
         <!-- administrator_id -->
         <input type="text" style="display:none" ng-model="teamData.administrator_id" ng-init="teamData.administrator_id = userId">
-        <button class="button button-positive button-clear icon-right ion-ios-plus m-icon"
+        <button
+        class="button button-positive button-clear icon-right ion-ios-plus m-icon"
         ng-click="newTeam()">
           crear team
         </button>
@@ -46,7 +50,7 @@
       <div class="list">
         <div class="item item-divider padding item-icon-right" >
           <h1 class="title nmb">{{team.name}}</h1>
-          <i class="icon ion-ios-gear m-icon"></i>
+          <i class="icon ion-ios-gear m-icon" ng-click="abrirModalOpciones()"></i>
         </div>
       </div>
       <h2 class="divider">Administrador</h2>

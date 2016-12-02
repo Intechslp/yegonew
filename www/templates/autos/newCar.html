@@ -10,21 +10,11 @@
       <img ng-show="imgURI2 === undefined" src="img/photo.jpg" alt="">
       <img ng-show="imgURI2 !== undefined" ng-src="{{imgURI2}}">
       <div class="button-holder">
-        <button ng-show="imgURI2 === undefined" class="button button-positive icon-right ion-camera m-icon"
+        <button class="button button-positive button-icon ion-camera m-icon"
         ng-click="takePicture()">
-          Tomar foto
         </button>
-        <button ng-show="imgURI2 === undefined" class="button button-positive icon-right ion-images m-icon"
+        <button class="button button-positive button-icon ion-images m-icon"
         ng-click="selectPicture()">
-          Elegir de galería
-        </button>
-        <button ng-show="imgURI2 !== undefined" class="button button-positive icon-right ion-camera m-icon"
-        ng-click="takePicture()">
-          Tomar otra
-        </button>
-        <button ng-show="imgURI2 !== undefined" class="button button-positive icon-right ion-images m-icon"
-        ng-click="selectPicture()">
-          Elegir otra
         </button>
       </div>
     </div>
@@ -77,7 +67,9 @@
 
       <!-- owner_id -->
       <input type="text" style="display:none" ng-model="myCar.owner_id" ng-init="myCar.owner_id = usrId">
-      <button type="submit" class="button button-block icon-right ion-ios-plus button-positive">Añadir</button>
+      <div class="padding">
+        <button type="submit" class="button button-block icon-right ion-ios-plus button-positive">Añadir</button>
+      </div>
     </form>
   </ion-content>
 </ion-modal-view>

@@ -1,4 +1,4 @@
-<ion-view id="cargas" cache-view="false" class="cargas" view-title="Cargas">
+<ion-view id="cargas" cache-view="false" class="cargas" view-title="Cargas de Gasolina">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -8,29 +8,35 @@
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button id="header-btn" class="button button-icon icon ion-ios-plus"
-      ng-click="openModal()"></button>
+      ng-click="openModal()" ng-if="theresCar"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="has-header">
-    <div class="info-block padding">
+    <!-- SI HAY CARRO -->
+    <div class="info-block padding" ng-if="theresCar">
       <img class="info-block-item" src="img/icons/modelo.png" alt="" />
       <div class="info-block-item info-block-data">
         <h2>{{mainCar}}</h2>
       </div>
     </div>
-    <div ng-if="cargas_registradas === undefined" class="padding">
+    <div ng-if="objectIsEmpty() && theresCar" class="padding">
       <h4>Aun no has registrado cargas de gasolina</h4>
     </div>
-    <div class="list" ng-if="cargas_registradas !== undefined">
-      <div class="item carga-block" ng-click="goResumen()">
+    <div class="list" ng-if="!objectIsEmpty()" ng-if="theresCar">
+      <div class="item carga-block" ng-repeat="(key,month) in theMonths" ng-click="goResumen(key,month,$index)">
         <img class="carga-img" src="img/carga-light.png" alt="">
         <div class="month-data">
-          <h3>{{setMonth(mes[0])}} 2016</h3>
-          <p>Litros Consumidos: <span class="blue-span">0.0</span><br>
-            Gasto Total: <span class="blue-span">$0.00</span>
+          <h3>{{key}}</h3>
+          <p>Litros Consumidos: <span class="blue-span">{{cargaTotal[$index]}} Lts.</span><br>
+            Gasto Total: <span class="blue-span">${{costoTotal[$index]}}</span>
           </p>
         </div>
       </div>
+    </div>
+    <!-- NO HAY CARRO -->
+    <div class="padding" ng-if="!theresCar">
+      <h4>No hay autos registrados</h4>
+      <button class="button button-positive button-clear">Dar de alta un auto</button>
     </div>
   </ion-content>
 </ion-view>

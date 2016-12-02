@@ -25,7 +25,12 @@
           <h3>No. Serie: {{theCar.serial_number}}</h3>
           <h3 ng-show="theCar.main == 1">Auto Principal: Sí</h3>
           <h3 ng-show="theCar.main == 0">Auto Principal: No</h3>
-
+          <i ng-if="theCar.main == 1"
+          class="card-right-icon ion-ios-star">
+          </i>
+          <i ng-if="theCar.main == 0"
+          class="card-right-icon ion-ios-star-outline">
+          </i>
         </div>
       </div>
       <button class="button button-positive button-clear icon-right ion-trash-a m-icon"
