@@ -345,6 +345,18 @@ ion-view.highway{
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
 
+/* WELCOME
+–––––––––––––––––––––––––––––
+–––––––––––––––––––––––––––––*/
+.welcome .scroll {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.welcome *{
+  text-align: center;
+}
 
 /* HOME
 –––––––––––––––––––––––––––––

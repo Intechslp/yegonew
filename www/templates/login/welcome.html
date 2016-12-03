@@ -1,4 +1,4 @@
-<ion-view id="login" class="highway">
+<ion-view id="login" class="highway welcome">
   <ion-nav-bar class="bar-clear">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -11,15 +11,17 @@
     <!-- LOGIN -->
 
     <div ng-show="registered == true">
-      <h1>¡Bienvenido a Yego!</h1>
+      <h1>¡Bienvenido!</h1>
       <h2>Ya estás registrado</h2>
       <h3>Disfruta la experiencia completa</h3>
     </div>
     <div ng-if="registered == false">
-      <h1>¡Bienvenido a Yego!</h1>
-      <h2>No estás registrado</h2>
-      <h3>Para disfrutar la experiencia completa Registrate</h3>
+      <h1>¡Bienvenido!</h1>
+      <h2>Aun no estás registrado</h2>
+      <p>Puedes utilizar algunas de las funciones de Yego, pero para disfrutar de la experiencia completa deberás registrarte</p>
     </div>
-    <a href="#/app/directorio" class="button button-positive">Continuar</a>
+    <div class="padding">
+      <a href="#/app/directorio" class="button button-positive button-block ">Continuar</a>
+    </div>
   </ion-content>
 </ion-view>

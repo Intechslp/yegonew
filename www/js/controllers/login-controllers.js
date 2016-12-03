@@ -241,13 +241,12 @@ function ($scope, $state, $filter,
 
 // go to Car registration
   $scope.goAuto = function(city){
-    console.log('goAuto()');
     $scope.usuarioData.city_id = city.id;
     console.log($scope.usuarioData);
+
     if($scope.$storage.guest){
       console.log('guest is true');
-      $state.$storage.guestUser = {};
-      $state.$storage.guestUser.city_id = city.id;
+      $scope.$storage.guestUser = {'city_id': city.id};
       $state.go('welcome');
     }else{
       console.log('guest is false');
