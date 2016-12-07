@@ -38,6 +38,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
 
     $scope.usrId = $scope.$storage.id;
     var usrUid = $scope.$storage.headers.uid;
+    $scope.userCity = $scope.$storage.user.city.id;
 
     GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
       console.log(resp);
@@ -79,7 +80,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
     GasolinasData.getFuels().then(function(resp){
       $scope.gasolinas = resp;
       console.log(resp);
-      GasolinasData.getGasStations().then(function(resp){
+      GasolinasData.getGasStations($scope.userCity).then(function(resp){
         $scope.gasolineras = resp;
         $ionicLoading.hide();
         console.log(resp);

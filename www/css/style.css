@@ -231,12 +231,25 @@ p.info-label.bigger span.gray-info{
 #the-side-menu ion-item.item.item-complex {
   border: none;
 }
-#the-side-menu a.item-content {
+#the-side-menu a.item-content, #the-side-menu ion-item.deactivated-item {
   padding-left: 4em;
 }
 #the-side-menu .list {
   padding: 1em 0;
   background: white;
+}
+#the-side-menu ion-item.deactivated-item{
+  background: white;
+  position: relative;
+  border: none;
+  color: #808080;
+}
+#the-side-menu ion-item.deactivated-item img{
+  position: absolute;
+  top: 12px;
+  left: 24px;
+  width: 100%;
+  max-width: 25px;
 }
 #the-side-menu ion-list:nth-of-type(1) {
   border-bottom: solid 1px #afafaf;
@@ -570,19 +583,22 @@ img.menu-icon {
   top: 0;
   right: -6px;
 }
-#mapa-modal .scroll-content .scroll{
+#dirMapa .scroll-content .scroll{
   width:100%;
   height: 100%;
 }
-#mapa-modal .rescate-map {
+#dirMapa .rescate-map {
   width: 100%;
   height: 90%;
   position: relative;
 }
-#mapa-modal .item-divider{
+#dirMapa .scroll *{
+  color:#0d1927;
+}
+#dirMapa .item-divider{
   height: 10%;
 }
-#mapa-modal .item-divider h1{
+#dirMapa .item-divider h1{
   font-size: 15px;
 }
 .single-services li{
@@ -888,6 +904,9 @@ img.menu-icon {
 .perfil .list.card .item img{
   width:100%;
 }
+#perfil #perfil-cont p > a{
+  text-decoration: underline;
+}
 /* GARAGE
 –––––––––––––––––––––––––––––*/
 #garage-cont{
@@ -999,7 +1018,7 @@ ion-content.scroll-content.ionic-scroll {
 }
 .invitations.list .item-divider,#team-cont .list .item-divider,
 .perfil.modal .item-divider,
-.negocios .item-divider{
+.negocios .item-divider, #dirMapa .item-divider{
   background: #92baf5;
   color:#0d1927;
   padding: 1em;
@@ -1054,6 +1073,55 @@ ion-content.scroll-content.ionic-scroll {
   padding-bottom: .3em;
   width: 100%;
   border-bottom: solid 2px white;
+}
+
+#team .car-card-cont{
+  display: block;
+  width:100%;
+  max-width: 320px;
+  margin:.5em auto 0 auto;
+}
+#team .car-card{
+  background: #92baf5;
+  display: flex;
+  flex-direction: row;
+  width:100%;
+}
+#team .car-card .car-item{
+  width:50%;
+}
+#team .car-card .car-item.item-image{
+  overflow:hidden;
+  position: relative;
+  min-height: 112px;
+}
+#team .car-item img.car-picture{
+  width: 170%;
+  position: absolute;
+  top: 0;
+  left: -35%;
+  z-index: 10;
+}
+#team .car-item img.user-picture{
+  width:100%;
+  max-width:50px;
+  border-radius: 50%;
+  border: 2px solid white;
+  position: absolute;
+  top:auto;
+  left:auto;
+  bottom: 5px;
+  right: 5px;
+  z-index: 15;
+}
+#team .car-card *{
+  color: #0d1927;
+}
+#team .car-card h4{
+  margin-top: 0;
+}
+#team .auto-photo{
+  width: 100%;
 }
 /* ABOUT
 –––––––––––––––––––––––––––––

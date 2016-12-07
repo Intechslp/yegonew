@@ -22,21 +22,20 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
     console.log("hello");
     $rootScope.doRefresh();
   });
-  $auth.validateUser().then(function(resp){
-  }).catch(function(resp){
-    $window.localStorage.clear();
-    $ionicHistory.clearCache();
-    $ionicHistory.clearHistory();
-    $state.go('login');
-  });
+
   $rootScope.doRefresh = function(){
     console.log('doRefresh');
     $scope.$storage = $localStorage;
-    $scope.perfil = $scope.$storage.user;
-    console.log($scope.perfil);
-    $rootScope.userId = $scope.$storage.id;
-    $rootScope.usuario = $scope.$storage.user;
-    // console.log($scope.usuario);
+    if(!$scope.$storage.guest){
+      $scope.perfil = $scope.$storage.user;
+      console.log($scope.perfil);
+      $rootScope.userId = $scope.$storage.id;
+      $rootScope.usuario = $scope.$storage.user;
+    }else{
+      $scope.perfil = {
+        name: 'Invitado'
+      }
+    }
   }
 
   $scope.changeTab = function(state){
@@ -59,41 +58,48 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 .controller('DirectorioCtrl',
 function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ionicPopup,
   $ionicHistory,$localStorage, EstablecimientosData, NegociosData) {
-    $scope.$on('$ionicView.afterEnter', function(e){
-      console.log("afterEnter");
-      navigator.splashscreen.hide();
-    });
-//Comprobación de sesión
-var my_timeout = $timeout(function(){
-  //en caso de que la petición tarde demasiado se cancela el loading
-  $ionicLoading.hide();
-  $window.localStorage.clear();
-  $ionicHistory.clearCache();
-  $ionicHistory.clearHistory();
-  $state.go('login');
-  console.log('Time Out :(')
-},7000);
 
-  $auth.validateUser().then(function(resp){
-    $timeout.cancel(my_timeout);
-    console.log('usuario válido')
-  }).catch(function(resp){
+  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+//Comprobación de sesión
+  var my_timeout = $timeout(function(){
+    //en caso de que la petición tarde demasiado se cancela el loading
     $ionicLoading.hide();
+    $localStorage.$reset();
     $window.localStorage.clear();
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     $state.go('login');
+    console.log('Time Out :(')
+  },7000);
+
+  $auth.validateUser().then(function(resp){
+    $timeout.cancel(my_timeout);
+  }).catch(function(resp){
+    if(!$scope.$storage.guest){
+      $ionicLoading.hide();
+      $localStorage.$reset();
+      $window.localStorage.clear();
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+      $state.go('login');
+    }else{
+      $timeout.cancel(my_timeout);
+      $state.go('app.directorio');
+    }
   });
 // Declaración de variables
   $scope.$storage = $localStorage;
+
+  if(!$scope.$storage.guest){
+    $scope.userCity = $scope.$storage.user.city.id;
+  }else{
+    $scope.userCity = $scope.$storage.guestUser.city_id;
+  }
   $scope.tabsState = true;
   $scope.closeBtn = false;
   $scope.searchList = false;
   $scope.negocios = {};
   $scope.adn = {};
-  $scope.userCity = $scope.$storage.user.city.id;
-
-  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
 // Obtener la lista de establecimientos general
   EstablecimientosData.getEstablecimientosGral($scope.userCity).then(function(resp){
@@ -162,6 +168,9 @@ var my_timeout = $timeout(function(){
     EstablecimientosData.setSubcategorias($scope.subcats);
     $state.go('app.dirCat',{catName: name});
   }
+  $scope.goGasList = function(){
+    $state.go('app.gasList');
+  }
 
   $scope.goSingle = function(negId){
     $state.go('app.dirSingle',{singleId:negId});
@@ -174,7 +183,6 @@ var my_timeout = $timeout(function(){
     });
 
     alertPopup.then(function(res) {
-      //console.log('Thank you for not eating my delicious ice cream cone');
     });
   };
 
@@ -202,7 +210,11 @@ var my_timeout = $timeout(function(){
   // VARS
   $scope.$storage = $localStorage;
   $scope.negocios = {};
-  $scope.userCity = $scope.$storage.user.city.id;
+  if(!$scope.$storage.guest){
+    $scope.userCity = $scope.$storage.user.city.id;
+  }else{
+    $scope.userCity = $scope.$storage.guestUser.city_id;
+  }
   var subcat = $stateParams.subcatId;
   $scope.subcatName = $stateParams.subcatName;
 
@@ -225,7 +237,8 @@ var my_timeout = $timeout(function(){
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirSingleCtrl',
 function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal,
-  $rootScope, $ionicPopup, NgMap,EstablecimientosData, ratingToStars, RatingData) {
+  $rootScope, $ionicPopup, NgMap,EstablecimientosData, ratingToStars, RatingData,
+  $cordovaGeolocation) {
   // $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
   $scope.single = {};
   $scope.setRating = false;
@@ -239,6 +252,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   EstablecimientosData.getSingle(singleId).then(function(response){
     $ionicLoading.hide();
     $scope.single = response;
+    console.log($scope.single);
     $scope.rating = $scope.single.review_score*2;
     $scope.updateStars($scope.rating);
     $scope.marker = {
@@ -246,7 +260,6 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
       lat:$scope.single.lat,
       lng:$scope.single.lng
     };
-    console.log(response)
   }).catch(function(response){
     $ionicLoading.hide();
   });
@@ -283,18 +296,52 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   }).then(function(modal) {
     $scope.modalMapa = modal;
   });
+
   $scope.openModal = function() {
     $scope.modalMapa.show();
-    $ionicLoading.show();
-    NgMap.getMap().then(function(map) {
-      $scope.map = map;
-      $ionicLoading.hide();
+    // $ionicLoading.show();
+    var options = {timeout: 10000, enableHighAccuracy: true};
+
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      var mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    }, function(error){
+      console.log("Could not get location");
     });
-    $scope.callbackFunc = function(param) {
-      $scope.myself = $scope.map.getCenter();
-      // console.log($scope.myself);
-    };
-    console.log($scope.marker);
+
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      // $ionicLoading.hide();
+      var marker = new google.maps.Marker({
+        map: $scope.map,
+        animation: google.maps.Animation.DROP,
+        position: latLng
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: "Here I am!"
+      });
+
+      google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.open($scope.map, marker);
+      });
+    });
+
+    // USANDO NGMAP
+    //––––––––––––––––––
+    // NgMap.getMap().then(function(map) {
+    //   $scope.map = map;
+    //   $ionicLoading.hide();
+    // });
+    // $scope.callbackFunc = function(param) {
+    //   $scope.myself = $scope.map.getCenter();
+    //   // console.log($scope.myself);
+    // };
+    // console.log($scope.marker);
   };
   $scope.closeModal = function() {
     $scope.modalMapa.hide();
@@ -319,8 +366,322 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
    window.open(url,'_blank');
   };
 
+  $scope.openMap = function(){
+    console.log('openMap');
+    EstablecimientosData.setSingleForMap($scope.single);
+    $state.go('app.dirMapa');
+  }
+
 })//END DIRECTORIO SINGLE CONTROLLER
 //**********
+
+
+
+// GASOLINERAS LISTA CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('GasListCtrl', function($state, $scope, $stateParams, $localStorage,
+   $ionicLoading, GasolinasData) {
+  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+  // VARS
+  $scope.$storage = $localStorage;
+  $scope.gasolineras = {};
+  if(!$scope.$storage.guest){
+    $scope.userCity = $scope.$storage.user.city.id;
+  }else{
+    $scope.userCity = $scope.$storage.guestUser.city_id;
+  }
+  var subcat = $stateParams.subcatId;
+  $scope.subcatName = $stateParams.subcatName;
+
+  GasolinasData.getGasStations($scope.userCity).then(function(response){
+    $scope.gasolineras= response;
+    console.log($scope.gasolineras);
+    $ionicLoading.hide();
+  }).catch(function(response){
+    $ionicLoading.hide();
+  });
+  $scope.goSingle = function(gasolinera){
+    // console.log(lol);
+    GasolinasData.setGasolineraSingle(gasolinera);
+    $state.go('app.gasSingle',{gasId:gasolinera.id});
+  }
+
+})//END GASOLINERAS LISTA CONTROLLER
+//**********
+
+
+
+// DIRECTORIO SINGLE CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('DirSingleCtrl',
+function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal,
+  $rootScope, $ionicPopup, NgMap,EstablecimientosData, ratingToStars, RatingData,
+  $cordovaGeolocation, $localStorage) {
+  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+  $scope.$storage = $localStorage;
+  $scope.single = {};
+  $scope.setRating = false;
+  $scope.rating = 5;
+  $scope.comoLlegar = true;
+  $scope.objR = {};
+  $scope.objR.review= {};
+  $scope.userId = $rootScope.userId;
+  var singleId = $stateParams.singleId;
+
+  EstablecimientosData.getSingle(singleId).then(function(response){
+    $ionicLoading.hide();
+    $scope.single = response;
+    console.log($scope.single);
+    $scope.rating = $scope.single.review_score*2;
+    $scope.updateStars($scope.rating);
+  }).catch(function(response){
+    $ionicLoading.hide();
+  });
+
+// rating
+  $scope.editableRating = ratingToStars.getStarsForPoi($scope.rating/2);
+  $scope.updateStars = function (rating){
+    $scope.editableRating = ratingToStars.getStarsForPoi(rating/2);
+  }
+  // $scope.staticRating = ratingToStars.getStarsForPoi(3.5);
+  $scope.toggleRating = function(){
+    if(!$scope.$storage.guest){
+      $scope.setRating = !$scope.setRating;
+    }else{
+      $scope.showAlert('Usuario invitado',
+        'Actualmente te encuentras en una sesion de invitado, para poder '+
+        'calificar establecimientos necesitas registrarte','error')
+    }
+  }
+  $scope.enviarCalif = function(rating){
+    $scope.objR.review.app_user_id = $scope.userId;
+    $scope.objR.review.establishment_id = $scope.single.id;
+    $scope.objR.review.rate = rating/2;
+    console.log($scope.objR);
+    RatingData.postRating($scope.objR).then(function(resp){
+      console.log(resp);
+      $scope.showAlert(
+        '¡Éxito!',
+        'Gracias por tu retroalimentación, esto nos ayuda a todos para mejorar.'+
+        ' Sigue utilizando Yego App',
+        'fine'
+      );
+    }).catch(function(resp){
+      console.log(resp);
+    });
+  }
+
+  $scope.showAlert = function(msj1,msj2,type) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+
+    alertPopup.then(function(res) {
+      if(type != 'error'){
+        $scope.toggleRating();
+      }
+    });
+  };
+
+  $scope.openInAppBrowser = function(url){
+   // Open in app browser
+   window.open(url,'_blank');
+  };
+
+  $scope.openMap = function(){
+    console.log('openMap');
+    EstablecimientosData.setSingleForMap($scope.single);
+    $state.go('app.dirMapa');
+  }
+
+})//END DIRECTORIO SINGLE CONTROLLER
+//**********
+
+
+
+// GASOLINERA SINGLE CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('GasSingleCtrl',
+function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal,
+  $rootScope, $ionicPopup, NgMap,GasolinasData, ratingToStars, RatingData,
+  $cordovaGeolocation, $localStorage) {
+  $scope.$storage = $localStorage;
+  $scope.single = {};
+  $scope.setRating = false;
+  $scope.rating = 5;
+  $scope.comoLlegar = true;
+  $scope.objR = {};
+  $scope.objR.review= {};
+  $scope.userId = $rootScope.userId;
+  var singleId = $stateParams.singleId;
+
+  $scope.single=GasolinasData.getGasolineraSingle();
+  console.log($scope.single);
+
+// rating
+  $scope.editableRating = ratingToStars.getStarsForPoi($scope.rating/2);
+  $scope.updateStars = function (rating){
+    $scope.editableRating = ratingToStars.getStarsForPoi(rating/2);
+  }
+  // $scope.staticRating = ratingToStars.getStarsForPoi(3.5);
+  $scope.toggleRating = function(){
+    if(!$scope.$storage.guest){
+      $scope.setRating = !$scope.setRating;
+    }else{
+      $scope.showAlert('Usuario invitado',
+        'Actualmente te encuentras en una sesion de invitado, para poder '+
+        'calificar establecimientos necesitas registrarte','error')
+    }
+  }
+  $scope.enviarCalif = function(rating){
+    $scope.objR.review.app_user_id = $scope.userId;
+    $scope.objR.review.establishment_id = $scope.single.id;
+    $scope.objR.review.rate = rating/2;
+    console.log($scope.objR);
+    RatingData.postRating($scope.objR).then(function(resp){
+      console.log(resp);
+      $scope.showAlert(
+        '¡Éxito!',
+        'Gracias por tu retroalimentación, esto nos ayuda a todos para mejorar.'+
+        ' Sigue utilizando Yego App',
+        'fine'
+      );
+    }).catch(function(resp){
+      console.log(resp);
+    });
+  }
+
+// modal de mapa
+  $ionicModal.fromTemplateUrl('templates/directorio/map.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modalMapa = modal;
+  });
+
+  $scope.openModal = function() {
+    $scope.modalMapa.show();
+    // $ionicLoading.show();
+    var options = {timeout: 10000, enableHighAccuracy: true};
+
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      var mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    }, function(error){
+      console.log("Could not get location");
+    });
+
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      // $ionicLoading.hide();
+      var marker = new google.maps.Marker({
+        map: $scope.map,
+        animation: google.maps.Animation.DROP,
+        position: latLng
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: "Here I am!"
+      });
+
+      google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.open($scope.map, marker);
+      });
+    });
+  };
+  $scope.closeModal = function() {
+    $scope.modalMapa.hide();
+  };
+  $scope.comoLlegarFn = function(){
+    $scope.comoLlegar = true;
+  }
+
+  $scope.showAlert = function(msj1,msj2,type) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+
+    alertPopup.then(function(res) {
+      if(type != 'error'){
+        $scope.toggleRating();
+      }
+    });
+  };
+
+  $scope.openInAppBrowser = function(url){
+   // Open in app browser
+   window.open(url,'_blank');
+  };
+
+  $scope.openMap = function(){
+    console.log('openMap');
+    EstablecimientosData.setSingleForMap($scope.single);
+    $state.go('app.dirMapa');
+  }
+
+})//END GASOLINERA SINGLE CONTROLLER
+//**********
+
+
+
+// DIRECTORIO MAPA CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('DirMapaCtrl',
+function($state, $scope, $rootScope, $stateParams, $ionicLoading,
+  $cordovaGeolocation, $ionicNavBarDelegate, EstablecimientosData) {
+  console.log('DirMapaCtrl');
+  $scope.single = EstablecimientosData.getSingleForMap();
+  console.log($scope.single);
+  $ionicLoading.show();
+  var options = {timeout: 10000, enableHighAccuracy: true};
+
+  $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+    var mypos_lat = position.coords.latitude;
+    var mypos_lng = position.coords.longitude;
+    var lat = Number($scope.single.lat)
+    var lng = Number($scope.single.lng)
+    var latLng = new google.maps.LatLng(lat, lng);
+    console.log(latLng);
+    var mapOptions = {
+      center: latLng,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    //Wait until the map is loaded
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      $ionicLoading.hide();
+      var marker = new google.maps.Marker({
+        map: $scope.map,
+        animation: google.maps.Animation.DROP,
+        position: latLng
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: '<h4>'+$scope.single.business.name+'</h4>'+
+        '<p>tel: '+$scope.single.phone+'<br>'+
+        'email: '+$scope.single.business.email+'</p>'
+      });
+
+      google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.open($scope.map, marker);
+      });
+
+    });
+  }, function(error){
+    console.log("Could not get location");
+  });
+
+
+})//END DIRECTORIO MAPA CONTROLLER
+//**********
+
 
 
 // CERCA DE MI CONTROLLER

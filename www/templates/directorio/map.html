@@ -10,10 +10,8 @@
     <div class="item-divider">
       <h1 class="title">{{single.business.name}}</h1>
     </div>
-    <!-- <button class="button button-positive como-llegar" ng-click="comoLlegarFn()">
-      Cómo llegar
-    </button> -->
-    <ng-map class="rescate-map" center='[{{marker.lat}}, {{marker.lng}}]'
+    <div id="map" class="rescat" data-tap-disabled="true"></div>
+    <!-- <ng-map class="rescate-map" center='[{{marker.lat}}, {{marker.lng}}]'
       zoom="16" map-type-control="false" street-view-control="false"
       geo-callback="callbackFunc('you')">
 
@@ -34,6 +32,6 @@
         destination="[{{marker.lat}},{{marker.lng}}]"
         ng-if="comoLlegar">
       </directions>
-    </ng-map>
+    </ng-map> -->
   </ion-content>
 </ion-modal-view>

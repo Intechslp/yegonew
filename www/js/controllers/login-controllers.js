@@ -10,20 +10,25 @@ angular.module('starter.login.controllers',
     $ionicPopup, $ionicHistory, $cordovaSQLite,
     HeadersSave, UserData){
 
-  console.log('LoginCtrl');
-
-  $ionicLoading.show({templateUrl: 'templates/comprobando.html'});
-  $auth.validateUser().then(function(resp){
-    $state.go('app.directorio');
-  }).catch(function(resp){
-    $ionicLoading.hide();
-    $window.localStorage.clear();
-    $ionicHistory.clearCache();
-    $ionicHistory.clearHistory();
-  });
-
   // VARS
   $scope.$storage = $localStorage;
+
+  if($scope.$storage.guest === undefined || !$scope.$storage.guest){
+    $ionicLoading.show({templateUrl: 'templates/comprobando.html'});
+    $auth.validateUser().then(function(resp){
+      $state.go('app.directorio');
+    }).catch(function(resp){
+      $ionicLoading.hide();
+      $localStorage.$reset();
+      $window.localStorage.clear();
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+    });
+  }else if($scope.$storage.guest){
+    $state.go('app.directorio');
+  }
+
+  // VARS
   $scope.loginData = {};
   $scope.registerData = {};
   $scope.userData = {};
@@ -172,17 +177,6 @@ angular.module('starter.login.controllers',
     });
   }
 
-  $scope.insert = function(obj) {
-      console.log($rootScope.db);
-      var query = "INSERT INTO people (usrId, firstname, username, family, pic, carpic, guest) VALUES (?,?,?,?,?,?)";
-      console.log(query);
-      $cordovaSQLite.execute($rootScope.db, query, [0, obj.firstname, obj.user, obj.family, obj.pic, obj.carpic, 1]).then(function(res) {
-          console.log("INSERT ID -> " + res.insertId);
-      }, function (err) {
-          console.error(err);
-      });
-  }
-
 })// END LOGIN CONTROLLER
 
 
@@ -210,8 +204,6 @@ function ($scope, $state, $filter,
   });
 
   $scope.loadStates = function(paisId){
-    console.log('loadStates()');
-    console.log(paisId);
     $scope.showState = true;
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     LocationData.getStates(paisId).then(function(resp){
@@ -222,8 +214,6 @@ function ($scope, $state, $filter,
     });
   }
   $scope.loadCities = function(paisId,estadoId){
-    console.log('loadCities()');
-    console.log(estadoId);
     $scope.showCity = true;
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     LocationData.getCities(paisId,estadoId).then(function(resp){
@@ -242,14 +232,10 @@ function ($scope, $state, $filter,
 // go to Car registration
   $scope.goAuto = function(city){
     $scope.usuarioData.city_id = city.id;
-    console.log($scope.usuarioData);
-
     if($scope.$storage.guest){
-      console.log('guest is true');
       $scope.$storage.guestUser = {'city_id': city.id};
       $state.go('welcome');
     }else{
-      console.log('guest is false');
       $ionicLoading.show({templateUrl: 'templates/enviando.html'});
       UserData.updateUser($scope.$storage.id,$scope.usuarioData).then(function(resp){
         $scope.$storage.user = resp;
@@ -257,10 +243,8 @@ function ($scope, $state, $filter,
         $state.go('autoReg');
       }).catch(function(resp){
         $ionicLoading.hide();
-        console.log(resp);
         $scope.showAlert('Error','Hubo un problema al envar tus datos, intenta más tarde');
       });
-
     }
   }
 
@@ -292,13 +276,11 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
   SegurosData.getMarcas().then(function(response){
-    console.log(response);
     $ionicLoading.hide();
     var brands = JSON.parse(response);
     $scope.marcas = brands.Marcas;
   }).catch(function(response){
     $ionicLoading.hide();
-    console.log(response);
     $ionicLoading.hide();
     $scope.showAlert('fail',response);
   });
@@ -311,7 +293,6 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
       $scope.modelos = models.Modelos;
     }).catch(function(response){
       $ionicLoading.hide();
-      console.log(response);
       $scope.showAlert('fail',response);
     });
   }
@@ -324,54 +305,72 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
       $scope.descripciones = descriptions.Descripciones;
     }).catch(function(response){
       $ionicLoading.hide();
-      console.log(response);
       $scope.showAlert('fail',response);
     });
   }
 
   $scope.saveCar = function(){
-    console.log('saveCar()');
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    if($scope.imgRegAuto !== undefined){
-      ImageUploadFactory.uploadImage($scope.imgRegAuto, 'yegoapp').then(function(result){
-        $scope.url = result.url;
-        $scope.myCar.imageurl = $scope.url;
-        console.log($scope.myCar);
-        $scope.objV.vehicle = $scope.myCar;
-        // Una vez subida la foto, se suben los datos del auto
-        AutosData.nuevoAuto($scope.objV).then(function(response){
-          console.log(response);
+    if($scope.comprobarAuto()){
+      $ionicLoading.show({templateUrl:'templates/enviando.html'});
+      if($scope.imgRegAuto !== undefined){
+        var tmp = new Date();
+        var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
+        var publicId = 'vehiculos/'+timestring+'-'+$scope.userId;
+        ImageUploadFactory.uploadImage($scope.imgRegAuto, 'yegoapp', publicId).then(function(result){
+          $scope.url = result.url;
+          $scope.myCar.imageurl = $scope.url;
+          $scope.myCar.photoid = publicId;
+          $scope.objV.vehicle = $scope.myCar;
+          // Una vez subida la foto, se suben los datos del auto
+          AutosData.nuevoAuto($scope.objV).then(function(response){
 
+            UserData.getUserData($scope.$storage.id).then(function(resp){
+              $scope.$storage.user = resp;
+              $ionicLoading.hide();
+            }).catch(function(resp){
+              $ionicLoading.hide();
+            });
+            $state.go('welcome');
+          }).catch(function(response){
+            $ionicLoading.hide();
+          });
+
+        }).catch(function(err) {
+          $ionicLoading.hide();
+          // Do something with the error here
+          $cordovaCamera.cleanup();
+        });
+      }else{
+        $scope.objV.vehicle = $scope.myCar;
+        AutosData.nuevoAuto($scope.objV).then(function(response){
           UserData.getUserData($scope.$storage.id).then(function(resp){
             $scope.$storage.user = resp;
-            console.log(resp);
             $ionicLoading.hide();
           }).catch(function(resp){
-            console.log(resp);
             $ionicLoading.hide();
           });
           $state.go('welcome');
         }).catch(function(response){
-          console.log(response);
           $ionicLoading.hide();
         });
+      }
+    }
+  }
 
-      }).catch(function(err) {
-        $ionicLoading.hide();
-        console.log('ImageUploadFactory().catch');
-        // Do something with the error here
-        console.log(err);
-        $cordovaCamera.cleanup();
-      });
+  $scope.comprobarAuto = function(){
+    if(
+      $scope.myCar.brand !== null ||
+      $scope.myCar.model !== null ||
+      $scope.myCar.description !== null
+    ){
+      return true;
     }else{
-      console.log('A LA VERGA PINCHE APP :3')
-      $ionicLoading.hide();
+      return false;
     }
   }
 
   // Abre la camara para tomar foto
   $scope.takePicture = function($event) {
-    console.log('takePicture()')
     var options = {
       quality : 70,
       destinationType : Camera.DestinationType.DATA_URL,
@@ -385,8 +384,7 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
     };
     // $event.stopPropagation();
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
-      // console.log(imageData)
+
       $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
     }, function(err) {
       // An error occured. Show a message to the user
@@ -394,7 +392,6 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
   }
 
   $scope.selectPicture = function() {
-    console.log('selectPicture()')
     var options = {
       quality : 70,
       destinationType : Camera.DestinationType.DATA_URL,
@@ -408,7 +405,6 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
       $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
     }, function(err) {
       // An error occured. Show a message to the user

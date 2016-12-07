@@ -25,18 +25,18 @@ angular.module('starter', [
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if(window.cordova.plugins.Keyboard !== undefined){
-      if (window.cordova && window.cordova.plugins.Keyboard) {
-        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-        cordova.plugins.Keyboard.disableScroll(true);
-      }
+    if (window.cordova && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+      cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleBlackTranslucent();
     }
     setTimeout(function() {
-      navigator.splashscreen.hide();
+      if(navigator.splashscreen !== undefined){
+        navigator.splashscreen.hide();
+      }
     }, 300);
 
   });
@@ -114,6 +114,16 @@ angular.module('starter', [
       }
     }
   })
+  // DIRECTORIO LISTA DE GASOLINERAS
+  .state('app.gasList', {
+    url: '/directorio/gasolineras',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/gaslist.html",
+        controller: 'GasListCtrl'
+      }
+    }
+  })
   // DIRECTORIO SINGLE
   .state('app.dirSingle', {
     url: '/directorio/single/:singleId',
@@ -121,6 +131,26 @@ angular.module('starter', [
       'menuContent': {
         templateUrl: "templates/directorio/single.html",
         controller: 'DirSingleCtrl'
+      }
+    }
+  })
+  // DIRECTORIO SINGLE GASOLINERA
+  .state('app.gasSingle', {
+    url: '/directorio/gasolineras/:gasId',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/gassingle.html",
+        controller: 'GasSingleCtrl'
+      }
+    }
+  })
+  // DIRECTORIO MAPA
+  .state('app.dirMapa', {
+    url: '/directorio/mapa',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/mapa.html",
+        controller: 'DirMapaCtrl'
       }
     }
   })

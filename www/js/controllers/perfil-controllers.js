@@ -42,9 +42,13 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
     $ionicLoading.show({templateUrl:'templates/enviando.html'});
 
     if($scope.imgURI !== undefined){
-      ImageUploadFactory.uploadImage($scope.imgURI, 'perfilyego').then(function(result){
+      var tmp = new Date();
+      var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
+      var publicId = 'usuarios/'+timestring+'-'+$scope.userId;
+        UploadFactory.uploadImage($scope.imgURI, 'perfilyego', publicId).then(function(result){
         $scope.url = result.url;
         $scope.myUser.imageurl = $scope.url;
+        $scope.myUser.photoid = publicId;
         UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
           //obtener información actualizada del usuario
           $scope.$storage.user = resp;
@@ -144,14 +148,15 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
 
   $scope.signOutClick = function() {
     $ionicLoading.show();
-    $auth.signOut().then(function(resp) {
+    if (!$scope.$storage.guest) {
+      $auth.signOut().then(function(resp) {
         // handle success response
         $window.localStorage.clear();
         $ionicHistory.clearCache().then(function() {
           $ionicHistory.clearHistory();
           $ionicHistory.nextViewOptions({ disableBack: true, historyRoot: true });
-          $ionicLoading.hide();
           $timeout(function () {
+            $ionicLoading.hide();
             $state.go('login');
           },500)
         });
@@ -160,6 +165,19 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
         console.log(resp);
         $ionicLoading.hide();
       });
+    }else{
+      $window.localStorage.clear();
+      $localStorage.$reset();
+      $ionicHistory.clearCache().then(function() {
+        $ionicHistory.clearHistory();
+        $ionicHistory.nextViewOptions({ disableBack: true, historyRoot: true });
+
+        $timeout(function () {
+          $state.go('login');
+          $ionicLoading.hide();
+        },1000)
+      });
+    }
   };
 
 })// END PERFIL CONTROLLER
@@ -174,7 +192,8 @@ function($state, $scope, $rootScope,$stateParams,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
   TeamData,UserData) {
 
-  $scope.userId = $rootScope.userId;
+  $scope.$storage = $localStorage;
+  $scope.userId = $scope.$storage.id;
   $scope.famData = {}
   $scope.team = {};
   $scope.theresTeam =  false;
@@ -195,9 +214,9 @@ function($state, $scope, $rootScope,$stateParams,
         console.log(response);
         $ionicLoading.hide();
       });
-
     }else if (response.length > 0){
       $scope.team = response[0];
+      console.log($scope.team);
       $scope.theresTeam = true;
       $ionicLoading.hide();
     }
@@ -208,7 +227,7 @@ function($state, $scope, $rootScope,$stateParams,
 
   // Crear nuevo Team
   $scope.newTeam = function(){
-    if($scope.teamData.name !== null){
+    if($scope.teamData.name != null){
       $ionicLoading.show({templateUrl:'templates/enviando.html'});
       TeamData.crearTeam($scope.teamData).then(function(response){
         $state.go('app.team', $stateParams, {reload: true, inherit: false})

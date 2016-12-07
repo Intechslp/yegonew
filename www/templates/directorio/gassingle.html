@@ -4,11 +4,11 @@
     </ion-nav-back-button>
   </ion-nav-bar>
   <ion-content>
-    <img ng-if="single.imageurl == null" src="img/default-local.jpg" alt="" class="main-img">
+    <img ng-if="single.imageurl == null" src="img/default-gas.jpg" alt="" class="main-img">
     <img ng-if="single.imageurl != null" src="{{single.imageurl}}" alt="" class="main-img">
     <div class="row">
       <div class="col">
-        <h1>{{single.business.name}}</h1>
+        <h1>{{single.name}}</h1>
         <div class="inner-row">
             <div class="rate-bar" ng-click="toggleRating()">
               <i ng-repeat="star in editableRating" class="icon {{star.icon}}"></i>
@@ -19,8 +19,6 @@
               mapa
             </button>
         </div>
-        <h3 ng-if="single.description != null">Descripción:</h3>
-        <p>{{single.business.description}}</p>
       </div>
     </div>
     <div class="row">
@@ -30,20 +28,18 @@
           <i class="icon ion-location"></i>
           {{single.street+' '+single.number_e+' Int. '+single.number_i+' '+single.neighborhood | capitalize:true}}
         </p>
-
         <p ng-if="single.neighborhood != null && single.number_i == null">
           <i class="icon ion-location"></i>
           {{single.street+' '+single.number_e+' '+single.neighborhood | capitalize:true}}
         </p>
-
-        <p ng-if="single.neighborhood == null && single.number_i == null">
+        <p ng-if="single.neighborhood == null && (single.number_i == null || single.number_i == '')">
           <i class="icon ion-location"></i>
           {{single.street+' '+single.number_e | capitalize:true}}
         </p>
 
-        <p><i class="icon ion-android-time"></i>{{single.schedule}}</p>
+        <p ng-if="single.work_shift != null"><i class="icon ion-android-time"></i>{{single.work_shift}}</p>
 
-        <p><i class="icon ion-ios-telephone"></i>{{single.phone}}</p>
+        <p ng-if="single.phone != null"><i class="icon ion-ios-telephone"></i>{{single.phone}}</p>
 
         <p
         ng-if="single.business.email !== undefined || single.business.email === ''">

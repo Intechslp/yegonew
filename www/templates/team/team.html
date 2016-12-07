@@ -54,26 +54,46 @@
         </div>
       </div>
       <h2 class="divider">Administrador</h2>
-      <div class="list card">
-        <div class="item auto-card">
-          <h2>{{team.administrator.name+team.administrator.lastnames}}</h2>
-          <p>{{team.administrator.car}}</p>
-          <a href="#" class="ion-android-more-vertical"></a>
+        <div class="car-card-cont">
+          <div class="car-card">
+            <div class="car-item item-image">
+              <img class="car-picture" src="img/photo.jpg"
+              ng-show="team.administrator.driver_of_vehicles[0].imageurl === undefined">
+              <img class="car-picture" src="{{team.administrator.driver_of_vehicles[0].imageurl}}"
+              ng-show="team.administrator.driver_of_vehicles[0].imageurl !== undefined">
+              <img class="user-picture" src="img/camera.jpg"
+              ng-show="team.administrator.imageurl === undefined">
+              <img class="user-picture" src="{{team.administrator.imageurl}}"
+              ng-show="team.administrator.imageurl !== undefined">
+            </div>
+            <div class="car-item padding">
+              <h4>{{team.administrator.name+' '+team.administrator.lastnames}}</h4>
+              <p>{{team.administrator.driver_of_vehicles[0].description}}</br>
+              {{team.administrator.driver_of_vehicles[0].brand}}</br>
+              {{team.administrator.driver_of_vehicles[0].model}}</p>
+            </div>
+          </div>
         </div>
-        <div class="item item-image">
-          <img src="img/photo.jpg">
-        </div>
-      </div>
 
       <h2 class="divider">Integrantes</h2>
-      <div class="list card" ng-repeat="member in team.app_users">
-        <div class="item auto-card">
-          <h2>{{member.name+' '+member.lastnames}}</h2>
-          <a href="#" class="ion-android-more-vertical"></a>
-        </div>
-        <div class="item item-image">
-          <img src="img/photo.jpg" ng-if="member.imageurl === undefined">
-          <img src="{{member.imageurl}}" ng-if="member.imageurl !== undefined">
+      <div class="car-card-cont" ng-repeat="member in team.app_users">
+        <div class="car-card">
+          <div class="car-item item-image">
+            <img class="car-picture" src="img/photo.jpg"
+            ng-show="member.driver_of_vehicles[0].imageurl === undefined">
+            <img class="car-picture" src="{{member.driver_of_vehicles[0].imageurl}}"
+            ng-show="member.driver_of_vehicles[0].imageurl !== undefined">
+            <img class="user-picture" src="img/camera.jpg"
+            ng-show="member.imageurl === undefined">
+            <img class="user-picture" src="{{member.imageurl}}"
+            ng-show="member.imageurl !== undefined">
+          </div>
+          <div class="car-item padding">
+            <h4>{{member.name+' '+member.lastnames}}</h4>
+            <p>{{member.driver_of_vehicles[0].description}}</br>
+            {{member.driver_of_vehicles[0].brand}}</br>
+            {{member.driver_of_vehicles[0].model}}</p>
+          </div>
         </div>
       </div>
   </ion-content>
