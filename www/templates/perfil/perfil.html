@@ -10,13 +10,23 @@
   <ion-content>
     <div id="profile-card"
       class="profile-card"
-      style="background-image:url({{usuario.driver_of_vehicles[0].imageurl}})">
+      style="background-image:url({{usuario.driver_of_vehicles[0].imageurl}})"
+      ng-show="!$storage.guest">
 
       <div ng-if="usuario.imageurl === undefined || usuario.imageurl == null"
         class="profile-element"
-        ng-click="editUserModal()">
+        ng-click="editUserModal()" ng-if="!$storage.guest">
         <img id="profile-pic" ng-src="{{notImage}}"/>
       </div>
+
+      <div ng-if="usuario.imageurl !== undefined && usuario.imageurl != null" class="profile-element">
+        <img id="profile-pic" ng-src="{{usuario.imageurl}}">
+      </div>
+    </div>
+    <div id="profile-card"
+      class="profile-card"
+      style="background-image:url('img/guest-profile.jpg')"
+      ng-show="$storage.guest">
 
       <div ng-if="usuario.imageurl !== undefined && usuario.imageurl != null" class="profile-element">
         <img id="profile-pic" ng-src="{{usuario.imageurl}}">
@@ -25,7 +35,8 @@
 
     <!-- PERFIL -->
     <div id="perfil-cont">
-      <div class="list card">
+      <!-- NO ES INVITADO -->
+      <div class="list card" ng-if="!$storage.guest">
         <div class="item item-text-wrap">
           <h2><strong>Nombre:</strong> {{usuario.name}}</h2>
           <h2><strong>Apellidos:</strong> {{usuario.lastnames}}</h2>
@@ -34,6 +45,16 @@
           <h2><strong>Auto Principal:</strong> {{usuario.vehicle.brand+' '+usuario.vehicle.description+' '+usuario.vehicle.model}}</h2>
           <h2><strong>Ciudad:</strong> {{usuario.city.name}}</h2>
           <a class="card-right-icon ion-edit m-icon" ng-click="editUserModal()"></a>
+        </div>
+      </div>
+      <!-- ES INVITADO -->
+      <div class="list card" ng-if="$storage.guest">
+        <div class="item item-text-wrap">
+          <p>
+            Actualmente tienes un perfil de invitado, para disfrutar de la
+            experiencia completa de Yego® <a ng-click="signOutClick()">Cierra Sesión</a>
+             y regístrate con una cuenta nueva, no tiene costo y contarás con todos los beneficios.
+          </p>
         </div>
       </div>
       <button class="button button-clear button-positive icon icon-right ion-ios-close"

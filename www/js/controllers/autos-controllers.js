@@ -77,9 +77,13 @@ function($state, $scope, $window, $rootScope, $stateParams,
     if($scope.comprobarAuto()){
       $ionicLoading.show({templateUrl:'templates/enviando.html'});
       if($scope.imgURI2 !== undefined){
-        ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp').then(function(result){
+        var tmp = new Date();
+        var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
+        var publicId = 'vehiculos/'+timestring+'-'+$scope.userId;
+        ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp',publicId).then(function(result){
           $scope.url = result.url;
           $scope.myCar.imageurl = $scope.url;
+          $scope.myCar.photoid = publicId;
           $scope.objV.vehicle = $scope.myCar;
           AutosData.nuevoAuto($scope.objV).then(function(response){ //ORIGINAL
             $ionicLoading.hide();
@@ -89,7 +93,6 @@ function($state, $scope, $window, $rootScope, $stateParams,
             console.log(response);
             $ionicLoading.hide();
           });
-
         }).catch(function(err) {
           $ionicLoading.hide();
           console.log('ImageUploadFactory().catch');

@@ -23,7 +23,8 @@
         <img id="profile-pic" src="{{perfil.imageurl}}" alt=""
           class="profile-element" ng-show="perfil.imageurl != null">
         <h1 class="profile-element">{{perfil.name+' '+perfil.lastnames}}</h1>
-        <h2 class="profile-element">Yego Team: <strong>{{perfil.family_name}}</strong></h2>
+        <h2 class="profile-element" ng-if="perfil.family_name != null">
+          Yego Team: <strong>{{perfil.family_name}}</strong></h2>
       </div>
       <ion-list>
         <ion-item menu-close href="#/app/directorio">
@@ -34,28 +35,44 @@
           <img src="img/perfil.png" alt="" />
           Perfil
         </ion-item>
-        <ion-item menu-close href="#/app/cargas">
+        <ion-item menu-close href="#/app/cargas" ng-if="!$storage.guest">
           <img src="img/carga-dark.png" alt="" />
           Cargas de Gasolina
         </ion-item>
-        <ion-item menu-close href="#/app/autos">
+        <ion-item menu-close href="#/app/autos" ng-if="!$storage.guest">
           <img src="img/auto.png" alt="" />
           Mis Autos
         </ion-item>
-        <ion-item menu-close href="#/app/misSeguros">
+        <ion-item menu-close href="#/app/misSeguros" ng-if="!$storage.guest">
           <img src="img/seguro.png" alt="" />
           Mis Seguros
         </ion-item>
-        <ion-item menu-close href="#/app/team">
+        <ion-item menu-close href="#/app/team" ng-if="!$storage.guest">
           <img src="img/team.png" alt="" />
+          Mi Yego Team
+        </ion-item>
+        <ion-item class="deactivated-item" ng-if="$storage.guest">
+          <img src="img/carga-dark-d.png" alt="" />
+          Cargas de Gasolina
+        </ion-item>
+        <ion-item class="deactivated-item" ng-if="$storage.guest">
+          <img src="img/auto-d.png" alt="" />
+          Mis Autos
+        </ion-item>
+        <ion-item class="deactivated-item" ng-if="$storage.guest">
+          <img src="img/seguro-d.png" alt="" />
+          Mis Seguros
+        </ion-item>
+        <ion-item class="deactivated-item" ng-if="$storage.guest">
+          <img src="img/team-d.png" alt="" />
           Mi Yego Team
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-item menu-close href="#/app/negocios">
+        <!-- <ion-item menu-close href="#/app/negocios">
           <img src="img/negocio.png" alt="" />
           Agregar Negocio
-        </ion-item>
+        </ion-item> -->
         <ion-item menu-close href="#/app/about">
           <img src="img/info.png" alt="" />
           Acerca de Yego

@@ -34,7 +34,9 @@ angular.module('starter', [
       StatusBar.styleBlackTranslucent();
     }
     setTimeout(function() {
-      window.splashscreen.hide();
+      if(navigator.splashscreen !== undefined){
+        navigator.splashscreen.hide();
+      }
     }, 300);
 
   });
@@ -42,8 +44,8 @@ angular.module('starter', [
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $authProvider) {
   $authProvider.configure({
-    apiUrl: 'https://stage-yego-backoffice.herokuapp.com/api/v1',// stage
-    // apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',// production
+    /* production */
+    apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',
     storage: 'localStorage'
   });
   $ionicConfigProvider.backButton.previousTitleText(false);
@@ -112,6 +114,16 @@ angular.module('starter', [
       }
     }
   })
+  // DIRECTORIO LISTA DE GASOLINERAS
+  .state('app.gasList', {
+    url: '/directorio/gasolineras',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/gaslist.html",
+        controller: 'GasListCtrl'
+      }
+    }
+  })
   // DIRECTORIO SINGLE
   .state('app.dirSingle', {
     url: '/directorio/single/:singleId',
@@ -119,6 +131,26 @@ angular.module('starter', [
       'menuContent': {
         templateUrl: "templates/directorio/single.html",
         controller: 'DirSingleCtrl'
+      }
+    }
+  })
+  // DIRECTORIO SINGLE GASOLINERA
+  .state('app.gasSingle', {
+    url: '/directorio/gasolineras/:gasId',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/gassingle.html",
+        controller: 'GasSingleCtrl'
+      }
+    }
+  })
+  // DIRECTORIO MAPA
+  .state('app.dirMapa', {
+    url: '/directorio/mapa',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/directorio/mapa.html",
+        controller: 'DirMapaCtrl'
       }
     }
   })

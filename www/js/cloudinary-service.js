@@ -2,8 +2,9 @@ angular.module('starter')
 .factory('ImageUploadFactory', function ($q, $ionicLoading, $cordovaFileTransfer) {
 
   return {
-    uploadImage: function (imageURI , preset) {
+    uploadImage: function (imageURI , preset, publicId) {
       console.log('start upload image.');
+      console.log('foto publicid'+publicId);
       var deferred = $q.defer();
 
       uploadFile();
@@ -12,13 +13,12 @@ angular.module('starter')
         // $ionicLoading.show({template : 'Uploading image...'});
         // Add the Cloudinary "upload preset" name to the headers
         var uploadOptions = {
-          params : { 'upload_preset': preset}
+          params : { 'upload_preset': preset, 'public_id':  publicId}
         };
         console.log(uploadOptions);
       $cordovaFileTransfer
         // Your Cloudinary URL will go here
         .upload('https://api.cloudinary.com/v1_1/omakase/image/upload', imageURI, uploadOptions)
-
         .then(function(result) {
           // Let the user know the upload is completed
           // $ionicLoading.show({template : 'Done.', duration: 1000});
