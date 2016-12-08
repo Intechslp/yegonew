@@ -44,8 +44,8 @@ angular.module('starter', [
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $authProvider) {
   $authProvider.configure({
-    apiUrl: 'https://stage-yego-backoffice.herokuapp.com/api/v1',// stage
-    // apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',// production
+    /* production */
+    apiUrl: 'https://production-yego-backoffice.herokuapp.com/api/v1',
     storage: 'localStorage'
   });
   $ionicConfigProvider.backButton.previousTitleText(false);

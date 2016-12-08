@@ -18,7 +18,6 @@ angular.module('starter')
 –––––––––––––––––––––––*/
 .factory('UserData', function($http){
 
-    // var url_u = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
     var url_u = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
     return {
         registerUser: function(obj){
@@ -58,11 +57,8 @@ angular.module('starter')
  TEAM DATA
 –––––––––––––––––––––––*/
 .factory('TeamData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
-    // var urlInv = 'http://stage-yego-backoffice.herokuapp.com/api/v1/family_requests/'; // stage
     var urlInv = 'http://production-yego-backoffice.herokuapp.com/api/v1/family_requests/'; // production
-    // var urlPI = 'http://stage-yego-backoffice.herokuapp.com/api/v1/my_family_requests/'; // stage
     var urlPI = 'http://production-yego-backoffice.herokuapp.com/api/v1/my_family_requests/'; // production
 
     return {
@@ -116,11 +112,8 @@ angular.module('starter')
  LOCATION DATA
 –––––––––––––––––––––––*/
 .factory('LocationData', function($http){
-    // var url_p = 'http://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//pais // stage
     var url_p = 'http://production-yego-backoffice.herokuapp.com/api/v1/countries/';//pais // production
-    // var url_e = 'http://stage-yego-backoffice.herokuapp.com/api/v1/countries/';//estado // stage
     var url_e = 'http://production-yego-backoffice.herokuapp.com/api/v1/countries/';//estado // production
-    // var url_c = 'http://stage-yego-backoffice.herokuapp.com/api/v1/state/';//ciudad // stage
     var url_c = 'http://production-yego-backoffice.herokuapp.com/api/v1/state/';//ciudad // production
 
     return{
@@ -147,33 +140,12 @@ angular.module('starter')
 /***************
 ****************
 ****************
- SEGUROS DATA
-–––––––––––––––––––––––*/
-.factory('SomeDataFactory', function($http){
-    var url = 'http://private-3c6f3-tracto.apiary-mock.com/resumen';
-
-    return {
-    getSomeData: function(){
-        return $http.get(url).then(function(response){
-            var data = response.data;
-            //do something exciting with the data
-            return data;
-            });
-        }
-    }
-})
-/***************
-****************
-****************
  ESTABLECIMIENTOS DATA
 –––––––––––––––––––––––*/
 .factory('EstablecimientosData', function($http){
-    var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/city_establishments/'; //stage
-    // var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/city_establishments/'; //production
-    var url2 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/categories'; //stage
-    // var url2 = 'http://production-yego-backoffice.herokuapp.com/api/v1/categories'; //production
-    var url3 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/establishments/'; //stage
-    // var url3 = 'http://production-yego-backoffice.herokuapp.com/api/v1/establishments/'; //production
+    var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/city_establishments/'; //production
+    var url2 = 'http://production-yego-backoffice.herokuapp.com/api/v1/categories'; //production
+    var url3 = 'http://production-yego-backoffice.herokuapp.com/api/v1/establishments/'; //production
 
     var subcategorias = {};
     var categorias = {};
@@ -233,9 +205,7 @@ angular.module('starter')
  NEGOCIOS DATA
 –––––––––––––––––––––––*/
 .factory('NegociosData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/businesses'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/businesses'; // production
-    // var url2 = 'http://stage-yego-backoffice.herokuapp.com/api/v1/my_businesses/'; // stage
     var url2 = 'http://production-yego-backoffice.herokuapp.com/api/v1/my_businesses/'; // production
     return {
         getNegocios: function(){
@@ -276,7 +246,6 @@ angular.module('starter')
  SERVICIOS DATA
 –––––––––––––––––––––––*/
 .factory('ServiciosData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/services'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/services'; // production
     return {
         getServicios: function(){
@@ -294,7 +263,6 @@ angular.module('starter')
  MIS SEGUROS DATA
 –––––––––––––––––––––––*/
 .factory('MisSegurosData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/insurances/'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/insurances/'; // production
 
     var theCar = {};
@@ -342,11 +310,8 @@ angular.module('starter')
  GASOLINAS DATA
 –––––––––––––––––––––––*/
 .factory('GasolinasData', function($http){
-    // var url_fuels = 'http://stage-yego-backoffice.herokuapp.com/api/v1/fuels/'; // stage
     var url_fuels = 'http://production-yego-backoffice.herokuapp.com/api/v1/fuels/'; // production
-    // var url_gas_stations = 'http://stage-yego-backoffice.herokuapp.com/api/v1/city_gas_stations/'; // stage
     var url_gas_stations = 'http://production-yego-backoffice.herokuapp.com/api/v1/city_gas_stations/'; // production
-    // var url_fuel_refills = 'http://stage-yego-backoffice.herokuapp.com/api/v1/app_users/'; // stage
     var url_fuel_refills = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
 
     var gasolinera = {};
@@ -452,7 +417,6 @@ angular.module('starter')
  RATING DATA
 –––––––––––––––––––––––*/
 .factory('RatingData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/reviews/'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/reviews/'; // production
     return {
         postRating: function(obj){
@@ -482,7 +446,6 @@ angular.module('starter')
  CUPONES DATA
 –––––––––––––––––––––––*/
 .factory('CuponesData', function($http){
-    // var url = 'http://stage-yego-backoffice.herokuapp.com/api/v1/cupons'; // stage
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/cupons'; // production
 
     var el_cupon = {};
