@@ -36,7 +36,6 @@ angular.module('starter')
             }
             return $http(ops).then(function(response){
                 var data = response.data;
-                console.log(data);
                 return data;
             });
         },
@@ -99,7 +98,6 @@ angular.module('starter')
         eliminarInvitacion: function(reqId){
             var finalUrl = urlInv+reqId;
             return $http.delete(finalUrl).then(function(response){
-                console.log(response)
             }).catch(function(response){
                 console.log(response)
             });
@@ -216,25 +214,19 @@ angular.module('starter')
         },
         getUserNegocios: function(userId){
             var urlFinal = url2+userId;
-            console.log(urlFinal);
             return $http.get(urlFinal).then(function(response){
               var data = response.data;
               return data;
             });
         },
         createNegocio: function(negocio){
-            console.log('crearNegocio()');
-            console.log(negocio);
             var obj = {};
             obj.business = {};
             obj.business = negocio;
             return $http.post(url,obj).then(function(response){
-                console.log('lo logramos!');
-                console.log(response.data);
                 var data = response.data;
                 return data;
             }).catch(function(response){
-                console.log('no lo logramos :(');
                 console.log(response);
             });
         }
@@ -249,7 +241,6 @@ angular.module('starter')
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/services'; // production
     return {
         getServicios: function(){
-            console.log('getServicios()');
           return $http.get(url).then(function(response){
               var data = response.data;
               return data;
@@ -268,30 +259,23 @@ angular.module('starter')
     var theCar = {};
     return {
         getInsurance: function(insuranceId){
-            console.log('getInsurance()');
           return $http.get(url).then(function(response){
               var data = response.data;
               return data;
           });
         },
         newInsurance: function(objS){
-            console.log('newInsurance()');
-            console.log(objS);
             return $http.post(url,objS).then(function(response){
               var data = response.data;
               return data;
-              console.log('lo logramos');
             }).catch(function(err){
               console.log(err);
             });
         },
         editInsurance: function(insId,objS){
-            console.log('editInsurance()');
-            console.log(objS);
             return $http.patch(url+insId,objS).then(function(response){
               var data = response.data;
               return data;
-              console.log('lo logramos');
             }).catch(function(err){
               console.log(err);
             });
@@ -313,6 +297,7 @@ angular.module('starter')
     var url_fuels = 'http://production-yego-backoffice.herokuapp.com/api/v1/fuels/'; // production
     var url_gas_stations = 'http://production-yego-backoffice.herokuapp.com/api/v1/city_gas_stations/'; // production
     var url_fuel_refills = 'http://production-yego-backoffice.herokuapp.com/api/v1/app_users/'; // production
+    var url_sg = 'http://production-yego-backoffice.herokuapp.com/api/v1/gas_stations/' // production
 
     var gasolinera = {};
 
@@ -362,7 +347,6 @@ angular.module('starter')
             return monthRefills;
         },
         getFuels: function(){
-            console.log('getFuels()');
           return $http.get(url_fuels).then(function(response){
               var data = response.data;
               return data;
@@ -371,7 +355,6 @@ angular.module('starter')
           });
         },
         getGasStations: function(cityId){
-            console.log('getGasStations()');
             return $http.get(url_gas_stations+cityId).then(function(response){
                 var data = response.data;
                 return data;
@@ -385,10 +368,17 @@ angular.module('starter')
         getGasolineraSingle: function(){
             return gasolinera;
         },
+        getOneGasolinera: function(id){
+            var urlFinal = url_sg+id;
+            return $http.get(urlFinal).then(function(response){
+                var data = response.data;
+                return data;
+          }).catch(function(err){
+              console.log(err);
+          });
+        },
         getFuelRefills: function(userId,carId){
-            console.log('getFuelRefills('+userId+','+carId+')');
-            var urlFinal = url_fuel_refills+userId+'/vehicles/'+carId+'/fuel_refills/'
-            console.log(urlFinal);
+            var urlFinal = url_fuel_refills+userId+'/vehicles/'+carId+'/fuel_refills/';
             return $http.get(urlFinal).then(function(response){
                 var data = porMeses(response.data);
                 return data;
@@ -397,7 +387,6 @@ angular.module('starter')
           });
         },
         NewFuelRefill: function(userId,objG){
-            console.log('NewFuelRefill()');
             return $http.post(
                 url_fuel_refills+userId+'/vehicles/'+objG.fuel_refill.vehicle_id+'/fuel_refills/',
                 objG

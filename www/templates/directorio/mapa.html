@@ -3,9 +3,12 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
   </ion-nav-bar>
-  <ion-content class="has-header">
+  <ion-content>
     <div class="item-divider">
-      <h1 class="title">{{single.business.name}}</h1>
+      <h1 class="title" ng-if="single.business.name !== undefined">
+        {{single.business.name}}</h1>
+      <h1 class="title" ng-if="single.business.name === undefined">
+        {{single.name}}</h1>
     </div>
     <div id="map" class="rescate-map" data-tap-disabled="true"></div>
   </ion-content>

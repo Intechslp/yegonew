@@ -587,19 +587,19 @@ img.menu-icon {
   width:100%;
   height: 100%;
 }
-#dirMapa .rescate-map {
+#dirMapa #map.rescate-map {
   width: 100%;
-  height: 90%;
+  height: 100%;
   position: relative;
 }
 #dirMapa .scroll *{
   color:#0d1927;
 }
 #dirMapa .item-divider{
-  height: 10%;
 }
 #dirMapa .item-divider h1{
   font-size: 15px;
+  margin-bottom: 0;
 }
 .single-services li{
   padding: .5em 3em;
@@ -618,138 +618,57 @@ img.menu-icon {
 /* CERCA DE MI
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
-#cerca .bar-assertive, #cerca .button-assertive,
-#cerca-modal .bar-assertive, #cerca-modal .button-assertive{
-  border-color: #B90017;
-  background-color: #B90017;
-  background-image: linear-gradient(0deg, #B90017, #B90017 50%, transparent 50%);
-}
-#cerca .button-assertive, #cerca-modal .button-assertive{
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0;
-  padding: .5em;
-  height: 13%;
-}
-#cerca-modal .button-assertive{
-  font-size: 20px;
-}
-#cerca .scroll, #cerca-modal .scroll{
-  height:100%;
-}
-#cerca #datos {
-  background: #FF6000;
-  margin-bottom: 0px;
-  padding: 1em 1em .3em;
-  height: 40%;
-  min-height: 210px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-#cerca #datos .toggle input:checked + .track {
-  border-color: #4cb8d9;
-  background-color: #4cb8d9;
-}
-#cerca #datos .toggle input + .track {
-  border-color: #4cd964;
-  background-color: #4cd964;
-}
-#cerca #datos .input-label {
-  color: white;
-}
-#cerca #datos .item {
-  background: transparent;
-  color: white;
-  padding: 0;
-  border: none;
-  /*border-bottom: 1px solid #d04e00;*/
-}
-#cerca #datos .item:nth-last-child(1){
-  border-bottom: none;
-}
-#cerca #datos .form-header{
-  text-align: center;
-  font-weight: 600;
-  margin: auto;
-  font-size: 18px;
-  padding: 0;
-}
-#cerca .smaller-row {
+#cerca .scroll{
+  position: relative;
   width: 100%;
-  max-width: 250px;
-  margin: auto;
-  padding: 0;
+  height: 100%;
 }
-#cerca #datos .col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
+#cerca .scroll *{
+  color:#0d1927;
 }
-#cerca #datos .smaller-row .col .input-label{
-  font-size: 17px;
-  padding: .3em 0;
-  margin: 0;
-}
-#cerca #datos .select-container {
-  background: white;
-  width: 100%;
-  overflow: hidden;
-  padding: .5em 1em;
-  position:   relative;
-}
-#cerca #datos .select-container, #cerca #datos textarea.com-input,
-#cerca #datos input.ubi-input {
-  margin: 3% 0;
-}
-#cerca #datos .select-container .input-label{
-  width:25%;
-}
-#cerca #datos .select-container select {
-  width: 75%;
-  right: 30px;
-}
-#cerca #datos .select-container .input-label,
-#cerca #datos .select-container select {
-  padding: 0;
-  margin: 0;
-  color: #aaa;
-}
-#cerca #datos textarea.com-input {
-  height: 50px;
-}
-#cerca #datos .select-container,#cerca #datos .com-input,#cerca #datos .ubi-input {
-  background: white;
-  padding: .5em 1em;
-  border: 1px solid #B90017;
-  box-shadow: 0px 3px 5px #b34300;
-  font-size: 17px;
-}
-.not-rescate-map {
-  padding: 1.5em 1em;
-  height: 47%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  align-content: center;
-  background-image: url(../img/map-bg.jpg);
-  background-size: cover;
-  background-origin: initial;
-  background-position: center;
-}
-#cerca .not-rescate-map .button {
-  width: 230px;
-  font-size: 16px;
-  font-weight: 600;
-  box-shadow: 0px 2px 5px #777;
-  padding: 2px 1em 1px;
-}
-#cerca .rescate-map {
+#cerca #map.cerca-map {
   width: 100%;
   height: 100%;
   position: relative;
+}
+#cerca .list {
+  position:absolute;
+  width:100%;
+  top:0;
+  left:0;
+  z-index: 99;
+  background: #92baf5;
+  margin-bottom: 0;
+}
+#cerca .list .item,#cerca .list .item select{
+  background: transparent;
+  color: transparent;
+}
+#cerca .list .item{
+  border: 1px solid #699dea;
+}
+#cerca .list .item-select:after{
+  color:#0d1927;
+}
+#cerca .list .item-select .input-label{
+  padding:0;
+}
+#cerca .list .item-select .input-label-2{
+  position: absolute;
+  top: 6px;
+  bottom:0;
+  right: 0;
+  padding: 0 48px 0 16px ;
+  width:auto;
+  max-width: none;
+}
+#cerca #subcategory{
+  opacity: 1;
+  transition: opacity .5s;
+}
+#cerca #subcategory.ng-hide {
+  opacity: 0;
+  transition: opacity .5s;
 }
 /* CUPONERA
 –––––––––––––––––––––––––––––

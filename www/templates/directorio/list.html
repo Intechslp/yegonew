@@ -11,12 +11,12 @@
         <img ng-if="negocio.image.thumbnail.url != null" src="{{negocio.image.thumbnail.url}}" alt="">
         <h2>{{negocio.business | capitalize:true}}</h2>
         <div class="rate-bar">
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star-half"></i>
           <i class="icon ion-android-star-outline"></i>
           <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <p>0 (0)</p>
+          <p>{{negocio.review_score}} ({{negocio.review_counter}})</p>
         </div>
       </a>
     </div>

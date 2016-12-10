@@ -45,22 +45,29 @@
 
         <p><i class="icon ion-ios-telephone"></i>{{single.phone}}</p>
 
-        <p
-        ng-if="single.business.email !== undefined || single.business.email === ''">
+        <p ng-if="
+          single.business.email !== undefined &&
+          single.business.email !== '' &&
+          single.business.email != null">
           <i class="icon ion-ios-email"></i>
           <a href="mailto:{{single.business.email}}">{{single.business.email}}</a>
         </p>
 
-        <p
-        ng-if="single.business.website !== undefined || single.business.website === ''">
+        <p ng-if="single.business.website !== undefined &&
+          single.business.website !== '' &&
+          single.business.website != null">
           <i class="icon ion-monitor"></i>
           <a ng-click="openInAppBrowser(single.business.website)">{{single.business.website}}</a>
         </p>
-        <p ng-if="single.business.facebook !== undefined || single.business.facebook === ''">
+        <p ng-if="single.business.facebook !== undefined &&
+          single.business.facebook !== '' &&
+          single.business.facebook != null">
           <i class="icon ion-social-facebook"></i>
           <a ng-click="openInAppBrowser('http://facebook.com/'+single.business.facebook)">{{single.business.facebook}}</a>
         </p>
-        <p ng-if="single.business.twitter !== undefined || single.business.twitter === ''">
+        <p ng-if="single.business.twitter !== undefined &&
+          single.business.twitter !== '' &&
+          single.business.twitter != null">
           <i class="icon ion-social-twitter"></i>
           <a ng-click="openInAppBrowser('http://twitter.com/'+single.business.twitter)">{{single.business.twitter}}</a>
         </p>

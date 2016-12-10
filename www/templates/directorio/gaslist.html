@@ -11,12 +11,12 @@
         <img ng-if="gasolinera.image.thumbnail.url != null" src="{{gasolinera.image.thumbnail.url}}" alt="">
         <h2>{{gasolinera.name | capitalize:true}}</h2>
         <div class="rate-bar">
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star"></i>
+          <i class="icon ion-android-star-half"></i>
           <i class="icon ion-android-star-outline"></i>
           <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <p>0 (0)</p>
+          <p>{{gasolinera.review_score}} ({{gasolinera.review_counter}})</p>
         </div>
       </a>
     </div>

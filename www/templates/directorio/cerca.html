@@ -1,4 +1,4 @@
-<ion-view id="cerca" view-title="Cerca de mi">
+<ion-view id="cerca" class="cerca" view-title="Cerca de mi">
   <ion-nav-bar class="bar-dark">
     <ion-nav-back-button>
     </ion-nav-back-button>
@@ -7,23 +7,25 @@
       </button>
     </ion-nav-buttons>
   </ion-nav-bar>
-  <ion-content class="has-header">
-    <ng-map class="rescate-map" center='current-position'
-      map-type-control="false" street-view-control="false"
-      geo-fallback-center="[22.153843, -100.979790]"
-      geo-callback="callbackFunc('you')">
-      <marker ng-repeat="marker in markers"
-      title="{{marker.title}}"
-      position="{{marker.pos}}">
-      </marker>
-      <marker position="{{myself}}" title="Hello World!"
-        icon="{
-          url:'img/pos.png',
-          scaledSize:[14,14],
-          origin: [0,0],
-          anchor: [7,7]
-          }" >
-      </marker>
-    </ng-map>
+  <ion-content>
+    <div class="list">
+      <label class="item item-input item-select">
+        <div class="input-label">Categoría:</div>
+        <div class="input-label input-label-2">{{chosenCat.name}}</div>
+        <select ng-model="chosenCat" ng-change="getSubcats(chosenCat)"
+        ng-options="category as category.name for category in categories">
+        </select>
+      </label>
+      <!-- SUBCATEGORIES EXIST -->
+      <label id="subcategory" class="item item-input item-select" ng-show="showsubcats">
+        <div class="input-label">Subcategoría:</div>
+        <div class="input-label input-label-2">{{chosenSubcat.name}}</div>
+        <select ng-model="chosenSubcat" ng-change="getMarkers(chosenSubcat)"
+        ng-options="subcategory as subcategory.name for subcategory in subcategories">
+        </select>
+
+      </label>
+    </div>
+    <div id="map" class="cerca-map" data-tap-disabled="true"></div>
   </ion-content>
 </ion-view>
