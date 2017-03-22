@@ -10,10 +10,10 @@
       <img ng-show="imgURI2 === undefined" src="img/photo.jpg" alt="">
       <img ng-show="imgURI2 !== undefined" ng-src="{{imgURI2}}">
       <div class="button-holder">
-        <button class="button button-positive button-icon ion-camera m-icon"
+        <button type="button" class="button button-positive button-icon ion-camera m-icon"
         ng-click="takePicture()">
         </button>
-        <button class="button button-positive button-icon ion-images m-icon"
+        <button type="button" class="button button-positive button-icon ion-images m-icon"
         ng-click="selectPicture()">
         </button>
       </div>

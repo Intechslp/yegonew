@@ -27,16 +27,16 @@
         <img class="carga-img" src="img/carga-light.png" alt="">
         <div class="month-data">
           <h3>{{key}}</h3>
-          <p>Litros Consumidos: <span class="blue-span">{{cargaTotal[$index]}} Lts.</span><br>
-            Gasto Total: <span class="blue-span">${{costoTotal[$index]}}</span>
+          <p>Litros Consumidos: <span class="blue-span">{{cargaTotal[$index] | number: 2}} Lts.</span><br>
+            Gasto Total: <span class="blue-span">${{costoTotal[$index] | number: 2}} MXN</span>
           </p>
         </div>
       </div>
     </div>
     <!-- NO HAY CARRO -->
     <div class="padding" ng-if="!theresCar">
-      <h4>No hay autos registrados</h4>
-      <button class="button button-positive button-clear">Dar de alta un auto</button>
+      <h4>Aun no hay autos registrados</h4>
+      <button class="button button-positive button-clear" ng-click="goAutos()">Ir a mis autos</button>
     </div>
   </ion-content>
 </ion-view>

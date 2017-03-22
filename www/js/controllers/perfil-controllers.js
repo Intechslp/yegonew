@@ -1,15 +1,16 @@
 angular.module('starter.perfil.controllers',
 ['starter.controllers','starter.login.controllers','starter.seguro.controllers',
-'ngMap','ngStorage','ng-token-auth','ngCordova'])
+'ngMap','ngStorage','ng-token-auth','ngCordova','jrCrop'])
 
 // PERFIL CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('PerfilCtrl',
 function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage,
   $timeout, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaCamera,
-  UserData, LocationData, ImageUploadFactory) {
+  $jrCrop, UserData, LocationData, ImageUploadFactory) {
   $scope.$storage = $localStorage;
   $scope.usuario = $scope.$storage.user;
+  console.log($scope.usuario);
   $scope.userId = $rootScope.userId;
   $scope.carData = {};
   $scope.famData = {};
@@ -39,17 +40,23 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
   }
   // Editar el usuario
   $scope.editUser = function(){
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
+    $ionicLoading.show({templateUrl:'templates/actualizando.html'});
 
     if($scope.imgURI !== undefined){
       var tmp = new Date();
       var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
       var publicId = 'usuarios/'+timestring+'-'+$scope.userId;
-        UploadFactory.uploadImage($scope.imgURI, 'perfilyego', publicId).then(function(result){
+      console.log('ImageUploadFactory');
+        ImageUploadFactory.uploadImage($scope.imgURI, 'perfilyego', publicId).then(function(result){
+        console.log(result);
         $scope.url = result.url;
         $scope.myUser.imageurl = $scope.url;
-        $scope.myUser.photoid = publicId;
+        $scope.myUser.photoid = 'perfil/'+publicId;
+        console.log($scope.myUser);
+        console.log('updateUser');
         UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
+          console.log('updateUser');
+          console.log(resp);
           //obtener información actualizada del usuario
           $scope.$storage.user = resp;
           $rootScope.user = resp;
@@ -67,7 +74,12 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
         $cordovaCamera.cleanup();
       });
     }else if ($scope.imgURI === undefined) {
+      console.log('imgURI undefined');
+      console.log($scope.userId);
+      console.log($scope.myUser);
       UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
+        console.log('updateUser');
+        console.log(resp);
         //obtener información actualizada del usuario
         $scope.$storage.user = resp;
         $rootScope.user = resp;
@@ -116,24 +128,76 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
     });
   }
 
+  // función para calcular el tamaño del crop window para jrCrop
+  $scope.cropWindowCalculator = function(){
+    var constraints = [window.innerWidth,window.innerWidth];
+    return constraints;
+  }
+
   // Abre la camara para tomar foto
   $scope.takePicture = function() {
     var options = {
-      quality : 70,
+      quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
+      allowEdit : false,
       encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 300,
-      targetHeight: 300,
       popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
+      correctOrientation:true,
+      saveToPhotoAlbum: true,
+      cameraDirection: Camera.Direction.FRONT
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      var constraints =  $scope.cropWindowCalculator();
+      $scope.imgURI = "data:image/jpeg;base64,"+imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI,
+          width: constraints[0],
+          height: constraints[0],
+          circle:true,
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI = canvas.toDataURL();
+      }, function() {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+      });
+
     }, function(err) {
       console.log(err);
+    });
+  }
+
+  $scope.selectPicture = function() {
+    console.log('selectPicture()')
+    var options = {
+      quality : 90,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+      encodingType: Camera.EncodingType.JPEG,
+      popoverOptions: CameraPopoverOptions
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var constraints =  $scope.cropWindowCalculator();
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI,
+          width: constraints[0],
+          height: constraints[1],
+          circle:true,
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI = canvas.toDataURL();
+      }, function() {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+      });
+    }, function(err) {
+      // An error occured. Show a message to the user
     });
   }
 

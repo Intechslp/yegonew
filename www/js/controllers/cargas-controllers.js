@@ -24,7 +24,6 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
   var elCarro = $scope.$storage.user.driver_of_vehicles[0];
   var userId = $scope.$storage.user.id;
   if(elCarro !== undefined){
-    console.log('El carro está definido');
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     $scope.mainCar = elCarro.brand+' '+elCarro.description+' '+elCarro.model;
     $scope.carId = $scope.$storage.user.driver_of_vehicles[0].id;
@@ -41,9 +40,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
     $scope.userCity = $scope.$storage.user.city.id;
 
     GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
-      console.log(resp);
       $scope.theMonths = _.groupBy(resp, 'month_year');
-      console.log($scope.theMonths);
       for (var prop in $scope.theMonths) {
         if ($scope.theMonths.hasOwnProperty(prop)) {
           var cargaSum = 0;
@@ -56,6 +53,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
           $scope.costoTotal.push(costoSum);
         }
       }
+      console.log($scope.theMonths);
       $ionicLoading.hide();
     }).catch(function(resp){
       console.log(resp);
@@ -160,6 +158,14 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
     console.log(month);
     GasolinasData.setSingleMonth(key,month,$scope.cargaTotal[indx],$scope.costoTotal[indx]);
     $state.go('app.resumenMes', {cargaId: 1});
+  }
+
+// funcion que envía a la pantalla de mis autos
+  $scope.goAutos = function(){
+    $ionicHistory.nextViewOptions({
+      historyRoot: true
+    })
+    $state.go('app.autos');
   }
 
 // funcion para comprobar si el objeto está vacío

@@ -24,8 +24,8 @@ angular.module('starter')
           return $http.post(url_u,obj).then(function(response){
             var data = response.data;
             return data;
-          }).catch(function(response){
-            console.log(response)
+          }).catch(function(err){
+            console.log(err)
           });
         },
         getUserData: function(id,uid){
@@ -40,12 +40,16 @@ angular.module('starter')
             });
         },
         updateUser: function(userId,obj){
+          console.log('update user service');
             var finalUrl = url_u+userId;
+            var userObj = {};
+            userObj.app_user = obj;
+            console.log(finalUrl);
             return $http.patch(finalUrl,obj).then(function(response){
                 var data = response.data;
                 return data;
-            }).catch(function(response){
-                console.log(response)
+            }).catch(function(err){
+                console.log(err)
             });
         }
     }
@@ -71,21 +75,22 @@ angular.module('starter')
         crearTeam: function(teamData){
             var ctUrl = url+teamData.administrator_id+'/families';
             return $http.post(ctUrl,teamData).then(function(response){
-            }).catch(function(response){
-                console.log(response);
+            }).catch(function(err){
+                console.log(err);
             });
         },
         eliminarTeam: function(team){
             var ctUrl = url+team.administrator.id+'/families/'+team.id;
             return $http.delete(ctUrl).then(function(response){
-            }).catch(function(response){
-                console.log(response);
+              console.log(response);
+            }).catch(function(err){
+                console.log(err);
             });
         },
         enviarInvitacion: function(obj){
             return $http.post(urlInv,obj).then(function(response){
-            }).catch(function(response){
-                console.log(response);
+            }).catch(function(err){
+                console.log(err);
             });
         },
         preguntarInvitacion: function(usrId){
@@ -98,8 +103,8 @@ angular.module('starter')
         eliminarInvitacion: function(reqId){
             var finalUrl = urlInv+reqId;
             return $http.delete(finalUrl).then(function(response){
-            }).catch(function(response){
-                console.log(response)
+            }).catch(function(err){
+                console.log(err)
             });
         }
     }
@@ -190,9 +195,33 @@ angular.module('starter')
             return singleStablishment;
         },
         createSucursal: function(sucursal){
-            return $http.post(url3,sucursal).then(function(response){
-            }).catch(function(response){
+            var obj = {};
+            obj.establishment = sucursal;
+            return $http.post(url3,obj).then(function(response){
+              console.log(response);
+            }).catch(function(err){
+              console.log(err);
             });
+        },
+        editSucursal: function(sucursal){
+          var obj = {};
+          obj.establishment = {};
+          obj.establishment = sucursal;
+          var f_url = url3+sucursal.id;
+          return $http.patch(url, obj).then(function(response){
+            var data = response.data;
+            return data;
+          }).catch(function(err){
+            console.log(err);
+          });
+        },
+        deleteSucursal: function(idSuc){
+          f_url = url3+idSuc;
+          return $http.delete(f_url).then(function(response){
+            console.log(response);
+          }).catch(function(err){
+            console.log(err);
+          });
         }
     }
 
@@ -205,6 +234,8 @@ angular.module('starter')
 .factory('NegociosData', function($http){
     var url = 'http://production-yego-backoffice.herokuapp.com/api/v1/businesses'; // production
     var url2 = 'http://production-yego-backoffice.herokuapp.com/api/v1/my_businesses/'; // production
+    var bisne = {};
+
     return {
         getNegocios: function(){
           return $http.get(url).then(function(response){
@@ -223,13 +254,53 @@ angular.module('starter')
             var obj = {};
             obj.business = {};
             obj.business = negocio;
+            console.log(obj);
             return $http.post(url,obj).then(function(response){
                 var data = response.data;
                 return data;
-            }).catch(function(response){
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        editNegocio: function(negocio){
+          var obj = {};
+          obj.business = {};
+          obj.business = negocio;
+          console.log(obj);
+          var f_url = url+'/'+negocio.id;
+          return $http.patch(f_url, obj).then(function(response){
+            var data = response.data;
+            console.log(response);
+            return data;
+          }).catch(function(err){
+            console.log(err);
+          });
+        },
+        deleteNegocio: function(idNeg){
+          f_url = url+idNeg;
+          return $http.delete(f_url).then(function(response){
+            console.log(response);
+          }).catch(function(err){
+            console.log(err);
+          });
+        },
+        setSingleNegocio: function(obj){
+          bisne = obj;
+        },
+        getSingleNegocio: function(){
+          return bisne;
+        },
+        getNegocioFromUrl: function(idNeg){
+            var f_url = url+'/'+idNeg;
+            return $http.get(f_url).then(function(response){
+                var data = response.data;
+                return data;
                 console.log(response);
+            }).catch(function(err){
+                console.log(err);
             });
         }
+
     }
 })
 /***************
@@ -380,6 +451,7 @@ angular.module('starter')
         getFuelRefills: function(userId,carId){
             var urlFinal = url_fuel_refills+userId+'/vehicles/'+carId+'/fuel_refills/';
             return $http.get(urlFinal).then(function(response){
+                console.log(response);
                 var data = porMeses(response.data);
                 return data;
           }).catch(function(err){

@@ -7,7 +7,7 @@
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('AutosCtrl',
 function($state, $scope, $window, $rootScope, $stateParams,
-  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth,
+  $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth, $jrCrop,
   SegurosData, AutosData, UserData, TeamData, $cordovaCamera, ImageUploadFactory) {
 
   // Comprobación de sesión
@@ -23,13 +23,14 @@ function($state, $scope, $window, $rootScope, $stateParams,
   $scope.$storage = $localStorage;
   $scope.usrId = $scope.$storage.id;
   var usrUid = $scope.$storage.headers.uid;
+  $scope.theresCars = false;
   $scope.marcas = [];
   $scope.modelos = [];
   $scope.descripciones = [];
   $scope.objV = {};
   $scope.objV.vehicle={};
   $scope.myCar = {};
-  $scope.allCars = {};
+  $scope.allCars = [];
 
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
@@ -37,6 +38,10 @@ function($state, $scope, $window, $rootScope, $stateParams,
   //obtener todos los autos del usuario
   AutosData.getMisAutos($scope.usrId,usrUid).then(function(resp){
     $scope.allCars = resp;
+    $scope.$storage.user.driver_of_vehicles = resp;
+    if($scope.allCars.length > 0){
+      $scope.theresCars = true;
+    }
     $ionicLoading.hide();
   }).catch(function(resp){
     console.log(resp);
@@ -56,7 +61,6 @@ function($state, $scope, $window, $rootScope, $stateParams,
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
     SegurosData.getMarcas().then(function(response){
-      console.log(response);
       $ionicLoading.hide();
       var brands = JSON.parse(response);
       $scope.marcas = brands.Marcas;
@@ -83,7 +87,7 @@ function($state, $scope, $window, $rootScope, $stateParams,
         ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp',publicId).then(function(result){
           $scope.url = result.url;
           $scope.myCar.imageurl = $scope.url;
-          $scope.myCar.photoid = publicId;
+          $scope.myCar.photoid = 'autos/'+publicId;
           $scope.objV.vehicle = $scope.myCar;
           AutosData.nuevoAuto($scope.objV).then(function(response){ //ORIGINAL
             $ionicLoading.hide();
@@ -118,6 +122,7 @@ function($state, $scope, $window, $rootScope, $stateParams,
       );
     }
   }
+
   $scope.comprobarAuto = function(){
     if(
       $scope.myCar.brand !== null ||
@@ -156,46 +161,88 @@ function($state, $scope, $window, $rootScope, $stateParams,
     });
   }
 
+// función para calcular el tamaño del crop window para jrCrop
+  $scope.cropWindowCalculator = function(){
+    var cropHeight = Math.round((900*window.innerWidth)/1600);
+    var constraints = [window.innerWidth,cropHeight];
+    return constraints;
+  }
+
+// función de prueba para debuguear la proporción de la camara
+//  $scope.pruebaImagen = function(){
+//    var constraints =  $scope.cropWindowCalculator();
+//    $jrCrop.crop({
+//        url: 'http://res.cloudinary.com/omakase/image/upload/v1485138935/autos/vehiculos/201700203532-41.jpg',
+//        width: constraints[0],
+//        height: constraints[1],
+//        title: 'Ajusta la Imágen'
+//    }).then(function(canvas) {
+//        // success!
+//        var imagen = canvas.toDataURL();
+//    }, function() {
+//        // User canceled or couldn't load image.
+//        console.log("not cropped");
+//    });
+//  }
+
+// función que abre la camara del dispositivo para tomar una foto
   $scope.takePicture = function() {
-    console.log('takePicture()')
     var options = {
-      quality : 70,
+      quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
+      allowEdit : false,
       encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 800,
-      targetHeight: 450,
       popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
+      saveToPhotoAlbum: true,
+      correctOrientation:true
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
-      // console.log(imageData)
+      var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI2,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI2 = canvas.toDataURL();
+      }, function() {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+      });
     }, function(err) {
       // An error occured. Show a message to the user
     });
   }
 
+// función que abre la biblioteca fotográfica del dispositivo para tomar una foto
   $scope.selectPicture = function() {
-    console.log('selectPicture()')
     var options = {
-      quality : 70,
+      quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-      allowEdit : true,
       encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 800,
-      targetHeight: 450,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
+      popoverOptions: CameraPopoverOptions
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-      console.log(options)
+      var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI2,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI2 = canvas.toDataURL();
+      }, function() {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+      });
     }, function(err) {
       // An error occured. Show a message to the user
     });
@@ -219,9 +266,9 @@ function($state, $scope, $window, $rootScope, $stateParams,
 // AUTOS SINGLE CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('AutoSingleCtrl',
-function($state, $stateParams, $scope, $rootScope, $window, NgMap,
+function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup,
-  $auth, AutosData,TeamData) {
+  $auth, $cordovaCamera, AutosData,TeamData, ImageUploadFactory) {
 
   $scope.usrId = $rootScope.userId;
   $scope.teamId = $rootScope.user.family_id;
@@ -274,7 +321,6 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
       $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
       TeamData.getTeam($scope.teamId).then(function(resp){
         $scope.teammates = resp[0].app_users;
-        console.log(resp);
         $ionicLoading.hide();
       }).catch(function(resp){
         console.log(resp);
@@ -283,45 +329,25 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
     }
   }
   $scope.changePrincipal = function(principal){
+    console.log('changePrincipal()');
     console.log(principal);
     if (principal){
-      $scope.myCar.main = 1;
+      $scope.myCar.main = true;
       $scope.myCar.driver_id = $scope.usrId;
       console.log($scope.theCar.imageurl);
       console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
       $scope.$storage.user.driver_of_vehicles[0].imageurl = $scope.theCar.imageurl;
       console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
     }else{
-      $scope.myCar.main = 0;
+      $scope.myCar.main = false;
     }
-  }
-
-  $scope.updateCar = function(){
-    $scope.objV.vehicle = $scope.myCar;
-    console.log($scope.objV);
-    $ionicLoading.show({templateUrl:'templates/enviando.html'});
-
-    // AutosData.nuevoAuto($scope.usrId,$scope.myCar).then(function(response){ //ORIGINAL
-    AutosData.editarAuto($scope.objV).then(function(response){ // PRUEBA
-      AutosData.getTheCarFromUrl($rootScope.userId,$scope.myCar.id).then(function(response){
-        AutosData.setTheCar(response);
-        $ionicLoading.hide();
-        $scope.editCarModal.hide();
-        $state.go('app.autoSingle', $stateParams, {reload: true, inherit: false});
-      }).catch(function(response){
-
-      });
-    }).catch(function(response){
-      console.log(response);
-      $ionicLoading.hide();
-    });
   }
 
   // A confirm dialog
   $scope.deleteCarConfirm = function() {
     var confirmPopup = $ionicPopup.confirm({
      title: '¿Eliminar '+$scope.theCar.description+' '+$scope.theCar.model+'?',
-     template: 'Una vez eliminado no se podra acceder al automovil ni a los servicios relacionados.'
+     template: 'Una vez eliminado no se podrá acceder al automóvil ni a los servicios relacionados, como seguros y recargas de gasolina, y esta información no podrá ser recuperada.'
     });
 
     confirmPopup.then(function(res) {
@@ -344,6 +370,138 @@ function($state, $stateParams, $scope, $rootScope, $window, NgMap,
       console.log(response);
       $ionicLoading.hide();
     });
+  }
+
+  // función para calcular el tamaño del crop window para jrCrop
+  $scope.cropWindowCalculator = function(){
+    var cropHeight = Math.round((900*window.innerWidth)/1600);
+    var constraints = [window.innerWidth,cropHeight];
+    return constraints;
+  }
+
+  // función que abre la camara del dispositivo para tomar una foto
+  $scope.takePicture = function() {
+    var options = {
+      quality : 90,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : false,
+      encodingType: Camera.EncodingType.JPEG,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true,
+      correctOrientation:true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var constraints =  $scope.cropWindowCalculator();
+      $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI2,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI2 = canvas.toDataURL();
+      }).catch(function(err) {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+          console.log(err);
+      });
+    }).catch(function(err) {
+      // An error occured. Show a message to the user
+      console.log(err);
+    });
+  }
+
+  // función que abre la biblioteca fotográfica del dispositivo para tomar una foto
+  $scope.selectPicture = function() {
+    console.log('selectPicture()')
+    var options = {
+      quality : 90,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+      encodingType: Camera.EncodingType.JPEG,
+      popoverOptions: CameraPopoverOptions
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var constraints =  $scope.cropWindowCalculator();
+      $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $jrCrop.crop({
+          url: $scope.imgURI2,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgURI2 = canvas.toDataURL();
+      }).catch(function(err) {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+          console.log(err);
+      });
+    }).catch(function(err) {
+      // An error occured. Show a message to the user
+      console.log(err);
+    });
+  }
+
+  $scope.updateCar = function(){
+    $ionicLoading.show({templateUrl:'templates/actualizando.html'});
+    if($scope.imgURI2 !== undefined){
+      console.log('IMG defined');
+      var tmp = new Date();
+      var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
+      var publicId = 'vehiculos/'+timestring+'-'+$scope.userId;
+      ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp',publicId).then(function(result){
+        console.log('Imagen subida con éxito');
+        $scope.url = result.url;
+        $scope.myCar.imageurl = $scope.url;
+        $scope.myCar.photoid = 'autos/'+publicId;
+        $scope.objV.vehicle = $scope.myCar;
+        console.log($scope.objV);
+        AutosData.editarAuto($scope.objV).then(function(response){
+          AutosData.getTheCarFromUrl($rootScope.userId,$scope.myCar.id).then(function(response){
+            AutosData.setTheCar(response);
+            $ionicLoading.hide();
+            $cordovaCamera.cleanup();
+            $scope.editCarModal.hide();
+            $state.go('app.autoSingle', $stateParams, {reload: true, inherit: false});
+          }).catch(function(response){
+            console.log(response)
+          });
+        }).catch(function(response){
+          console.log(response);
+          $ionicLoading.hide();
+        });
+      }).catch(function(err) {
+        $ionicLoading.hide();
+        console.log('ImageUploadFactory().catch');
+        // Do something with the error here
+        console.log(err);
+        $cordovaCamera.cleanup();
+      });
+    }else{
+      console.log('IMG undefined');
+      $scope.objV.vehicle = $scope.myCar;
+      console.log($scope.objV);
+      AutosData.editarAuto($scope.objV).then(function(response){
+        AutosData.getTheCarFromUrl($rootScope.userId,$scope.myCar.id).then(function(response){
+          AutosData.setTheCar(response);
+          $ionicLoading.hide();
+          $cordovaCamera.cleanup();
+          $scope.editCarModal.hide();
+          $state.go('app.autoSingle', $stateParams, {reload: true, inherit: false});
+        }).catch(function(response){
+          console.log(response)
+        });
+      }).catch(function(response){
+        console.log(response);
+        $ionicLoading.hide();
+      });
+    }
+
   }
 
 })// END AUTOS SINGLE CONTROLLER

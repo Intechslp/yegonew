@@ -1,0 +1,16 @@
+<ion-modal-view id="location-modal"
+  class="perfil modal modal-location" view-title="Nuevo sucursal">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Ubica tu negocio</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModalMap()">
+      </button>
+  </div>
+  <ion-content class="has-header">
+    <div id="map-location">
+    </div>
+    <img src="img/pos.png" alt="" class="marker">
+    <button type="button" class="button button-block button-positive"
+    ng-click="mapAction()">Aceptar ubicación</button>
+  </ion-content>
+</ion-modal-view>

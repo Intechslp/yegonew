@@ -16,8 +16,8 @@
       <img class="info-block-item" src="img/carga-light.png" alt="" />
       <div class="info-block-item info-block-data">
         <h2>Resumen {{theMonth.name}}</h2>
-        <p>Litros Consumidos: <span class="blue-span">{{theMonth.refill}} Lts.</span><br>
-          Gasto Total: <span class="blue-span">${{theMonth.cost}}</span>
+        <p>Litros Consumidos: <span class="blue-span">{{theMonth.refill | number: 2}} Lts.</span><br>
+          Gasto Total: <span class="blue-span">${{theMonth.cost | number: 2}}</span>
         </p>
       </div>
     </div>
@@ -27,8 +27,8 @@
           <h3>Carga del {{refill.created_at | date : 'd MMM, y'}}</h3>
           <p>Gasolinera: <span class="blue-span">{{refill.gas_station.name}}</span><br>
             Gasolina: <span class="blue-span">{{refill.fuel.name}}</span>
-            Cantidad: <span class="blue-span">{{refill.quantity}} Lts.</span><br>
-            Precio: <span class="blue-span">${{refill.price}}</span>
+            Cantidad: <span class="blue-span">{{refill.quantity | number: 2}} Lts.</span><br>
+            Precio: <span class="blue-span">${{refill.price | number: 2}}</span>
             Precio por Litro: <span class="blue-span">${{refill.price/refill.quantity | number: 2}} MXN/Lt.</span>
           </p>
         </div>

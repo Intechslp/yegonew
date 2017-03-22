@@ -7,7 +7,12 @@
       </button>
   </div>
   <ion-content class="has-header">
-    <form ng-submit="enviarSucursal()" class="list">
+    <div class="list">
+      <div class="item item-divider padding item-icon-right" >
+        <h2 class="title nmb">{{myNegocio.name}}</h2>
+      </div>
+    </div>
+    <form class="list">
       <!-- street -->
       <label class="item item-input" id="street">
        <span class="input-label">Calle*</span>
@@ -22,20 +27,20 @@
 
       <!-- number_i -->
       <label class="item item-input" id="number_i">
-       <span class="input-label">Nº Int.*</span>
-       <input type="number" ng-model="mySucursal.number_i" placeholder="ej. 0 ó A">
+       <span class="input-label">Nº Int.</span>
+       <input type="text" ng-model="mySucursal.number_i" maxlength="3" placeholder="ej. 0 ó A">
       </label>
 
       <!-- neighborhood -->
       <label class="item item-input" id="neighborhood">
-       <span class="input-label">Colonia*</span>
+       <span class="input-label">Colonia</span>
        <input type="text" ng-model="mySucursal.neighborhood" placeholder="ej. Balcones del Valle">
       </label>
 
       <!-- zipcode -->
       <label class="item item-input" id="zipcode">
        <span class="input-label">C.P.*</span>
-       <input type="number" ng-model="mySucursal.zipcode" placeholder="ej. 75555">
+       <input type="number" ng-model="mySucursal.zipcode" maxlength="5" placeholder="ej. 75555">
       </label>
 
       <!-- Pais -->
@@ -71,32 +76,24 @@
 
       <!-- schedule -->
       <label class="item item-input" id="schedule">
-       <span class="input-label">Horario</span>
+       <span class="input-label">Horario*</span>
        <input type="text" ng-model="mySucursal.schedule" placeholder="ej. lunes a viernes de 8am a 9pm">
       </label>
 
       <!-- ubicación -->
-      <!-- <label class="item item-button-right" id="neighborhood">
-        Seleccionar Ubicacion
-        <button class="button button-positive">
-          <i class="icon ion-ios-location"></i>
-        </button>
-      </label> -->
-
-      <!-- lat -->
-      <!-- <label class="item item-input" id="lat">
-       <span class="input-label">Laitud</span>
-       <input type="text" ng-model="mySucursal.lat" placeholder="">
-      </label> -->
-
-      <!-- lng -->
-      <!-- <label class="item item-input" id="lng">
-       <span class="input-label">Longitud</span>
-       <input type="text" ng-model="mySucursal.lng" placeholder="">
-      </label> -->
+      <div id="sucursal-map-cont">
+        <label class="item item-button-right" id="neighborhood">
+          Seleccionar Ubicación
+          <button type="button" class="button button-positive" ng-click="abrirModalMap()">
+            <i class="icon ion-ios-location"></i>
+          </button>
+        </label>
+        <div id="sucursal-map" ng-if="theresLocation">
+        </div>
+      </div>
 
       <ion-checkbox ng-repeat="servicio in servicios"
-      ng-model="mySucursal.service_ids[$index]" ng-value="servicio.id">{{servicio.name}}</ion-checkbox>
+      ng-model="services[$index]" ng-value="servicio.id">{{servicio.name}}</ion-checkbox>
 
 
       <!-- business_id -->
@@ -105,7 +102,7 @@
 
 
       <div class="padding">
-        <button type="submit"
+        <button type="submit" ng-click="enviarSucursal()"
         class="button button-block icon-right ion-ios-plus button-positive">
           Enviar a Revisión
         </button>

@@ -1,0 +1,46 @@
+<ion-view id="single-negocio" cache-view="false" class="perfil single-negocio"
+  view-title="Detalle Sucursal">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+    <div class="item item-divider">
+      <h3>{{mySucursal.business.name}}</h3>
+    </div>
+    <div id="negocios-cont" class="padding">
+      <h2 class="divider">Detalle:</h2>
+      <p><strong>Ciudad:</strong> {{mySucursal.city}}</p>
+      <p><strong>Dirección:</strong> {{mySucursal.street}} {{mySucursal.number_i}} {{mySucursal.number_e}}</p>
+      <p><strong>Colonia:</strong> {{mySucursal.neighborhood}}</p>
+      <p><strong>CP:</strong> {{mySucursal.zipcode}}</p>
+      <p><strong>Teléfono:</strong> {{mySucursal.phone}}</p>
+
+      <!-- ubicación -->
+      <div id="sucursal-single-map" ng-if="theresLocation">
+      </div>
+
+      <h2 class="divider">Servicios:</h2>
+      <ul class="single-services">
+        <li ng-repeat="service in mySucursal.services">
+          <img src="img/icons/servicios/{{ service | removeNWC }}.png" alt="">
+          {{service}}
+        </li>
+      </ul>
+
+      <h2 class="divider" id="opciones">Opciones:</h2>
+      <button class="button button-positive button-clear icon-right ion-edit border-bottom"
+      ng-click="editSucMod()">
+        Editar Sucursal
+      </button>
+      <button class="button button-positive button-clear icon-right ion-ios-trash border-bottom"
+      ng-click="deleteSucConfirm()">
+        Eliminar Sucursal
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

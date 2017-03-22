@@ -1,0 +1,58 @@
+<ion-modal-view id="new-car-modal"
+  class="perfil modal modal-new-car" view-title="Nuevo negocio">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Editar Negocio</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close"
+      id="header-btn" ng-click="cerrarModalNeg()">
+      </button>
+  </div>
+  <ion-content class="has-header">
+    <form ng-submit="editarNegocio()" class="list">
+      <div class="list">
+        <div class="item item-divider padding item-icon-right" >
+          <h2 class="title nmb">{{myNegocio.name}}</h2>
+        </div>
+      </div>
+
+      <!-- description -->
+      <label class="item item-input" id="description">
+       <span class="input-label">Descripción*</span>
+       <input type="text" ng-model="bisne.description" placeholder="Lo que hace el negocio">
+      </label>
+      <!-- website -->
+      <label class="item item-input" id="website">
+       <span class="input-label">Sitio web <span class="greyspan">http://</span></span>
+       <input type="text" ng-model="bisne.website" placeholder="elnegocio.com">
+      </label>
+      <!-- email -->
+      <label class="item item-input" id="email">
+       <span class="input-label">Email</span>
+       <input type="email" ng-model="bisne.email" placeholder="ejemplo@negocio.com">
+      </label>
+      <!-- facebook -->
+      <label class="item item-input" id="facebook">
+        <span class="input-label">facebook.com/</span>
+        <input type="text" ng-model="bisne.facebook" placeholder="elfacebook">
+      </label>
+      <!-- twitter -->
+      <label class="item item-input" id="twitter">
+        <span class="input-label">twitter.com/</span>
+        <input type="text" ng-model="bisne.twitter" placeholder="eltwitter">
+      </label>
+      <p class="padding info-label bigger">
+        <span class="gray-info">
+          *Si requieres modificar aspectos más detallados como el nombre de tu
+          negocio o las categorías a las que pertenece, envía un correo
+          electrónico con tu petición a
+          <a href="mailto:contacto@yego.com.mx">contacto@yego.com.mx</a></span>
+      </p>
+      <div class="padding">
+        <button type="submit"
+        class="button button-block button-positive">
+          Aceptar Cambios
+        </button>
+      </div>
+
+    </form>
+  </ion-content>
+</ion-modal-view>

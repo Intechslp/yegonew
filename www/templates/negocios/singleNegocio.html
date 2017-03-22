@@ -1,0 +1,46 @@
+<ion-view id="single-negocio" cache-view="false" class="perfil single-negocio" view-title="Detalle Negocio">
+  <ion-nav-bar class="bar-dark">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+    <div class="item item-divider">
+      <h3>{{myNegocio.name}}</h3>
+    </div>
+    <div id="negocios-cont" class="padding">
+      <h2 class="divider">Detalle:</h2>
+      <p><strong>Descripción:</strong> {{myNegocio.description}}</p>
+      <p><strong>Email:</strong> {{myNegocio.email}}</p>
+      <p><strong>Sitio web:</strong> {{myNegocio.website}}</p>
+      <p><strong>Facebook:</strong> {{myNegocio.facebook}}</p>
+      <p><strong>Twitter:</strong> {{myNegocio.twitter}}</p>
+    </div>
+    <div class="padding">
+      <h2 class="divider">Sucursales:</h2>
+      <div class="list card" ng-repeat="sucursal in myNegocio.establishments"
+      ng-click="goToSucursal(sucursal)">
+        <div class="item auto-card">
+          <h2>{{sucursal.street}} {{sucursal.number_e}}</h2>
+          <h3>{{sucursal.city}}</h3>
+        </div>
+      </div>
+      <h2 class="divider" id="opciones">Opciones:</h2>
+      <button class="button button-positive button-clear icon-right ion-ios-plus border-bottom"
+      ng-click="newSucMod()">
+        Agregar sucursal
+      </button>
+      <button class="button button-positive button-clear icon-right ion-edit border-bottom"
+      ng-click="openEditModal()">
+        Editar Negocio
+      </button>
+      <button class="button button-positive button-clear icon-right ion-ios-trash border-bottom"
+      ng-click="deleteNegConfirm()">
+        Eliminar Negocio
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

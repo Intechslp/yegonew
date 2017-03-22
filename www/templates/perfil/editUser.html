@@ -7,8 +7,8 @@
 
   <ion-content class="has-header">
     <div class="edit-photo-holder">
-      <img ng-if="imgURI === undefined && myUser.imageurl === undefined" src="img/photo.jpg" alt="">
-      <img ng-if="imgURI === undefined && myUser.imageurl !== undefined" src="{{myUser.imageurl}}" alt="">
+      <img ng-if="imgURI === undefined && usuario.imageurl === null" src="img/photo.jpg" alt="">
+      <img ng-if="imgURI === undefined && usuario.imageurl !== null" src="{{usuario.imageurl}}" alt="">
       <img ng-if="imgURI !== undefined" ng-src="{{imgURI}}">
       <div class="button-holder">
         <button class="button button-positive button-icon ion-camera m-icon"

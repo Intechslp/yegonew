@@ -31,9 +31,9 @@
       </p>
       <form action="" class="list">
         <!-- name -->
-        <label class="item item-input" id="codigo-label">
-         <span class="input-label">Nombre:* </span>
-         <input type="text" ng-model="teamData.name">
+        <label class="item item-input item-stacked-label" id="codigo-label">
+         <span class="input-label">Nombre del equipo:</span>
+         <input type="text" ng-model="teamData.name" placeholder="Nombre aquí" ng-disabled="teamData.name.length == 0">
         </label>
         <!-- administrator_id -->
         <input type="text" style="display:none" ng-model="teamData.administrator_id" ng-init="teamData.administrator_id = userId">
@@ -53,7 +53,8 @@
           <i class="icon ion-ios-gear m-icon" ng-click="abrirModalOpciones()"></i>
         </div>
       </div>
-      <h2 class="divider">Administrador</h2>
+      <div class="padding">
+        <h2 class="divider">Administrador</h2>
         <div class="car-card-cont">
           <div class="car-card">
             <div class="car-item item-image">
@@ -75,24 +76,25 @@
           </div>
         </div>
 
-      <h2 class="divider">Integrantes</h2>
-      <div class="car-card-cont" ng-repeat="member in team.app_users">
-        <div class="car-card">
-          <div class="car-item item-image">
-            <img class="car-picture" src="img/photo.jpg"
-            ng-show="member.driver_of_vehicles[0].imageurl === undefined">
-            <img class="car-picture" src="{{member.driver_of_vehicles[0].imageurl}}"
-            ng-show="member.driver_of_vehicles[0].imageurl !== undefined">
-            <img class="user-picture" src="img/camera.jpg"
-            ng-show="member.imageurl === undefined">
-            <img class="user-picture" src="{{member.imageurl}}"
-            ng-show="member.imageurl !== undefined">
-          </div>
-          <div class="car-item padding">
-            <h4>{{member.name+' '+member.lastnames}}</h4>
-            <p>{{member.driver_of_vehicles[0].description}}</br>
-            {{member.driver_of_vehicles[0].brand}}</br>
-            {{member.driver_of_vehicles[0].model}}</p>
+        <h2 class="divider">Integrantes</h2>
+        <div class="car-card-cont" ng-repeat="member in team.app_users">
+          <div class="car-card">
+            <div class="car-item item-image">
+              <img class="car-picture" src="img/photo.jpg"
+              ng-show="member.driver_of_vehicles[0].imageurl === undefined">
+              <img class="car-picture" src="{{member.driver_of_vehicles[0].imageurl}}"
+              ng-show="member.driver_of_vehicles[0].imageurl !== undefined">
+              <img class="user-picture" src="img/camera.jpg"
+              ng-show="member.imageurl === undefined">
+              <img class="user-picture" src="{{member.imageurl}}"
+              ng-show="member.imageurl !== undefined">
+            </div>
+            <div class="car-item padding">
+              <h4>{{member.name+' '+member.lastnames}}</h4>
+              <p>{{member.driver_of_vehicles[0].description}}</br>
+              {{member.driver_of_vehicles[0].brand}}</br>
+              {{member.driver_of_vehicles[0].model}}</p>
+            </div>
           </div>
         </div>
       </div>

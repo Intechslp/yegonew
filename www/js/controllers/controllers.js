@@ -23,9 +23,11 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
   });
 
   $rootScope.doRefresh = function(){
+    console.log('doRefresh()');
     $scope.$storage = $localStorage;
     if(!$scope.$storage.guest){
       $scope.perfil = $scope.$storage.user;
+      console.log($scope.perfil);
       $rootScope.userId = $scope.$storage.id;
       $rootScope.usuario = $scope.$storage.user;
     }else{

@@ -18,7 +18,8 @@ angular.module('starter', [
   'ngStorage',
   'angularSoap',
   'ng-token-auth',
-  'ngCordova'
+  'ngCordova',
+  'jrCrop'
 ])
 
 .run(function($ionicPlatform, $cordovaSQLite, $rootScope) {
@@ -347,23 +348,13 @@ angular.module('starter', [
       }
     }
   })
-  // lista de sucursales
-  .state('app.sucursales', {
-    url: '/negocios/:idNeg/sucursales',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/negocios/sucursales.html",
-        controller: 'SucursalesCtrl'
-      }
-    }
-  })
   // sucursales single
   .state('app.singleSucursal', {
     url: '/negocios/:idNeg/sucursales/:idSuc',
     views: {
       'menuContent': {
         templateUrl: "templates/negocios/singleSucursal.html",
-        controller: 'singleSucursalCtrl'
+        controller: 'SingleSucursalCtrl'
       }
     }
   })

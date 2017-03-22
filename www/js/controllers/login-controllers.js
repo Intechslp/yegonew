@@ -116,7 +116,6 @@ angular.module('starter.login.controllers',
 
   };
 
-
   $scope.verifyRegistration = function(){
     if($scope.registerData.email != null &&
       $scope.userData.name != null &&
@@ -263,7 +262,7 @@ function ($scope, $state, $filter,
 // AUTOREG CONTROLLER
 .controller('AutoRegCtrl',
 function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
-  SegurosData, UserData, AutosData, ImageUploadFactory) {
+  SegurosData, UserData, AutosData, ImageUploadFactory, $jrCrop) {
 
   $scope.$storage = $localStorage;
   $scope.userId = $scope.$storage.user.id;
@@ -319,11 +318,10 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
         ImageUploadFactory.uploadImage($scope.imgRegAuto, 'yegoapp', publicId).then(function(result){
           $scope.url = result.url;
           $scope.myCar.imageurl = $scope.url;
-          $scope.myCar.photoid = publicId;
+          $scope.myCar.photoid = 'autos/'+publicId;
           $scope.objV.vehicle = $scope.myCar;
           // Una vez subida la foto, se suben los datos del auto
           AutosData.nuevoAuto($scope.objV).then(function(response){
-
             UserData.getUserData($scope.$storage.id).then(function(resp){
               $scope.$storage.user = resp;
               $ionicLoading.hide();
@@ -369,45 +367,78 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
     }
   }
 
-  // Abre la camara para tomar foto
-  $scope.takePicture = function($event) {
+  // función para calcular el tamaño del crop window para jrCrop
+  $scope.cropWindowCalculator = function(){
+    var cropHeight = Math.round((900*window.innerWidth)/1600);
+    var constraints = [window.innerWidth,cropHeight];
+    return constraints;
+  }
+
+  // función que abre la camara del dispositivo para tomar una foto
+  $scope.takePicture = function() {
     var options = {
-      quality : 70,
+      quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
+      allowEdit : false,
       encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 800,
-      targetHeight: 450,
       popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
+      saveToPhotoAlbum: true,
+      correctOrientation:true
     };
-    // $event.stopPropagation();
-    $cordovaCamera.getPicture(options).then(function(imageData) {
 
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var constraints =  $scope.cropWindowCalculator();
       $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
+      $jrCrop.crop({
+          url: $scope.imgRegAuto,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgRegAuto = canvas.toDataURL();
+      }).catch(function(err) {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+          console.log(err);
+      });
+    }).catch(function(err) {
       // An error occured. Show a message to the user
+      console.log(err);
     });
   }
 
+  // función que abre la biblioteca fotográfica del dispositivo para tomar una foto
   $scope.selectPicture = function() {
+    console.log('selectPicture()')
     var options = {
-      quality : 70,
+      quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-      allowEdit : true,
       encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 800,
-      targetHeight: 450,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: true
+      popoverOptions: CameraPopoverOptions
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
+      var constraints =  $scope.cropWindowCalculator();
       $scope.imgRegAuto = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
+      $jrCrop.crop({
+          url: $scope.imgRegAuto,
+          width: constraints[0],
+          height: constraints[1],
+          title: 'Ajusta la Imágen'
+      }).then(function(canvas) {
+          // success!
+          $scope.imgRegAuto = canvas.toDataURL();
+      }).catch(function(err) {
+          // User canceled or couldn't load image.
+          console.log("couldn't load the image");
+          console.log(err);
+      });
+    }).catch(function(err) {
       // An error occured. Show a message to the user
+      console.log(err);
     });
   }
 

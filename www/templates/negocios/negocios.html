@@ -14,12 +14,12 @@
       <div class="item item-divider">
         Mis Negocios
       </div>
-      <div class="list card" ng-repeat="negocio in negocios">
+      <div class="list card" ng-repeat="negocio in negocios" ng-click="goToNegocio(negocio)">
         <div class="item auto-card">
           <h1>{{negocio.name}}</h1>
           <h2>{{negocio.description}}</h2>
 
-          <label class="status-label">{{negocio.status}}</label>
+          <label class="status-label" ng-class="negocio.status">{{negocio.status}}</label>
         </div>
       </div>
     </div>
@@ -32,9 +32,13 @@
       ng-click="abrirModalNeg(1)">
         Agregar negocio
       </button>
-      <button class="button button-positive button-clear icon-right"
+      <button class="button button-positive button-clear icon-right border-bottom"
       ng-click="abrirModalNeg(0)">
         Recomendar negocio
+      </button>
+      <button class="button button-positive button-clear icon-right"
+      ng-click="abrirModalNeg(1)">
+        Agregar Gasolinera
       </button>
     </div>
   </ion-content>

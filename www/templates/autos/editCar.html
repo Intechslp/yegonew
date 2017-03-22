@@ -6,7 +6,20 @@
   </div>
 
   <ion-content class="has-header">
-    <form ng-submit="updateCar()" class="list">
+    <div class="edit-photo-holder">
+      <img ng-if="imgURI2 === undefined && theCar.imageurl === null" src="img/photo.jpg" alt="">
+      <img ng-if="imgURI2 === undefined && theCar.imageurl !== null" src="{{theCar.imageurl}}" alt="">
+      <img ng-if="imgURI2 !== undefined" ng-src="{{imgURI2}}">
+      <div class="button-holder">
+        <button class="button button-positive button-icon ion-camera m-icon"
+        ng-click="takePicture()">
+        </button>
+        <button class="button button-positive button-icon ion-images m-icon"
+        ng-click="selectPicture()">
+        </button>
+      </div>
+    </div>
+    <form class="list">
       <!-- colour -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Color</span>
@@ -19,12 +32,12 @@
       </label>
 
       <!-- main -->
-      <ion-checkbox ng-model="principal" ng-change="changePrincipal(principal)">
+      <ion-checkbox ng-model="principal" ng-change="changePrincipal(principal)" ng-checked="theCar.main">
         Este es mi auto Principal
       </ion-checkbox>
 
       <!-- driver_id changeDriver == false -->
-      <label class="item item-input" ng-if="!changeDriver">
+      <label class="item item-input" ng-if="!changeDriver && !theCar.main">
         <div class="input-label">Conductor</div>
         <span class="input-label">
 			    	<button class="button button-icon icon ion-edit s-icon" ng-click="theChange()"></button>
@@ -55,7 +68,8 @@
       <!-- car id -->
       <input type="text" style="display:none" ng-model="myCar.id" ng-init="myCar.id = theCar.id">
       <div class="padding">
-        <button type="submit" class="button button-block button-positive">Aceptar Cambios</button>
+        <button type="button" class="button button-block button-positive"
+          ng-click="updateCar()">Aceptar Cambios</button>
       </div>
     </form>
   </ion-content>

@@ -23,6 +23,9 @@ ion-view.pane:before {
   height: 44px;
   background-color: #0d1927;
 }
+.platform-ios ion-view.pane:before {
+  height:64px;
+}
 ion-view.highway.pane:before {
   background-color: transparent;
 }
@@ -31,6 +34,9 @@ ion-view.highway.pane:before {
   background: #142840;
   display: flex;
   flex-direction: column;
+}
+ion-side-menu .scroll{
+  background: white;
 }
 .bar-dark .button.button-clear *{
   color: #92baf5;
@@ -47,7 +53,9 @@ button.button.button-icon.icon.s-icon:before {
   font-size: 24px;
   line-height: 32px;
 }
-
+.item{
+  color: white;
+}
 .item p{
   color: white;
 }
@@ -100,6 +108,15 @@ p.info-label.bigger span.gray-info{
   line-height: 35px;
   min-height: 40px;
   padding: 0 0.5em;
+}
+.button.button-positive.active,
+.button.button-positive.activated{
+  background: #2d578a;
+  color:white;
+  border-color: transparent;
+}
+.button-holder .button.button-positive.button-icon{
+  background: #92baf5;
 }
 .button.button-positive.button-clear {
   color:#92baf5 !important;
@@ -831,7 +848,7 @@ img.menu-icon {
 #garage-cont{
   width: 100%;
   max-width: 320px;
-  margin:auto;
+  margin:0 auto;
 }
 #garage-cont .car-item {
   position: relative;
@@ -840,7 +857,7 @@ img.menu-icon {
 #garage-cont i.card-right-icon{
   position: absolute;
   top: 7px;
-  right: 7px;
+  right: -3px;
 }
 #garage-cont i.card-right-icon:before {
   font-size: 25px;
@@ -937,7 +954,7 @@ ion-content.scroll-content.ionic-scroll {
 }
 .invitations.list .item-divider,#team-cont .list .item-divider,
 .perfil.modal .item-divider,
-.negocios .item-divider, #dirMapa .item-divider{
+.negocios .item-divider, #dirMapa .item-divider, #single-negocio .item-divider{
   background: #92baf5;
   color:#0d1927;
   padding: 1em;
@@ -945,11 +962,16 @@ ion-content.scroll-content.ionic-scroll {
   flex-direction: row;
   justify-content: space-between;
 }
-.invitations.list .item-divider,#team-cont .list .item-divider *, .perfil.modal .item-divider *{
+.invitations.list .item-divider,#team-cont .list .item-divider *,
+.perfil.modal .item-divider *,  #single-negocio .item-divider *{
   color:#0d1927 !important;
 }
 #team-cont .item-divider h1,.perfil.modal .item-divider h1{
   font-size: 24px;
+}
+.item-divider h3{
+  margin: 0;
+  font-size: 18px;
 }
 .invitations span.inv-counter{
   color:#92baf5;
@@ -987,8 +1009,8 @@ ion-content.scroll-content.ionic-scroll {
 #team-cont h2 {
   font-size: 20px;
 }
-#team-cont h2.divider{
-  margin: 1em .5em 1em;
+#team-cont h2.divider,#single-negocio h2.divider{
+  margin: 1em 0;
   padding-bottom: .3em;
   width: 100%;
   border-bottom: solid 2px white;
@@ -1139,8 +1161,16 @@ label.status-label{
   position:absolute;
   top: 0;
   right: 0;
-  background: #fff100;
   padding: .1em .5em;
+}
+.status-label.pendiente{
+  background: #fff100;
+}
+.status-label.activo{
+  background: #00bcd4;
+}
+.status-label.inactivo{
+  background: #e91e63;
 }
 .perfil.negocios .list.card{
   padding:0;
@@ -1157,6 +1187,52 @@ label.status-label{
 .perfil.modal .list .item-content.disable-pointer-events {
   margin-left: 40px;
 }
+#sucursal-map-cont{
+  padding: 1em 2em;
+}
+#sucursal-map-cont label.item{
+  min-height: 60px;
+}
+#sucursal-map-cont label.item > .button{
+  padding: 0 0.7em;
+}
+#sucursal-map{
+  width:100%;
+  height:200px;
+  display: block
+}
+#location-modal .scroll{
+  height:100%;
+  display: block;
+  position: relative;
+}
+#map-location{
+  width:100%;
+  height:100%;
+  display: block;
+}
+#location-modal .scroll .button{
+  position: absolute;
+  bottom:0;
+  left: 5%;
+  width: 90%;
+}
+#location-modal .scroll .marker{
+  position: absolute;
+  width: 100%;
+  max-width: 32px;
+  top:50%;
+  left:50%;
+  margin-top: -32px;
+  margin-left: -16px;
+}
+
+#sucursal-single-map{
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+
 /* ANIMATIONS BEFORE
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/

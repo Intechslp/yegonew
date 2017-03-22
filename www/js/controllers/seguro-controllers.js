@@ -80,7 +80,7 @@ angular.module('starter.seguro.controllers',
       }).catch(function(response){
         $ionicLoading.hide();
         console.log(response);
-        if(respones === "An error has occurred."){
+        if(response === "An error has occurred."){
           $scope.showAlert('Error','Un error ha ocurrido, intenta más tarde');
         }else{
           $scope.showAlert('Error',response);
@@ -337,7 +337,7 @@ angular.module('starter.seguro.controllers',
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('MisSegurosCtrl',
 function($scope, $state, $stateParams, $localStorage, $ionicLoading, $ionicPopup,
-  $ionicModal, AutosData, MisSegurosData) {
+  $ionicModal, $ionicHistory, AutosData, MisSegurosData) {
 
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
   $scope.$storage = $localStorage;
@@ -375,6 +375,14 @@ function($scope, $state, $stateParams, $localStorage, $ionicLoading, $ionicPopup
     $scope.modal.hide();
     $state.go('app.misSeguros', $stateParams, {reload: true, inherit: false});
   };
+
+// funcion que envía a la pantalla de mis autos
+  $scope.goAutos = function(){
+    $ionicHistory.nextViewOptions({
+      historyRoot: true
+    })
+    $state.go('app.autos');
+  }
 
 // funcion para añadir nueva información de seguros
   $scope.nuevoSeguro = function(){
@@ -474,6 +482,7 @@ function($scope, $state, $stateParams, $localStorage, $ionicLoading, $ionicPopup
     $scope.elAuto.insurances[0].policy_number = $scope.newInfo.policy_number;
     $scope.modal.hide();
   };
+
 
 // funcion para añadir nueva información de seguros
   $scope.editarSeguro = function(){
