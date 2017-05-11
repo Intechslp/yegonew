@@ -11,14 +11,18 @@
         <span class="gray-info">Pago con Tarjeta de de crédito o débito.</span>
       </p>
 
-      <p class="info-label bigger npb">
+      <!-- <p class="info-label bigger npb">
         Selecciona el tipo de pago:
-      </p>
+      </p> -->
 
       <!-- Pago Anual -->
-      <ion-radio ng-model="choice" ng-value="'A'">Pago Anual $3406.95</ion-radio>
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Pago anual</span>
+       <input type="text" ng-model="sendData.NumeroPlastico" maxlength="16">
+      </label>
+      <!-- <ion-radio ng-model="choice" ng-value="'A'">Pago Anual $3406.95</ion-radio> -->
       <!-- Pago Mensual -->
-      <ion-radio ng-model="choice" ng-value="'B'" checked>Pago Mensual $283.91</ion-radio>
+      <!-- <ion-radio ng-model="choice" ng-value="'B'" checked>Pago Mensual $283.91</ion-radio> -->
 
       <!-- Banco -->
       <label class="item item-input item-select" id="genero-label">
@@ -55,11 +59,22 @@
 
       <!-- Tarjeta -->
       <label class="item item-input item-select" id="genero-label">
-        <div class="input-label">Tarjeta</div>
+        <div class="input-label">Tipo Tarjeta</div>
         <select ng-model="sendData.TipoTarjeta" id="genero">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option value="CREDITO">CREDITO</option>
           <option value="DEBITO">DEBITO</option>
+        </select>
+      </label>
+
+      <!-- Carrier -->
+      <label class="item item-input item-select" id="genero-label">
+        <div class="input-label">Carrier</div>
+        <select ng-model="sendData.Carrier" id="genero">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option value="AMEX">AMEX</option>
+          <option value="MASTER CARD">MASTER CARD</option>
+          <option value="VISA">VISA</option>
         </select>
       </label>
 
@@ -91,7 +106,7 @@
 
       <!-- Código Seguridad -->
       <label class="item item-input" id="codigo-label">
-       <span class="input-label">Nombre</span>
+       <span class="input-label">Código seguridad</span>
        <input type="tel" ng-model="sendData.CodSeguridad" maxlength="3">
       </label>
 
@@ -101,9 +116,10 @@
         <div class="col">
         </div>
         <div class="col">
-          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/3">
+          <button class="button button-block button-positive button-clear"
+            ng-click="goPay()">
             CONTINUAR
-          </a>
+          </button>
         </div>
       </div>
     </form>

@@ -19,55 +19,36 @@
               mapa
             </button>
         </div>
-        <h3 ng-if="single.description != null">Descripción:</h3>
-        <p>{{single.business.description}}</p>
+        <h3 ng-if="showTheData(single.business.description)">Descripción:</h3>
+        <p ng-if="showTheData(single.business.description)">{{single.business.description}}</p>
       </div>
     </div>
     <div class="row">
       <div class="col single-data">
         <h3>Datos</h3>
-        <p ng-if="single.neighborhood != null && single.number_i != null">
+        <p>
           <i class="icon ion-location"></i>
-          {{single.street+' '+single.number_e+' Int. '+single.number_i+' '+single.neighborhood | capitalize:true}}
-        </p>
-
-        <p ng-if="single.neighborhood != null && single.number_i == null">
-          <i class="icon ion-location"></i>
-          {{single.street+' '+single.number_e+' '+single.neighborhood | capitalize:true}}
-        </p>
-
-        <p ng-if="single.neighborhood == null && single.number_i == null">
-          <i class="icon ion-location"></i>
-          {{single.street+' '+single.number_e | capitalize:true}}
+          {{ showTheAddress() | capitalize:true}}
         </p>
 
         <p><i class="icon ion-android-time"></i>{{single.schedule}}</p>
 
         <p><i class="icon ion-ios-telephone"></i>{{single.phone}}</p>
 
-        <p ng-if="
-          single.business.email !== undefined &&
-          single.business.email !== '' &&
-          single.business.email != null">
+        <p ng-if="showTheData(single.business.email)">
           <i class="icon ion-ios-email"></i>
           <a href="mailto:{{single.business.email}}">{{single.business.email}}</a>
         </p>
 
-        <p ng-if="single.business.website !== undefined &&
-          single.business.website !== '' &&
-          single.business.website != null">
+        <p ng-if="showTheData(single.business.website)">
           <i class="icon ion-monitor"></i>
           <a ng-click="openInAppBrowser(single.business.website)">{{single.business.website}}</a>
         </p>
-        <p ng-if="single.business.facebook !== undefined &&
-          single.business.facebook !== '' &&
-          single.business.facebook != null">
+        <p ng-if="showTheData(single.business.facebook)">
           <i class="icon ion-social-facebook"></i>
           <a ng-click="openInAppBrowser('http://facebook.com/'+single.business.facebook)">{{single.business.facebook}}</a>
         </p>
-        <p ng-if="single.business.twitter !== undefined &&
-          single.business.twitter !== '' &&
-          single.business.twitter != null">
+        <p ng-if="showTheData(single.business.twitter)">
           <i class="icon ion-social-twitter"></i>
           <a ng-click="openInAppBrowser('http://twitter.com/'+single.business.twitter)">{{single.business.twitter}}</a>
         </p>

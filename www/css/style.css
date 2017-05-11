@@ -32,8 +32,9 @@ ion-view.highway.pane:before {
 
 .scroll{
   background: #142840;
-  display: flex;
-  flex-direction: column;
+  height: auto;
+  /*display: flex;
+  flex-direction: column;*/
 }
 ion-side-menu .scroll{
   background: white;
@@ -282,6 +283,8 @@ p.info-label.bigger span.gray-info{
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
 .highway .scroll{
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
@@ -525,10 +528,10 @@ img.menu-icon {
 }
 /* Single Directorio
 –––––––––––––––––––––––––––––*/
-#dirSingle .main-img{width:100%}
+#dirSingle .main-img{width:100%;margin-bottom: -6px;}
 #dirSingle .row{border-top:1px solid #3d4753}
 #dirSingle h1 {color: #92baf5;font-size: 20px; margin-bottom: 0}
-#dirSingle h3 {font-size: 18px;}
+#dirSingle h3 {font-size: 18px;margin-top: 0px;}
 #dirSingle .inner-row {
   display: flex;
   flex-direction: row;
@@ -790,6 +793,25 @@ img.menu-icon {
   display: none;
 }
 
+#seguros.seguros-compra.paso-0 .radio-custom.item.item-radio:before{
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: #4d6282;
+  top: 14px;
+  right: 8px;
+  content: "";
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 1px rgba(38, 38, 38, 0.3);
+}
+#dirSingle ul.seguros-special-list{
+  list-style-type: circle;
+  padding-left: 1em
+}
+#dirSingle ul.seguros-special-list li{
+  margin-bottom: .5em;
+}
+
 /* GUIA
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
@@ -857,10 +879,13 @@ img.menu-icon {
 #garage-cont i.card-right-icon{
   position: absolute;
   top: 7px;
-  right: -3px;
+  right: 7px;
 }
 #garage-cont i.card-right-icon:before {
   font-size: 25px;
+}
+#autos-single #garage-cont i.card-right-icon{
+   top:-3px;
 }
 .car-card-cont{
   display: inline-block;
@@ -873,6 +898,7 @@ img.menu-icon {
   display: flex;
   flex-direction: column;
   width:100%;
+  box-shadow: 5px 5px 0px #000;
 }
 .car-card .car-item{
   width:100%;
@@ -972,6 +998,37 @@ ion-content.scroll-content.ionic-scroll {
 .item-divider h3{
   margin: 0;
   font-size: 18px;
+}
+#team .item-divider p{
+  color:#0d1927;
+  font-size: 16px;
+  margin-bottom: 0;
+}
+#team .item-divider .counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#team .item-divider .counter .button-icon{
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: .5em;
+  margin: 0 0 0 .5em;
+}
+#team .item-divider .counter .button-icon:before{
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: 24px;
+  color:#0d1927;
+}
+#team .item-divider .counter .button-icon:after{
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 32px;
 }
 .invitations span.inv-counter{
   color:#92baf5;

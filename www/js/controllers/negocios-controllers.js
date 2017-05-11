@@ -228,8 +228,8 @@ $scope.enviarSucursal = function(){
 // Comprobar campos obligatorios del modal de negocios
   $scope.checkBusinessReq = function(){
     if (
-      $scope.myNegocio.name != null &&
-      $scope.myNegocio.description != null &&
+      $scope.myNegocio.name !== null &&
+      $scope.myNegocio.description !== null &&
       $scope.myNegocio.subcategory_ids.length > 0
     ) {
       return true;
@@ -241,11 +241,11 @@ $scope.enviarSucursal = function(){
 // Comprobar campos obligatorios del modal de sucursal
   $scope.checkEstablishmentReq = function(){
     if (
-      $scope.mySucursal.street != null &&
-      $scope.mySucursal.number_e != null &&
-      $scope.mySucursal.zipcode != null &&
-      $scope.mySucursal.schedule != null &&
-      $scope.mySucursal.city_id != null
+      $scope.mySucursal.street !== null &&
+      $scope.mySucursal.number_e !== null &&
+      $scope.mySucursal.zipcode !== null &&
+      $scope.mySucursal.schedule !== null &&
+      $scope.mySucursal.city_id !== null
     ) {
       return true;
     }else{
@@ -278,6 +278,19 @@ $scope.enviarSucursal = function(){
       });
     }).catch(function(){
       console.log("Could not get location");
+      $ionicLoading.hide();
+      $scope.mapModal.hide();
+      $scope.showAlert2('¡Ups!','Lo sentimos parece que tu conexión a internet está fallando o no podemos encontrar tu ubicación, asegurate de que la configuración de tu teléfono esté en orden.');
+    });
+  };
+
+  $scope.showAlert2 = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+
+    alertPopup.then(function(res) {
     });
   };
 

@@ -6,7 +6,7 @@
 // AUTOS CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('AutosCtrl',
-function($state, $scope, $window, $rootScope, $stateParams,
+function($state, $scope, $window, $rootScope, $stateParams, $timeout,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $auth, $jrCrop,
   SegurosData, AutosData, UserData, TeamData, $cordovaCamera, ImageUploadFactory) {
 
@@ -35,8 +35,36 @@ function($state, $scope, $window, $rootScope, $stateParams,
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
+  var misautos_to = $timeout(function(){
+    //en caso de que la petición tarde demasiado se cancela el loading
+    $ionicLoading.hide();
+    $scope.showConfirm('¡Vaya!',
+    'Parece que ha habido un error accediendo a la base de datos o tu conexión'+
+    ' a internet no es óptima para que Yego funcione correctamente');
+    console.log('Time Out :(');
+  },7000);
+
+  // A confirm dialog
+ $scope.showConfirm = function(msj1, msj2) {
+   var confirmPopup = $ionicPopup.confirm({
+     title: msj1,
+     template: msj2,
+     cancelText: 'Cancelar',
+     okText: 'Reintentar'
+   });
+   confirmPopup.then(function(res) {
+     if(res) {
+       $state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+       console.log('You are sure');
+     } else {
+       console.log('You are not sure');
+     }
+   });
+ };
+
   //obtener todos los autos del usuario
   AutosData.getMisAutos($scope.usrId,usrUid).then(function(resp){
+    $timeout.cancel(misautos_to);
     $scope.allCars = resp;
     $scope.$storage.user.driver_of_vehicles = resp;
     if($scope.allCars.length > 0){
@@ -86,6 +114,7 @@ function($state, $scope, $window, $rootScope, $stateParams,
         var publicId = 'vehiculos/'+timestring+'-'+$scope.userId;
         ImageUploadFactory.uploadImage($scope.imgURI2, 'yegoapp',publicId).then(function(result){
           $scope.url = result.url;
+          $scope.myCar.main = $scope.principal;
           $scope.myCar.imageurl = $scope.url;
           $scope.myCar.photoid = 'autos/'+publicId;
           $scope.objV.vehicle = $scope.myCar;
@@ -294,7 +323,7 @@ function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
     console.log($scope.theCar);
   }
   $scope.carId = $stateParams.id;
-  $scope.principal;
+  $scope.principal = $scope.theCar.main;
   $scope.changeDriver = false;
   $scope.objV = {};
   $scope.objV.vehicle = {};
@@ -328,18 +357,18 @@ function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
       });
     }
   }
-  $scope.changePrincipal = function(principal){
+  $scope.changePrincipal = function(boolean){
     console.log('changePrincipal()');
-    console.log(principal);
-    if (principal){
-      $scope.myCar.main = true;
+    console.log(boolean);
+    if (boolean){
+      $scope.principal = true;
       $scope.myCar.driver_id = $scope.usrId;
       console.log($scope.theCar.imageurl);
       console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
       $scope.$storage.user.driver_of_vehicles[0].imageurl = $scope.theCar.imageurl;
       console.log($scope.$storage.user.driver_of_vehicles[0].imageurl);
     }else{
-      $scope.myCar.main = false;
+      $scope.principal = false;
     }
   }
 
@@ -459,10 +488,13 @@ function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
         $scope.url = result.url;
         $scope.myCar.imageurl = $scope.url;
         $scope.myCar.photoid = 'autos/'+publicId;
+        $scope.myCar.main = $scope.principal;
+        console.log('before Update: '+$scope.myCar.main);
         $scope.objV.vehicle = $scope.myCar;
         console.log($scope.objV);
         AutosData.editarAuto($scope.objV).then(function(response){
           AutosData.getTheCarFromUrl($rootScope.userId,$scope.myCar.id).then(function(response){
+            console.log('after Update: '+response.main);
             AutosData.setTheCar(response);
             $ionicLoading.hide();
             $cordovaCamera.cleanup();
@@ -484,13 +516,15 @@ function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
       });
     }else{
       console.log('IMG undefined');
+      $scope.myCar.main = $scope.principal;
+      console.log('before Update: '+$scope.myCar.main);
       $scope.objV.vehicle = $scope.myCar;
       console.log($scope.objV);
       AutosData.editarAuto($scope.objV).then(function(response){
         AutosData.getTheCarFromUrl($rootScope.userId,$scope.myCar.id).then(function(response){
+          console.log('after Update: '+response.main);
           AutosData.setTheCar(response);
           $ionicLoading.hide();
-          $cordovaCamera.cleanup();
           $scope.editCarModal.hide();
           $state.go('app.autoSingle', $stateParams, {reload: true, inherit: false});
         }).catch(function(response){

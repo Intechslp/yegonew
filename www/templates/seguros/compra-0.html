@@ -32,7 +32,7 @@
       </label>
       <ion-radio class="radio-custom" ng-model="sendData.CveVehic"
         ng-repeat="descripcion in descripciones"
-        ng-value="{{descripcion[0]}}">
+        ng-value="descripcion[0]" ng-if="descripcion !== null">
         {{descripcion[1]}}
       </ion-radio>
 

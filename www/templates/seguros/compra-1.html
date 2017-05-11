@@ -14,58 +14,65 @@
       <!-- Correo electronico -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Correo Electrónico</span>
-       <input type="email" ng-model="sendData.Email">
+       <input type="email" ng-model="pFisica.Email">
       </label>
 
       <!-- Nombre -->
       <label class="item item-input" id="codigo-label">
-       <span class="input-label">Nombre</span>
-       <input type="text" ng-model="sendData.Nombre">
+       <span class="input-label">Nombre(s)</span>
+       <input type="text" ng-model="pFisica.Nombre">
       </label>
 
       <!-- Apellido Paterno -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Apellido Paterno</span>
-       <input type="text" ng-model="sendData.ApellidoP">
+       <input type="text" ng-model="pFisica.ApellidoP">
       </label>
 
       <!-- Apellido Materno -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Apellido Materno</span>
-       <input type="text" ng-model="sendData.ApellidoM">
+       <input type="text" ng-model="pFisica.ApellidoM">
+      </label>
+
+      <!-- RFC -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">RFC</span>
+       <input type="text" ng-model="pFisica.RFC" maxlength="13">
       </label>
 
       <!-- Celular -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Celular</span>
-       <input type="tel" ng-model="sendData.Celular" maxlength="10">
+       <input type="tel" ng-model="pFisica.Celular" maxlength="10">
       </label>
 
       <!-- Telefono -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Teléfono</span>
-       <input type="tel" ng-model="sendData.Telefono" maxlength="10">
+       <input type="tel" ng-model="pFisica.Telefono" maxlength="10">
       </label>
 
       <!-- Fecha -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Fecha nacimiento</span>
-       <input type="date" ng-model="sendData.FechaNac" maxlength="10">
+       <input type="date" ng-model="pFisica.FechaNac">
       </label>
 
       <!-- Nacionalidad -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Nacionalidad</span>
-       <input type="tel" ng-model="sendData.Nacionalidad" maxlength="10">
+       <input type="text" ng-model="pFisica.Nacionalidad">
       </label>
 
       <!-- Lugar de nac. -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Lugar de nac.</span>
-       <input type="tel" ng-model="sendData.LugarNac" maxlength="10">
+       <input type="text" ng-model="pFisica.LugarNac">
       </label>
+
       <!-- Tipo de persona -->
-      <input type="text" ng-model="sendData.TipoPersona" ng-init="sendData.TipoPersona = 'FISICA'" style="display:none">
+      <input type="text" ng-model="pFisica.TipoPersona" ng-init="pFisica.TipoPersona = 'FISICA'" style="display:none">
 
       <div class="row">
         <div class="col">
@@ -73,9 +80,9 @@
         <div class="col">
         </div>
         <div class="col">
-          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/2">
+          <button class="button button-block button-positive button-clear" ng-click="goPaso2('fisica')">
             CONTINUAR
-          </a>
+          </button>
         </div>
       </div>
     </form>
@@ -85,47 +92,65 @@
       <!-- Correo electronico -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Correo Electrónico</span>
-       <input type="email" ng-model="sendData.Email">
-      </label>
-
-      <!-- Razón Social -->
-      <label class="item item-input" id="codigo-label">
-       <span class="input-label">Razón Social</span>
-       <input type="email" ng-model="sendData.CPostal">
-      </label>
-
-      <!-- RFC Empresa -->
-      <label class="item item-input" id="codigo-label">
-       <span class="input-label">RFC Empresa</span>
-       <input type="email" ng-model="sendData.CPostal" maxlength="13">
-      </label>
-
-      <!-- Correo electronico -->
-      <label class="item item-input" id="codigo-label">
-       <span class="input-label">Correo Electrónico</span>
-       <input type="email" ng-model="sendData.CPostal">
+       <input type="email" ng-model="pMoral.Email">
       </label>
 
       <!-- Nombre -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Nombre(s)</span>
-       <input type="text" ng-model="sendData.CPostal">
+       <input type="text" ng-model="pMoral.Nombre">
       </label>
 
       <!-- Apellido Paterno -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Apellido Paterno</span>
-       <input type="text" ng-model="sendData.CPostal">
+       <input type="text" ng-model="pMoral.ApellidoP">
       </label>
 
       <!-- Apellido Materno -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Apellido Materno</span>
-       <input type="text" ng-model="sendData.CPostal">
+       <input type="text" ng-model="pMoral.ApellidoM">
+      </label>
+
+      <!-- RFC -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">RFC (Empresa)</span>
+       <input type="text" ng-model="pMoral.RFC" maxlength="13">
+      </label>
+
+      <!-- Celular -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Celular</span>
+       <input type="tel" ng-model="pMoral.Celular" maxlength="10">
+      </label>
+
+      <!-- Telefono -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Teléfono</span>
+       <input type="tel" ng-model="pMoral.Telefono" maxlength="10">
+      </label>
+
+      <!-- Fecha -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Fecha nacimiento</span>
+       <input type="date" ng-model="pMoral.FechaNac">
+      </label>
+
+      <!-- Nacionalidad -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Nacionalidad</span>
+       <input type="text" ng-model="pMoral.Nacionalidad">
+      </label>
+
+      <!-- Lugar de nac. -->
+      <label class="item item-input" id="codigo-label">
+       <span class="input-label">Lugar de nac.</span>
+       <input type="text" ng-model="pMoral.LugarNac">
       </label>
 
       <!-- Tipo de persona -->
-      <input type="text" ng-model="sendData.TipoPersona" ng-init="sendData.TipoPersona = 'MORAL'" style="display:none">
+      <input type="text" ng-model="pMoral.TipoPersona" ng-init="pMoral.TipoPersona = 'MORAL'" style="display:none">
 
       <div class="row">
         <div class="col">
@@ -133,9 +158,9 @@
         <div class="col">
         </div>
         <div class="col">
-          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/2">
+          <button class="button button-block button-positive button-clear" ng-click="goPaso2('moral')">
             CONTINUAR
-          </a>
+          </button>
         </div>
       </div>
 

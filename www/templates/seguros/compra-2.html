@@ -16,11 +16,12 @@
         </select>
       </label>
 
-      <!-- RFC -->
+      <!-- CPostal -->
       <label class="item item-input" id="codigo-label">
-       <span class="input-label">RFC</span>
-       <input type="text" ng-model="sendData.RFC" maxlength="13">
+       <span class="input-label">Código Postal</span>
+       <input type="tel" ng-model="sendData.CPostal" maxlength="5">
       </label>
+
 
       <!-- Calle -->
       <label class="item item-input" id="codigo-label">
@@ -71,9 +72,10 @@
         <div class="col">
         </div>
         <div class="col">
-          <a class="button button-block button-positive button-clear" href="#/app/seguros/compra/paso/3">
+          <button class="button button-block button-positive button-clear"
+            ng-click="goPaso3()">
             CONTINUAR
-          </a>
+          </button>
         </div>
       </div>
     </form>

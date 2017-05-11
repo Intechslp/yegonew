@@ -67,6 +67,7 @@ angular.module('starter')
     return {
         getTeam: function(usrId){
             var getUrl = url+usrId+'/families';
+            console.log(getUrl);
             return $http.get(getUrl).then(function(response){
                 var data = response.data;
                 return data;
@@ -543,6 +544,7 @@ angular.module('starter')
     var datosEnv = {};
     var la_cotizacion = {};
     var data_recotizacion = {};
+    var emiteOTData = {};
 
     return {
         getMarcas: function(){
@@ -567,6 +569,8 @@ angular.module('starter')
             });
         },
         setData: function(datos){
+          console.log("Set Data:");
+          console.log(datos);
             datosEnv = datos;
         },
         getData: function(){
@@ -583,12 +587,12 @@ angular.module('starter')
                     "Usuario": user,
                     "Pass": pass,
                     "TipoRegreso": tipo,
-                    "Edad": datos.Edad,
+                    "Edad": parseInt(datos.Edad),
                     "Marca": datos.Marca,
                     "CPostal": datos.CPostal,
                     "Genero": datos.Genero,
                     "tipoAuto": datos.tipoAuto,
-                    "Modelo": datos.Modelo,
+                    "Modelo": parseInt(datos.Modelo),
                     "Descripcion": datos.Descripcion,
                     "Plan": datos.Plan,
                     "perioricidadPago": datos.perioricidadPago,
@@ -603,7 +607,7 @@ angular.module('starter')
                 "Pass": pass,
                 "TipoRegreso": tipo,
                 "Marca":auto.Marca,
-                "Modelo": auto.Modelo,
+                "Modelo": parseInt(auto.Modelo),
                 "Descripcion": auto.Descripcion,
                 "Aseguradora": aseguradora
             });
@@ -625,11 +629,11 @@ angular.module('starter')
                     "Usuario": user,
                     "Pass": pass,
                     "CPostal": datos.CPostal,
-                    "Edad": datos.Edad,
+                    "Edad": parseInt(datos.Edad),
                     "Genero": datos.Genero,
                     "TipoAuto": datos.tipoAuto,
                     "Marca": datos.Marca,
-                    "Modelo": datos.Modelo,
+                    "Modelo": parseInt(datos.Modelo),
                     "Descripcion": datos.Descripcion,
                     "Plan": datos.Plan,
                     "PerioricidadPago": datos.perioricidadPago,
@@ -645,6 +649,91 @@ angular.module('starter')
         },
         getSingle: function(){
             return seguro;
+        },
+        setEmiteOTData: function(data){
+            emiteOTData = data;
+            console.log("setEmiteOTData: ");
+            console.log(emiteOTData);
+        },
+        getEmiteOTData: function(){
+            return emiteOTData;
+        },
+        sendEmiteOT: function(datos){
+            return $soap.post(base_url,"EmiteOT", {
+              "RespuestaCotizacion": datos.RespuestaCotizacion,
+              "Nombre": datos.Nombre,
+              "ApellidoP": datos.ApellidoP,
+              "ApellidoM": datos.ApellidoM,
+              "Email": datos.Email,
+              "FechaNac": datos.FechaNac,
+              "LugarNac": datos.LugarNac,
+              "Nacionalidad": datos.Nacionalidad,
+              "RFC": datos.RFC,
+              "Telefono": datos.Telefono,
+              "Celular": datos.Celular,
+              "TipoPersona": datos.TipoPersona,
+              "Calle": datos.Calle,
+              "NoExt":datos.NoExt,
+              "NoInt": datos.NoInt,
+              "Colonia": datos.Colonia,
+              "CPostal": datos.CPostal,
+              "Estado":datos.Estado,
+              "Ciudad": datos.Ciudad,
+              "Banco": datos.Banco,
+              "TipoTarjeta": datos.TipoTarjeta,
+              "Carrier": datos.Carrier,
+              "NombrePlastico": datos.NombrePlastico,
+              "NumeroPlastico":datos.NumeroPlastico,
+              "MesVigencia": datos.MesVigencia,
+              "AnioVigencia": datos.AnioVigencia,
+              "CodSeguridad": datos.CodSeguridad,
+              "Serie": datos.Serie,
+              "Motor": datos.Motor,
+              "Placas":datos.Placas,
+              "NoInt": datos.NoInt,
+              "Alianza": "YEGO",
+              "FormatInput": "JSON"
+            });
+        },
+        validaUsuario: function(credentials){
+            console.log("VALIDAR USUARIO");
+
+          return $soap.post(base_url,"validaUsuario", {
+            "usuario": credentials.email,
+            "contrasena": credentials.pass
+          });
+        },
+        crearUsuario: function(data){
+            console.log("CREAR USUARIO");
+            the_pass = ""+data.Email;
+            the_pass = the_pass.replace("@","")
+            the_pass = the_pass.replace(".","")
+            userData = {
+                "usuario":the_pass,
+                "contrasena":the_pass,
+                "tipoEnt":data.TipoPersona,
+                "apellidoP":data.ApellidoP,
+                "apellidoM":data.ApellidoM,
+                "Nombre":data.Nombre,
+                "fechaNac":data.FechaNac,
+                "sexo":data.Genero,
+                "NombreCompleto":data.ApellidoP+" "+data.ApellidoM+" "+data.Nombre,
+                "rfc":data.RFC,
+                "telParticular":data.Telefono,
+                "telCelular":data.Celular,
+                "eMail1":data.Email,
+                "Nacionalidad":data.Nacionalidad,
+                "lugarNac":data.LugarNac,
+                "calle":data.Calle,
+                "cPostal":data.CPostal,
+                "colonia":data.Colonia,
+                "poblacion":data.Ciudad,
+                "ciudad":data.Ciudad,
+                "pais":"MEXICO"
+            }
+            console.log(userData);
+
+            return $soap.post(base_url,"creaUsuario", userData);
         }
     }
 }]);

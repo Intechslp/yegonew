@@ -6,7 +6,7 @@ angular.module('starter.cargas.controllers',
 // CARGAS CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('CargasCtrl',
-function($state, $scope, $window, $rootScope, $stateParams, $filter,
+function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
   $ionicLoading, $localStorage, $ionicModal, $ionicHistory, $ionicPopup, $auth,
   GasolinasData) {
 
@@ -39,7 +39,35 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter,
     var usrUid = $scope.$storage.headers.uid;
     $scope.userCity = $scope.$storage.user.city.id;
 
+    var gasolineras_to = $timeout(function(){
+      //en caso de que la petición tarde demasiado se cancela el loading
+      $ionicLoading.hide();
+      $scope.showConfirm('¡Vaya!',
+      'Parece que ha habido un error accediendo a la base de datos o tu conexión'+
+      ' a internet no es óptima para que Yego funcione correctamente');
+      console.log('Time Out :(');
+    },7000);
+
+    // A confirm dialog
+   $scope.showConfirm = function(msj1, msj2) {
+     var confirmPopup = $ionicPopup.confirm({
+       title: msj1,
+       template: msj2,
+       cancelText: 'Cancelar',
+       okText: 'Reintentar'
+     });
+     confirmPopup.then(function(res) {
+       if(res) {
+         $state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+         console.log('You are sure');
+       } else {
+         console.log('You are not sure');
+       }
+     });
+   };
+
     GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
+      $timeout.cancel(gasolineras_to);
       $scope.theMonths = _.groupBy(resp, 'month_year');
       for (var prop in $scope.theMonths) {
         if ($scope.theMonths.hasOwnProperty(prop)) {

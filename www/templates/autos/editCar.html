@@ -32,12 +32,12 @@
       </label>
 
       <!-- main -->
-      <ion-checkbox ng-model="principal" ng-change="changePrincipal(principal)" ng-checked="theCar.main">
+      <ion-checkbox ng-model="principal" ng-change="changePrincipal(principal)">
         Este es mi auto Principal
       </ion-checkbox>
 
       <!-- driver_id changeDriver == false -->
-      <label class="item item-input" ng-if="!changeDriver && !theCar.main">
+      <label class="item item-input" ng-if="!changeDriver && !principal">
         <div class="input-label">Conductor</div>
         <span class="input-label">
 			    	<button class="button button-icon icon ion-edit s-icon" ng-click="theChange()"></button>

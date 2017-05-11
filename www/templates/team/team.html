@@ -15,7 +15,9 @@
     <!-- NO HAY UN EQUIPO -->
     <div class="invitations list" ng-show="!theresTeam">
       <div class="item item-divider">
-        Invitaciones pendientes <span class="inv-counter">{{requests.length}}</span>
+        <p>Invitaciones pendientes</p><div class="counter"><span class="inv-counter">{{requests.length}}</span>
+        <button class="button button-icon button-clear ion-refresh" ng-click="refreshMyView()">
+        </button></div>
       </div>
       <div class="item item-text-wrap" ng-repeat="request in requests">
         <p><strong>{{request.family_admin.admin_name}}</strong> te ha invitado a ser parte su Yego® Team: <strong>{{request.family_admin.name}}</strong></p>
@@ -33,13 +35,13 @@
         <!-- name -->
         <label class="item item-input item-stacked-label" id="codigo-label">
          <span class="input-label">Nombre del equipo:</span>
-         <input type="text" ng-model="teamData.name" placeholder="Nombre aquí" ng-disabled="teamData.name.length == 0">
+         <input type="text" ng-model="teamData.name" placeholder="Nombre aquí" ng-change="isLongEnough()" style="margin-bottom:1em">
         </label>
         <!-- administrator_id -->
         <input type="text" style="display:none" ng-model="teamData.administrator_id" ng-init="teamData.administrator_id = userId">
         <button
         class="button button-positive button-clear icon-right ion-ios-plus m-icon"
-        ng-click="newTeam()">
+        ng-click="newTeam()" ng-disabled="disabled">
           crear team
         </button>
       </form>

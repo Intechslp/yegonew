@@ -70,6 +70,7 @@ angular.module('starter.login.controllers',
 
         UserData.getUserData(resp.id, $scope.$storage.headers.uid).then(function(response){
           $scope.$storage.user = response;
+          // console.log(response);
           $ionicLoading.hide();
           $state.go('app.directorio');
         }).catch(function(response){
@@ -88,10 +89,10 @@ angular.module('starter.login.controllers',
   $scope.regBtnClick = function() {
     if($scope.verifyRegistration()){
       $ionicLoading.show({templateUrl: 'templates/enviando.html'});
-      console.log('verifyRegistration is true')
+      // console.log('verifyRegistration is true')
 
       $scope.objU.app_user = $scope.userData;
-      console.log($scope.objU);
+      // console.log($scope.objU);
       $auth.submitRegistration($scope.registerData).then(function(resp) {
         var sesion = JSON.parse(localStorage.auth_headers.replace("-","_"));
         $scope.$storage.headers = sesion;
@@ -149,7 +150,7 @@ angular.module('starter.login.controllers',
   }
 
   $scope.guestClick = function(){
-    console.log('guestClick');
+    // console.log('guestClick');
     $scope.$storage.guest = true;
     $state.go('location')
   }
@@ -400,18 +401,18 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
           $scope.imgRegAuto = canvas.toDataURL();
       }).catch(function(err) {
           // User canceled or couldn't load image.
-          console.log("couldn't load the image");
-          console.log(err);
+          // console.log("couldn't load the image");
+          // console.log(err);
       });
     }).catch(function(err) {
       // An error occured. Show a message to the user
-      console.log(err);
+      // console.log(err);
     });
   }
 
   // función que abre la biblioteca fotográfica del dispositivo para tomar una foto
   $scope.selectPicture = function() {
-    console.log('selectPicture()')
+    // console.log('selectPicture()')
     var options = {
       quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
@@ -433,12 +434,12 @@ function ($scope, $state, $filter, $localStorage, $ionicLoading, $cordovaCamera,
           $scope.imgRegAuto = canvas.toDataURL();
       }).catch(function(err) {
           // User canceled or couldn't load image.
-          console.log("couldn't load the image");
-          console.log(err);
+          // console.log("couldn't load the image");
+          // console.log(err);
       });
     }).catch(function(err) {
       // An error occured. Show a message to the user
-      console.log(err);
+      // console.log(err);
     });
   }
 

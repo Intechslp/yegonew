@@ -265,10 +265,12 @@ function($state, $scope, $rootScope,$stateParams,
   $scope.teamData.name = null;
   $scope.myGuest = {};
   $scope.requests = {};
+  $scope.disabled = true;
 
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
 
   TeamData.getTeam($scope.userId).then(function(response){
+    console.log(response);
     if(response.length == 0){
       $scope.theresTeam = false;
       TeamData.preguntarInvitacion($scope.userId).then(function(response){
@@ -305,6 +307,11 @@ function($state, $scope, $rootScope,$stateParams,
     }
   }
 
+  // Refrescar para ver si hay invitaciones
+  $scope.refreshMyView = function(){
+    $state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+  }
+
   //Aceptar petición para ser parte de un Team
   $scope.acceptRequest = function(famId,reqId){
     $scope.famData.family_id = famId;
@@ -318,6 +325,16 @@ function($state, $scope, $rootScope,$stateParams,
     }).catch(function(response){
       $ionicLoading.hide();
     })
+  }
+
+  //Desactivar activar botón de crear team
+  $scope.isLongEnough = function(){
+    console.log('isLongEnough');
+    if($scope.teamData.name.length > 2){
+      $scope.disabled = false;
+    }else{
+      $scope.disabled = true;
+    }
   }
 
   // Cargar el modal

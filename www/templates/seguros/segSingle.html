@@ -9,14 +9,6 @@
 
     <div class="row">
       <div class="col">
-        <div class="rate-bar">
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <i class="icon ion-android-star-outline"></i>
-          <p>0 (0)</p>
-        </div>
         <p><strong>Vehículo cotizado:</strong> {{seguro.VehiculoCotizado}}</p>
       </div>
     </div>
@@ -33,11 +25,11 @@
     <div class="row">
       <div class="col">
         <h3>Cobertura</h3>
-        <p><strong>Danios Materiales</strong> {{seguro.Cobertura.Danios_Materiales}}</p>
-        <p><strong>Robo Total</strong> {{seguro.Cobertura.Robo_Total}}</p>
-        <p><strong>RC Bienes</strong> {{seguro.Cobertura.RC_Bienes}}</p>
-        <p><strong>RC Personas</strong> {{seguro.Cobertura.RC_Personas}}</p>
-        <p><strong>Defensa Legal</strong> {{seguro.Cobertura.Defensa_Legal}}</p>
+        <ul class="seguros-special-list">
+          <li ng-repeat="(key, value) in seguro.Cobertura" ng-if="value !== null && value !== undefined">
+            <strong>{{ fixKey(key) }}: </strong>{{ fixString(value) }}
+          </li>
+        </ul>
       </div>
     </div>
 

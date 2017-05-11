@@ -25,8 +25,12 @@ angular.module('starter')
             });
         },
         editarAuto: function(obj){
+          console.log('Editar Auto Service');
+          console.log(obj);
             var nvUrl = url+obj.vehicle.owner_id+'/vehicles/'+obj.vehicle.id;
+            console.log(nvUrl);
             return $http.patch(nvUrl,obj).then(function(response){
+              console.log(response);
             }).catch(function(response){
                 console.log(response);
             });

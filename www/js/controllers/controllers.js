@@ -23,11 +23,11 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
   });
 
   $rootScope.doRefresh = function(){
-    console.log('doRefresh()');
+    // console.log('doRefresh()');
     $scope.$storage = $localStorage;
     if(!$scope.$storage.guest){
       $scope.perfil = $scope.$storage.user;
-      console.log($scope.perfil);
+      // console.log($scope.perfil);
       $rootScope.userId = $scope.$storage.id;
       $rootScope.usuario = $scope.$storage.user;
     }else{
@@ -55,7 +55,8 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 // DIRECTORIO CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirectorioCtrl',
-function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ionicPopup,
+function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
+  $ionicPopup, $stateParams,
   $ionicHistory, $localStorage, EstablecimientosData, NegociosData) {
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
@@ -68,7 +69,7 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ioni
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     $state.go('login');
-    console.log('Time Out :(')
+    // console.log('Time Out :(')
   },7000);
 
   $auth.validateUser().then(function(resp){
@@ -100,9 +101,19 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ioni
   $scope.negocios = {};
   $scope.adn = {};
 
+  var directory_to = $timeout(function(){
+    //en caso de que la petición tarde demasiado se cancela el loading
+    $ionicLoading.hide();
+    $scope.showConfirm('¡Vaya!',
+    'Parece que ha habido un error accediendo a la base de datos o tu conexión'+
+    ' a internet no es óptima para que Yego funcione correctamente');
+    // console.log('Time Out :(');
+  },7000);
+
 // Obtener la lista de establecimientos general
   EstablecimientosData.getEstablecimientosGral($scope.userCity).then(function(resp){
     $scope.negocios = resp;
+    $timeout.cancel(directory_to);
     $ionicLoading.hide();
   }).catch(function(resp){
     // console.log(resp);
@@ -175,15 +186,32 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ioni
     $state.go('app.dirSingle',{singleId:negId});
   }
 
-  $scope.showAlert = function(res, response) {
+  $scope.showAlert = function(msj1, msj2) {
     var alertPopup = $ionicPopup.alert({
-      title: 'Ups!',
-      template: 'Hubo un error accediendo a la base de datos'
+      title: msj1,
+      template: msj2
     });
-
     alertPopup.then(function(res) {
     });
   };
+
+  // A confirm dialog
+ $scope.showConfirm = function(msj1, msj2) {
+   var confirmPopup = $ionicPopup.confirm({
+     title: msj1,
+     template: msj2,
+     cancelText: 'Cancelar',
+     okText: 'Reintentar'
+   });
+   confirmPopup.then(function(res) {
+     if(res) {
+       $state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+      //  console.log('You are sure');
+     } else {
+      //  console.log('You are not sure');
+     }
+   });
+ };
 
 })// END DIRECTORIO CONTROLLER
 //**********
@@ -217,7 +245,7 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ioni
 
   EstablecimientosData.getEstablecimientos(subcat, $scope.userCity).then(function(response){
     $scope.negocios= response;
-    console.log(response);
+    // console.log(response);
     $ionicLoading.hide();
   }).catch(function(response){
     $ionicLoading.hide();
@@ -228,87 +256,6 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading, $ioni
   }
 
 })//END DIRECTORIO LISTA CONTROLLER
-//**********
-
-
-// DIRECTORIO SINGLE CONTROLLER
-//–––––––––––––––––––––––––––––––––––––––––––––
-.controller('DirSingleCtrl',
-function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal,
-  $rootScope, $ionicPopup, NgMap,EstablecimientosData, ratingToStars, RatingData,
-  $cordovaGeolocation) {
-  // $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
-  $scope.single = {};
-  $scope.setRating = false;
-  $scope.rating = 5;
-  $scope.comoLlegar = true;
-  $scope.objR = {};
-  $scope.objR.review= {};
-  $scope.userId = $rootScope.userId;
-  var singleId = $stateParams.singleId;
-
-  EstablecimientosData.getSingle(singleId).then(function(response){
-    $ionicLoading.hide();
-    $scope.single = response;
-    console.log($scope.single);
-    $scope.rating = $scope.single.review_score*2;
-    $scope.updateStars($scope.rating);
-    $scope.marker = {
-      title:$scope.single.business.name,
-      lat:$scope.single.lat,
-      lng:$scope.single.lng
-    };
-  }).catch(function(response){
-    $ionicLoading.hide();
-  });
-
-// rating
-  $scope.editableRating = ratingToStars.getStarsForPoi($scope.rating/2);
-  $scope.updateStars = function (rating){
-    $scope.editableRating = ratingToStars.getStarsForPoi(rating/2);
-  }
-  $scope.toggleRating = function(){
-    $scope.setRating = !$scope.setRating;
-  }
-  $scope.enviarCalif = function(rating){
-    $scope.objR.review.app_user_id = $scope.userId;
-    $scope.objR.review.place_id = $scope.single.id;
-    $scope.objR.review.rate = rating/2;
-    $scope.objR.review.type = 'Establishment';
-    RatingData.postRating($scope.objR).then(function(resp){
-      $scope.showAlert(
-        '¡Éxito!',
-        'Gracias por tu retroalimentación, esto nos ayuda a todos para mejorar.'+
-        ' Sigue utilizando Yego App'
-      );
-    }).catch(function(resp){
-      console.log(resp);
-    });
-  }
-
-  $scope.showAlert = function(msj1,msj2) {
-    var alertPopup = $ionicPopup.alert({
-      title: msj1,
-      template: msj2
-    });
-
-    alertPopup.then(function(res) {
-      $scope.toggleRating();
-    });
-  };
-
-  $scope.openInAppBrowser = function(url){
-   // Open in app browser
-   window.open(url,'_blank');
-  };
-
-  $scope.openMap = function(){
-    console.log('openMap');
-    EstablecimientosData.setSingleForMap($scope.single);
-    $state.go('app.dirMapa');
-  }
-
-})//END DIRECTORIO SINGLE CONTROLLER
 //**********
 
 
@@ -331,7 +278,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
 
   GasolinasData.getGasStations($scope.userCity).then(function(response){
     $scope.gasolineras= response;
-    console.log($scope.gasolineras);
+    // console.log($scope.gasolineras);
     $ionicLoading.hide();
   }).catch(function(response){
     $ionicLoading.hide();
@@ -367,7 +314,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   EstablecimientosData.getSingle(singleId).then(function(response){
     $ionicLoading.hide();
     $scope.single = response;
-    console.log($scope.single);
+    // console.log($scope.single);
     $scope.rating = $scope.single.review_score*2;
     $scope.updateStars($scope.rating);
   }).catch(function(response){
@@ -402,7 +349,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
         'fine'
       );
     }).catch(function(resp){
-      console.log(resp);
+      // console.log(resp);
     });
   }
 
@@ -425,9 +372,32 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   };
 
   $scope.openMap = function(){
-    console.log('openMap');
+    // console.log('openMap');
     EstablecimientosData.setSingleForMap($scope.single);
     $state.go('app.dirMapa');
+  }
+
+  $scope.showTheData = function(data){
+    var ans;
+    if (data !== undefined &&
+      data !== '' &&
+      data != null){
+       ans = true;
+    }else{
+       ans = false;
+    }
+    return ans;
+  }
+
+  $scope.showTheAddress = function(){
+    if($scope.single.neighborhood != null && $scope.single.number_i != null){
+      $scope.theAddress = $scope.single.street+' '+$scope.single.number_e+' Int. '+$scope.single.number_i+' '+$scope.single.neighborhood;
+    }else if ($scope.single.neighborhood != null && $scope.single.number_i == null) {
+      $scope.theAddress = $scope.single.street+' '+$scope.single.number_e+' '+$scope.single.neighborhood;
+    }else if ($scope.single.neighborhood == null && $scope.single.number_i == null) {
+      $scope.theAddress = $scope.single.street+' '+$scope.single.number_e;
+    }
+    return $scope.theAddress;
   }
 
 })//END DIRECTORIO SINGLE CONTROLLER
@@ -452,7 +422,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   var singleId = $stateParams.singleId;
 
   $scope.single=GasolinasData.getGasolineraSingle();
-  console.log($scope.single);
+  // console.log($scope.single);
 
 // rating
   $scope.editableRating = ratingToStars.getStarsForPoi($scope.rating/2);
@@ -473,9 +443,9 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
     $scope.objR.review.app_user_id = $scope.userId;
     $scope.objR.review.establishment_id = $scope.single.id;
     $scope.objR.review.rate = rating/2;
-    console.log($scope.objR);
+    // console.log($scope.objR);
     RatingData.postRating($scope.objR).then(function(resp){
-      console.log(resp);
+      // console.log(resp);
       $scope.showAlert(
         '¡Éxito!',
         'Gracias por tu retroalimentación, esto nos ayuda a todos para mejorar.'+
@@ -483,7 +453,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
         'fine'
       );
     }).catch(function(resp){
-      console.log(resp);
+      // console.log(resp);
     });
   }
 
@@ -509,7 +479,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
       };
       $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
     }, function(error){
-      console.log("Could not get location");
+      // console.log("Could not get location");
     });
 
     google.maps.event.addListenerOnce($scope.map, 'idle', function(){
@@ -555,7 +525,7 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
   };
 
   $scope.openMap = function(){
-    console.log('openMap');
+    // console.log('openMap');
     EstablecimientosData.setSingleForMap($scope.single);
     $state.go('app.dirMapa');
   }
@@ -568,11 +538,11 @@ function($state, $scope, $stateParams, $ionicHistory, $ionicLoading, $ionicModal
 // DIRECTORIO MAPA CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirMapaCtrl',
-function($state, $scope, $rootScope, $stateParams, $ionicLoading,
-  $cordovaGeolocation, $ionicNavBarDelegate, EstablecimientosData) {
-  console.log('DirMapaCtrl');
+function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
+  $ionicPopup, $cordovaGeolocation, $ionicNavBarDelegate, EstablecimientosData) {
+  // console.log('DirMapaCtrl');
   $scope.single = EstablecimientosData.getSingleForMap();
-  console.log($scope.single);
+  // console.log($scope.single);
   $ionicLoading.show();
   var options = {timeout: 10000, enableHighAccuracy: true};
 
@@ -638,8 +608,19 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
 
     });
   }, function(error){
-    console.log("Could not get location");
+    // console.log("Could not get location");
+    $ionicLoading.hide();
+    $scope.showAlert('¡Ups!','Lo sentimos parece que tu conexión a internet está fallando o no podemos encontrar tu ubicación, asegurate de que la configuración de tu teléfono esté en orden.');
   });
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+    alertPopup.then(function(res) {
+    });
+  };
 
 
 })//END DIRECTORIO MAPA CONTROLLER
@@ -651,8 +632,8 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('CercaCtrl',
   function($state, $scope, $compile, $rootScope, $stateParams, $ionicLoading,
-    $localStorage, $cordovaGeolocation, $ionicNavBarDelegate,
-    EstablecimientosData, GasolinasData) {
+    $localStorage, $cordovaGeolocation, $ionicNavBarDelegate, $ionicHistory,
+    $ionicPopup, $timeout, EstablecimientosData, GasolinasData) {
 
   $ionicLoading.show();
   $scope.$storage = $localStorage;
@@ -670,13 +651,13 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
     $scope.categories = response;
     $scope.categories.push({id:999,name:'GASOLINERAS', subcategories: 'no'});
   }).catch(function(response){
-    console.log(response);
+    // console.log(response);
   });
 
   GasolinasData.getGasStations($scope.userCity).then(function(response){
     $scope.markers = response;
   }).catch(function(response){
-    console.log(response);
+    // console.log(response);
   });
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
@@ -721,8 +702,26 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
 
     });
   }, function(error){
-    console.log("Could not get location");
+    // console.log("Could not get location");
+    $ionicLoading.hide();
+    $scope.showAlert('¡Ups!',
+    'Lo sentimos parece que tu conexión a internet está fallando o no podemos'+
+    ' encontrar tu ubicación, asegurate de que la configuración de tu teléfono esté en orden.');
   });
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+
+    alertPopup.then(function(res) {
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.directorio');
+    });
+  };
 
 // Obtener las subcategorías según la caegoría elegida
   $scope.getSubcats = function(cat){
@@ -736,56 +735,97 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
 
 // Función para poder obtener los marcadores de los establecimientos
   $scope.getMarkers = function(subcat){
+
+    var cercademi_to = $timeout(function(){
+      //en caso de que la petición tarde demasiado se cancela el loading
+
+      $ionicLoading.hide();
+      $scope.showAlert('¡Ups!',
+      'Lo sentimos parece que tu conexión a internet está fallando o no podemos'+
+      ' encontrar tu ubicación, asegurate de que la configuración de tu teléfono esté en orden.');
+    },10000);
     if(subcat !== undefined){
       if(subcat.name !== 'no'){
         $scope.deleteMarkers();
         $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
         EstablecimientosData.getEstablecimientos(subcat.id, $scope.userCity)
         .then(function(response){
-          $scope.markers= response;
-          for (var i = 0; i < $scope.markers.length; i++) {
-            var record = $scope.markers[i];
-            var markerPos = new google.maps.LatLng(record.lat, record.lng);
-            var marker = new google.maps.Marker({
-                map: $scope.map,
-                position: markerPos
-            });
-            $scope.addInfoWindow(marker, 'est', record);
-            the_markers.push(marker);
-            if(i == $scope.markers.length-1){
-              $ionicLoading.hide();
+          $timeout.cancel(cercademi_to);
+          if (response.length > 0) {
+            $scope.markers= response;
+            for (var i = 0; i < $scope.markers.length; i++) {
+              var record = $scope.markers[i];
+              var markerPos = new google.maps.LatLng(record.lat, record.lng);
+              var marker = new google.maps.Marker({
+                  map: $scope.map,
+                  position: markerPos
+              });
+              $scope.addInfoWindow(marker, 'est', record);
+              the_markers.push(marker);
+              if(i == $scope.markers.length-1){
+                $ionicLoading.hide();
+              }
             }
+          }else{
+            $ionicLoading.hide();
+            $scope.showAlert('¡Ups!',
+            'Lo sentimos, parece que no hay locaciones de esta categoría'+
+            ' cerca de ti, intenta buscar otra cosa');
           }
         }).catch(function(response){
-          console.log(response);
+          $timeout.cancel(cercademi_to);
+          // console.log(response);
           $ionicLoading.hide();
+          $scope.showAlert('¡Ups!',
+          'Lo sentimos parece que tu conexión a internet está fallando, estas'+
+          ' muy lejos de la ubicación que tienes por defecto o hay un problema'+
+          ' de la conexión de base de datos, intenta más tarde.');
         });
       }else if(subcat.name === 'no'){
         $scope.deleteMarkers();
         $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
         GasolinasData.getGasStations($scope.userCity)
         .then(function(response){
-          $scope.markers= response;
-          for (var i = 0; i < $scope.markers.length; i++) {
-            var record = $scope.markers[i];
-            var markerPos = new google.maps.LatLng(record.lat, record.lng);
-            var marker = new google.maps.Marker({
-                map: $scope.map,
-                position: markerPos
-            });
-            $scope.addInfoWindow(marker, 'gas', record);
-            the_markers.push(marker);
-            if(i == $scope.markers.length-1){
-              $ionicLoading.hide();
+          $timeout.cancel(cercademi_to);
+          if (response.length > 0) {
+            $scope.markers= response;
+            for (var i = 0; i < $scope.markers.length; i++) {
+              var record = $scope.markers[i];
+              var markerPos = new google.maps.LatLng(record.lat, record.lng);
+              var marker = new google.maps.Marker({
+                  map: $scope.map,
+                  position: markerPos
+              });
+              $scope.addInfoWindow(marker, 'gas', record);
+              the_markers.push(marker);
+              if(i == $scope.markers.length-1){
+                $ionicLoading.hide();
+              }
             }
+          }else{
+            $ionicLoading.hide();
+            $scope.showAlert('¡Ups!',
+            'Lo sentimos, parece que no hay locaciones de esta categoría'+
+            ' cerca de ti, intenta buscar otra cosa');
           }
         }).catch(function(response){
-          console.log(response);
+          $timeout.cancel(cercademi_to);
+          // console.log(response);
           $ionicLoading.hide();
+          $scope.showAlert('¡Ups!','Lo sentimos parece que tu conexión a internet está fallando, estas muy lejos de la ubicación que tienes por defecto o hay un problema de la conexión de base de datos, intenta más tarde.');
         });
       }
     }
   }
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+    alertPopup.then(function(res) {
+    });
+  };
 
   $scope.addInfoWindow = function(marker,type, record) {
     if (type !== 'gas') {
@@ -805,7 +845,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
     }
 
     var compiledContent = $compile(infoWindowContent)($scope);
-    console.log(compiledContent);
+    // console.log(compiledContent);
     var infoWindow = new google.maps.InfoWindow({
         content: compiledContent[0]
     });
@@ -828,21 +868,23 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
   }
 
   $scope.goSingle = function(negId){
-    console.log('goSingle');
+    // console.log('goSingle');
     $state.go('app.dirSingle',{singleId:negId});
   }
 
   $scope.goSingleGas = function(gasid){
-    console.log('goSingleGas');
+    // console.log('goSingleGas');
     // console.log(lol);
     GasolinasData.getOneGasolinera(gasid).then(function(resp){
-      console.log(resp);
+      // console.log(resp);
       GasolinasData.setGasolineraSingle(resp);
       $state.go('app.gasSingle',{gasId:gasid});
     }).catch(function(resp){
-      console.log(resp);
+      // console.log(resp);
     });
   }
+
+
 
 })// END CERCA DE MI CONTROLLER
 //**********
@@ -862,17 +904,17 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading,
   $ionicLoading.show();
   CuponesData.getCupones().then(function(response){
     $scope.cupones = response;
-    console.log($scope.cupones);
+    // console.log($scope.cupones);
     $ionicLoading.hide();
   }).catch(function(response){
     $ionicLoading.hide();
-    console.log(response);
+    // console.log(response);
     $scope.showAlert();
   });
 
   $scope.goCupon = function(obj){
-    console.log('Go Cupon');
-    console.log(obj);
+    // console.log('Go Cupon');
+    // console.log(obj);
     CuponesData.setCupon(obj);
     $state.go('app.cupon');
   }
