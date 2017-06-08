@@ -9,19 +9,29 @@
   </ion-nav-bar>
   <ion-content>
     <div class="list">
-      <label class="item item-input item-select">
+      <label id="category" class="item item-input item-select">
         <div class="input-label">Categoría:</div>
-        <div class="input-label input-label-2">{{chosenCat.name}}</div>
-        <select ng-model="chosenCat" ng-change="getSubcats(chosenCat)"
+        <div class="input-label input-label-2">{{chosenCat}}</div>
+        <!-- <select ng-model="chosenCat"
+        ng-change="getSubcats(chosenCat)"
         ng-options="category as category.name for category in categories">
+        </select> -->
+        <select ng-model="chosenCat" id="tipoAuto"
+        ng-change="getSubcats(chosenCat)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="category in categories"
+          ng-value="category.name">{{category.name}}</option>
         </select>
       </label>
       <!-- SUBCATEGORIES EXIST -->
-      <label id="subcategory" class="item item-input item-select" ng-show="showsubcats">
+      <label id="subcategory" class="item item-input item-select"
+          ng-show="showsubcats">
         <div class="input-label">Subcategoría:</div>
-        <div class="input-label input-label-2">{{chosenSubcat.name}}</div>
         <select ng-model="chosenSubcat" ng-change="getMarkers(chosenSubcat)"
         ng-options="subcategory as subcategory.name for subcategory in subcategories">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="subcategory in subcategories"
+          ng-value="subcategory.name">{{subcategory.name}}</option>
         </select>
 
       </label>

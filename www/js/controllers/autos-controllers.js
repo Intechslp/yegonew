@@ -198,24 +198,25 @@ function($state, $scope, $window, $rootScope, $stateParams, $timeout,
   }
 
 // función de prueba para debuguear la proporción de la camara
-//  $scope.pruebaImagen = function(){
-//    var constraints =  $scope.cropWindowCalculator();
-//    $jrCrop.crop({
-//        url: 'http://res.cloudinary.com/omakase/image/upload/v1485138935/autos/vehiculos/201700203532-41.jpg',
-//        width: constraints[0],
-//        height: constraints[1],
-//        title: 'Ajusta la Imágen'
-//    }).then(function(canvas) {
-//        // success!
-//        var imagen = canvas.toDataURL();
-//    }, function() {
-//        // User canceled or couldn't load image.
-//        console.log("not cropped");
-//    });
-//  }
+ // $scope.pruebaImagen = function(){
+ //   var constraints =  $scope.cropWindowCalculator();
+ //   $jrCrop.crop({
+ //       url: 'https://vignette1.wikia.nocookie.net/the-leftovers/images/c/ca/Leftovers-hbo-season-3.jpg/revision/latest?cb=20170403202755',
+ //       width: constraints[0],
+ //       height: constraints[1],
+ //       title: 'Ajusta la Imágen'
+ //   }).then(function(canvas) {
+ //       // success!
+ //       var imagen = canvas.toDataURL();
+ //   }, function() {
+ //       // User canceled or couldn't load image.
+ //       console.log("not cropped");
+ //   });
+ // }
 
 // función que abre la camara del dispositivo para tomar una foto
   $scope.takePicture = function() {
+
     var options = {
       quality : 90,
       destinationType : Camera.DestinationType.DATA_URL,
@@ -226,10 +227,12 @@ function($state, $scope, $window, $rootScope, $stateParams, $timeout,
       saveToPhotoAlbum: true,
       correctOrientation:true
     };
+    console.log(options);
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
       var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $ionicLoading.show();
       $jrCrop.crop({
           url: $scope.imgURI2,
           width: constraints[0],
@@ -238,12 +241,14 @@ function($state, $scope, $window, $rootScope, $stateParams, $timeout,
       }).then(function(canvas) {
           // success!
           $scope.imgURI2 = canvas.toDataURL();
-      }, function() {
+      }).catch(function() {
           // User canceled or couldn't load image.
           console.log("couldn't load the image");
+          $scope.imgURI2 = null;
       });
-    }, function(err) {
+    }).catch( function(err) {
       // An error occured. Show a message to the user
+      console.log(err);
     });
   }
 
@@ -254,12 +259,14 @@ function($state, $scope, $window, $rootScope, $stateParams, $timeout,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
       encodingType: Camera.EncodingType.JPEG,
-      popoverOptions: CameraPopoverOptions
+      popoverOptions: CameraPopoverOptions,
+      correctOrientation:true
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
       var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI2 = "data:image/jpeg;base64," + imageData;
+      $ionicLoading.show();
       $jrCrop.crop({
           url: $scope.imgURI2,
           width: constraints[0],
@@ -268,12 +275,14 @@ function($state, $scope, $window, $rootScope, $stateParams, $timeout,
       }).then(function(canvas) {
           // success!
           $scope.imgURI2 = canvas.toDataURL();
-      }, function() {
+      }).catch(function() {
           // User canceled or couldn't load image.
           console.log("couldn't load the image");
+          $scope.imgURI2 = null;
       });
-    }, function(err) {
+    }).catch( function(err) {
       // An error occured. Show a message to the user
+      console.log(err);
     });
   }
 
@@ -451,7 +460,8 @@ function($state, $stateParams, $scope, $rootScope, $window, $jrCrop,
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
       encodingType: Camera.EncodingType.JPEG,
-      popoverOptions: CameraPopoverOptions
+      popoverOptions: CameraPopoverOptions,
+      correctOrientation:true
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {

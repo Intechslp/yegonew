@@ -19,7 +19,8 @@ angular.module('starter', [
   'angularSoap',
   'ng-token-auth',
   'ngCordova',
-  'jrCrop'
+  'jrCrop',
+  'ngAnimate'
 ])
 
 .run(function($ionicPlatform, $cordovaSQLite, $rootScope) {
@@ -32,7 +33,7 @@ angular.module('starter', [
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleBlackTranslucent();
+      StatusBar.styleLightContent();
     }
     setTimeout(function() {
       if(navigator.splashscreen !== undefined){
@@ -383,7 +384,17 @@ angular.module('starter', [
       }
     }
   })
-  // cargas single
+  // cargasSingle
+  .state('app.cargasSingle', {
+    url: '/cargas/singleCar',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/cargas/cargasSingle.html",
+        controller: 'CargasSingleCtrl'
+      }
+    }
+  })
+  // cargas resumen
   .state('app.resumenMes', {
     url: '/cargas/:cargaId',
     views: {

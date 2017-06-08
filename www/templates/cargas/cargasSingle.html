@@ -10,27 +10,17 @@
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button id="header-btn" class="button button-icon icon ion-ios-plus"
-      ng-click="openModal()" ng-if="theresCar"></button>
+      ng-click="openModal()"></button>
     </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="has-header">
-    <div class="list">
-      <div class="item item-avatar item-icon-right" ng-repeat="car in cars"
-      ng-click="goSingleCar(car)">
-        <img ng-src="{{car.imageurl}}">
-        <i class="icon ion-chevron-right"></i>
-        <h2>{{car.description+' '+car.model}}</h2>
-        <p>{{car.brand}}</p>
-      </div>
-    </div>
-    <!-- SI HAY CARRO -->
-    <!-- <div class="info-block padding" ng-if="theresCar">
-      <img class="info-block-item" src="img/icons/modelo.png" alt="" />
+    <div class="info-block padding">
+      <img class="info-block-item" ng-src="{{the_car.imageurl}}" alt="" />
       <div class="info-block-item info-block-data">
         <h2>{{mainCar}}</h2>
       </div>
     </div>
-    <div ng-if="objectIsEmpty() && theresCar" class="padding">
+    <div ng-if="objectIsEmpty()" class="padding">
       <h4>Aun no has registrado cargas de gasolina</h4>
     </div>
     <div class="list" ng-if="!objectIsEmpty()" ng-if="theresCar">
@@ -44,12 +34,6 @@
           </p>
         </div>
       </div>
-    </div> -->
-    <!-- NO HAY CARRO -->
-    <div class="padding" ng-if="!theresCar">
-      <h4>Aun no hay autos registrados</h4>
-      <button class="button button-positive button-clear"
-        ng-click="goAutos()">Ir a mis autos</button>
     </div>
   </ion-content>
 </ion-view>

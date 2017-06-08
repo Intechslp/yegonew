@@ -134,20 +134,84 @@ p.info-label.bigger span.gray-info{
  }
 /* HEADER
 –––––––––––––––––––––––––––––*/
-.bar-dark.bar.bar-header{
+.bar-dark.bar.bar-header,ion-header-bar.bar-stable.bar.bar-header{
   background: #0d1927;
   border-color: transparent;
   background-image: none;
   border-bottom-width: 0px;
   color: #92baf5;
 }
-.bar.bar-dark .title, .bar.bar-dark .ion-navicon:before{
+.bar.bar-dark .title, .bar.bar-dark .ion-navicon:before,
+ion-header-bar.bar-stable.bar.bar-header *{
   color: #92baf5;
 }
-#header-btn:before{
-  font-size: 24px;
+#header-btn:before, .header-btn:before{
+  font-size: 24px !important;
   color: #92baf5;
 }
+.bar .title.title.title-center.header-item div.h1.title {
+  font-family: 'Roboto';
+}
+
+.bar .title.title.title-center.header-item div.h1.title.ng-hide {
+
+}
+#custom-navbar .item-input-wrapper input{
+  color:white;
+}
+#custom-navbar .item-input-wrapper, #custom-navbar .h1.title,
+#search-btn,#close-btn, #home .after-search{
+  opacity: 1;
+}
+#custom-navbar .item-input-wrapper.ng-hide, #home .after-search.ng-hide,
+#custom-navbar .h1.title.ng-hide,#search-btn.ng-hide,#close-btn.ng-hide{
+  opacity: 0;
+}
+#custom-navbar .item-input-wrapper.ng-hide-add, #home .after-search.ng-hide-add,
+#custom-navbar .item-input-wrapper.ng-hide-remove, #home .after-search.ng-hide-remove,
+#custom-navbar .h1.title.ng-hide-add,
+#custom-navbar .h1.title.ng-hide-remove{
+  transition: all .5s;
+  transition-delay: .5s;
+}
+#search-btn.ng-hide-add,#close-btn.ng-hide-add{
+  transition: all .5s;
+}
+#close-btn.ng-hide-remove,#search-btn.ng-hide-remove{
+  transition: all .5s;
+}
+button#search-btn, button#close-btn {
+  position: absolute;
+  right: 0px;
+}
+/*.bar.bar-header.item-input-inset.fulwidth-bar{
+  padding-left: 2em;
+}*/
+#custom-navbar .item-input-wrapper {
+  background: #1a304a;
+  box-shadow: inset 1px 1px 5px #021644;
+  border-radius: 0px;
+  border-bottom: 1px solid #92baf5;
+}
+
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > *{
+  margin-top: 13px;
+  overflow: visible;
+  color: #92BAF5;
+  /*left: 45px !important;
+  right: 45px !important;*/
+}
+.platform-ios #custom-navbar .h1.title{
+  margin-top: 7px !important;
+}
+.platform-ios.platform-cordova #custom-navbar .bar.bar-header.item-input-inset.fulwidth-bar{
+  padding-top: 0px !important;
+}
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset .item-input-wrapper{
+  margin-top: 0px !important;
+}
+
+
 /* TABS
 –––––––––––––––––––––––––––––*/
 
@@ -405,8 +469,8 @@ ion-view.highway{
 #home .logo{
   display: block;
   width:100%;
-  max-width: 85px;
-  margin: 1.5em auto 1em;
+  max-width: 115px;
+  margin: 2.5em auto 0em;
 }
 #home .bar.bar-subheader {
   top: 0;
@@ -491,7 +555,7 @@ img.menu-icon {
   width: 100%;
   max-width: 320px;
 }
-#home a.button {
+#home ion-content button.button {
   width: 100%;
   max-width: 150px;
 }
@@ -660,9 +724,12 @@ img.menu-icon {
   background: #92baf5;
   margin-bottom: 0;
 }
-#cerca .list .item,#cerca .list .item select{
+#cerca .list .item, #cerca .list #category.item select{
   background: transparent;
   color: transparent;
+}
+#cerca .list #subcategory.item select{
+  background: transparent;
 }
 #cerca .list .item{
   border: 1px solid #699dea;

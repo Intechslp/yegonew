@@ -12,8 +12,8 @@ angular.module('jrCrop', ['ionic'])
   '$ionicModal',
   '$rootScope',
   '$q',
-function($ionicModal, $rootScope, $q) {
-
+  '$ionicLoading',
+function($ionicModal, $rootScope, $q, $ionicLoading) {
   var template = '<div class="jr-crop modal">' +
                     '<div class="jr-crop-center-container">' +
                       '<div class="jr-crop-img" ng-style="{width: width + \'px\', height: height + \'px\'}"></div>' +
@@ -212,7 +212,7 @@ function($ionicModal, $rootScope, $q) {
     /**
      * Calculate the new image from the values calculated by
      * user input. Return a canvas-object with the image on it.
-     * 
+     *
      * Note: It doesn't actually downsize the image, it only returns
      * a cropped version. Since there's inconsistenties in image-quality
      * when downsizing it's up to the developer to implement this. Preferably
@@ -264,13 +264,14 @@ function($ionicModal, $rootScope, $q) {
     }
   });
 
+
   return {
     defaultOptions: {
       width: 0,
       height: 0,
       aspectRatio: 0,
-      cancelText: 'Cancel',
-      chooseText: 'Choose',
+      cancelText: 'Cancelar',
+      chooseText: 'Aceptar',
       template: template,
       circle: false
     },
@@ -288,6 +289,7 @@ function($ionicModal, $rootScope, $q) {
 
       // Show modal and initialize cropper.
       return scope.modal.show().then(function() {
+        $ionicLoading.hide();
         return (new jrCropController(scope)).promise.promise;
       });
     },

@@ -17,8 +17,7 @@
 
       <!-- Pago Anual -->
       <label class="item item-input" id="codigo-label">
-       <span class="input-label">Pago anual</span>
-       <input type="text" ng-model="sendData.NumeroPlastico" maxlength="16">
+       <span class="input-label">Pago anual: {{ prima_total }}</span>
       </label>
       <!-- <ion-radio ng-model="choice" ng-value="'A'">Pago Anual $3406.95</ion-radio> -->
       <!-- Pago Mensual -->
@@ -81,13 +80,13 @@
       <!-- No. Tarjeta -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">No. Tarjeta</span>
-       <input type="text" ng-model="sendData.NumeroPlastico" maxlength="16">
+       <input type="tel" ng-model="sendData.NumeroPlastico" maxlength="16">
       </label>
 
       <!-- Nombre -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Nombre</span>
-       <input type="text" ng-model="sendData.NombrePlastico" maxlength="16">
+       <input type="text" ng-model="sendData.NombrePlastico" maxlength="50">
       </label>
 
       <div class="item double-holder">

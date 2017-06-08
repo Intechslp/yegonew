@@ -9,6 +9,18 @@
 
   <ion-content class="has-header">
     <form ng-submit="nuevaCarga()" class="list">
+      <!-- vehicle_id -->
+      <label class="item item-input item-select" ng-if="chooseCar">
+        <div class="input-label">Automóvil</div>
+        <select ng-model="carga.vehicle_id" id="vehicle_id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="car in cars" ng-value="{{car.id}}">{{car.description+" "+car.model}}</option>
+        </select>
+      </label>
+      <label class="item item-input" ng-if="!chooseCar">
+        <div class="input-label">Automóvil: {{mainCar}}</div>
+        <input type="text" style="display:none" ng-model="carga.vehicle_id" ng-init="carga.vehicle_id = carId">
+      </label>
       <!-- fuel_id -->
       <label class="item item-input item-select">
         <div class="input-label">Gasolina</div>
@@ -18,24 +30,26 @@
         </select>
       </label>
       <!-- gas_station_id -->
-      <label class="item item-input item-select">
+      <!-- <label class="item item-input item-select">
         <div class="input-label">Gasolinera</div>
         <select ng-model="carga.gas_station_id" id="gas_station_id">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option ng-repeat="gasolinera in gasolineras" value="{{gasolinera.id}}">{{gasolinera.name}}</option>
         </select>
-      </label>
+      </label> -->
+      <input type="text" style="display:none" id="gas_station_id"
+        ng-model="carga.gas_station_id" ng-init="carga.gas_station_id = 232">
 
       <!-- quantity -->
       <label class="item item-input" id="quantity">
        <span class="input-label">Litros</span>
-       <input type="number" step="0.01" min="0" ng-model="carga.quantity">
+       <input type="tel" step="0.01" min="0" ng-model="carga.quantity">
       </label>
 
       <!-- price -->
       <label class="item item-input" id="price">
        <span class="input-label">Costo total</span>
-       <input type="number" step="0.01" min="0" ng-model="carga.price">
+       <input type="tel" step="0.01" min="0" ng-model="carga.price">
       </label>
       <!-- kilometers -->
       <label class="item item-input" id="kilometers">
@@ -44,7 +58,7 @@
       </label>
 
       <!-- vehicle_id -->
-      <input type="text" style="display:none" ng-model="carga.vehicle_id" ng-init="carga.vehicle_id = carId">
+      <!-- <input type="text" style="display:none" ng-model="carga.vehicle_id" ng-init="carga.vehicle_id = carId"> -->
 
       <div class="padding">
         <button type="submit" class="button button-block button-positive">Añadir carga</button>

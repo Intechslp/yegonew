@@ -46,17 +46,17 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
       var tmp = new Date();
       var timestring = ''+tmp.getFullYear()+tmp.getMonth()+tmp.getDay()+tmp.getHours()+tmp.getMinutes()+tmp.getSeconds();
       var publicId = 'usuarios/'+timestring+'-'+$scope.userId;
-      console.log('ImageUploadFactory');
+      // console.log('ImageUploadFactory');
         ImageUploadFactory.uploadImage($scope.imgURI, 'perfilyego', publicId).then(function(result){
-        console.log(result);
+        // console.log(result);
         $scope.url = result.url;
         $scope.myUser.imageurl = $scope.url;
         $scope.myUser.photoid = 'perfil/'+publicId;
-        console.log($scope.myUser);
-        console.log('updateUser');
+        // console.log($scope.myUser);
+        // console.log('updateUser');
         UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
-          console.log('updateUser');
-          console.log(resp);
+          // console.log('updateUser');
+          // console.log(resp);
           //obtener información actualizada del usuario
           $scope.$storage.user = resp;
           $rootScope.user = resp;
@@ -74,12 +74,12 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
         $cordovaCamera.cleanup();
       });
     }else if ($scope.imgURI === undefined) {
-      console.log('imgURI undefined');
-      console.log($scope.userId);
-      console.log($scope.myUser);
+      // console.log('imgURI undefined');
+      // console.log($scope.userId);
+      // console.log($scope.myUser);
       UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
-        console.log('updateUser');
-        console.log(resp);
+        // console.log('updateUser');
+        // console.log(resp);
         //obtener información actualizada del usuario
         $scope.$storage.user = resp;
         $rootScope.user = resp;
@@ -151,6 +151,7 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
     $cordovaCamera.getPicture(options).then(function(imageData) {
       var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI = "data:image/jpeg;base64,"+imageData;
+      $ionicLoading.show();
       $jrCrop.crop({
           url: $scope.imgURI,
           width: constraints[0],
@@ -177,12 +178,14 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
       destinationType : Camera.DestinationType.DATA_URL,
       sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
       encodingType: Camera.EncodingType.JPEG,
-      popoverOptions: CameraPopoverOptions
+      popoverOptions: CameraPopoverOptions,
+      correctOrientation:true
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
       var constraints =  $scope.cropWindowCalculator();
       $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      $ionicLoading.show();
       $jrCrop.crop({
           url: $scope.imgURI,
           width: constraints[0],
@@ -270,7 +273,7 @@ function($state, $scope, $rootScope,$stateParams,
   $ionicLoading.show({templateUrl: 'templates/obteniendo.html'});
 
   TeamData.getTeam($scope.userId).then(function(response){
-    console.log(response);
+    // console.log(response);
     if(response.length == 0){
       $scope.theresTeam = false;
       TeamData.preguntarInvitacion($scope.userId).then(function(response){
@@ -282,7 +285,7 @@ function($state, $scope, $rootScope,$stateParams,
       });
     }else if (response.length > 0){
       $scope.team = response[0];
-      console.log($scope.team);
+      // console.log($scope.team);
       $scope.theresTeam = true;
       $ionicLoading.hide();
     }
@@ -329,7 +332,7 @@ function($state, $scope, $rootScope,$stateParams,
 
   //Desactivar activar botón de crear team
   $scope.isLongEnough = function(){
-    console.log('isLongEnough');
+    // console.log('isLongEnough');
     if($scope.teamData.name.length > 2){
       $scope.disabled = false;
     }else{

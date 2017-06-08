@@ -60,29 +60,34 @@ angular.module('starter.login.controllers',
   // Inicio de sesión
   $scope.loginClick = function (){
     $ionicLoading.show({templateUrl: 'templates/iniciando.html'});
-    $auth.submitLogin($scope.loginData)
-      .then(function(resp) {
-        HeadersSave.setHeaders(resp);
-        var sesion = JSON.parse(localStorage.auth_headers.replace("-","_"));
-        $scope.$storage.headers= sesion;
-        $scope.$storage.id = resp.id;
-        $scope.$storage.custId = resp.customer_id;
+    if($scope.checkLoginFields()){
+      $auth.submitLogin($scope.loginData)
+        .then(function(resp) {
+          HeadersSave.setHeaders(resp);
+          var sesion = JSON.parse(localStorage.auth_headers.replace("-","_"));
+          $scope.$storage.headers= sesion;
+          $scope.$storage.id = resp.id;
+          $scope.$storage.custId = resp.customer_id;
 
-        UserData.getUserData(resp.id, $scope.$storage.headers.uid).then(function(response){
-          $scope.$storage.user = response;
-          // console.log(response);
-          $ionicLoading.hide();
-          $state.go('app.directorio');
-        }).catch(function(response){
-          $ionicLoading.hide();
-          $scope.showAlert2();
-        });
+          UserData.getUserData(resp.id, $scope.$storage.headers.uid).then(function(response){
+            $scope.$storage.user = response;
+            // console.log(response);
+            $ionicLoading.hide();
+            $state.go('app.directorio');
+          }).catch(function(response){
+            $ionicLoading.hide();
+            $scope.showAlert2();
+          });
 
-      })
-      .catch(function(resp) {
-        $scope.showAlert();
-        $ionicLoading.hide();
-    });
+        })
+        .catch(function(resp) {
+          $scope.showAlert();
+          $ionicLoading.hide();
+      });
+    }else{
+      $scope.customAlert('Error','Debes de rellenar los campos de usuario y contraseña, no deben de estar vacíos.');
+      $ionicLoading.hide();
+    }
   }
 
   // Registro de nuevo usuario
@@ -127,10 +132,6 @@ angular.module('starter.login.controllers',
         if($scope.registerData.password.length >= 8 ){
           return true;
         }else{
-          $scope.customAlert(
-            'Error',
-            'la contraseña debe ser de 8 caractéres o más'
-          );
           return false;
         }
       }else{
@@ -175,6 +176,16 @@ angular.module('starter.login.controllers',
       title: msj1,
       template: msj2
     });
+  }
+
+  $scope.checkLoginFields = function(){
+    if($scope.loginData.email !== '' && $scope.loginData.email !== null &&
+      $scope.loginData.email !== undefined && $scope.loginData.password !== '' &&
+      $scope.loginData.password !== null && $scope.loginData.password !== undefined){
+      return true;
+    }else{
+      return false;
+    }
   }
 
 })// END LOGIN CONTROLLER

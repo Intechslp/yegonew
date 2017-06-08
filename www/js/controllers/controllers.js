@@ -27,7 +27,7 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
     $scope.$storage = $localStorage;
     if(!$scope.$storage.guest){
       $scope.perfil = $scope.$storage.user;
-      // console.log($scope.perfil);
+      console.log($scope.perfil);
       $rootScope.userId = $scope.$storage.id;
       $rootScope.usuario = $scope.$storage.user;
     }else{
@@ -56,7 +56,7 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirectorioCtrl',
 function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
-  $ionicPopup, $stateParams,
+  $ionicPopup, $stateParams,UserData,
   $ionicHistory, $localStorage, EstablecimientosData, NegociosData) {
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
@@ -100,6 +100,7 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   $scope.searchList = false;
   $scope.negocios = {};
   $scope.adn = {};
+  $scope.searchIsActive = false;
 
   var directory_to = $timeout(function(){
     //en caso de que la petición tarde demasiado se cancela el loading
@@ -136,6 +137,12 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
     $scope.subcats = $scope.$storage.subcats;
   }
 
+// función que activa la búsqueda rápida
+  $scope.searchToggle = function(){
+    $scope.searchIsActive = !$scope.searchIsActive;
+
+  }
+
 // función para la búsqueda rápida
 	$scope.srchchange = function () {
     $scope.searchList = false;
@@ -158,10 +165,10 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   };
 
 // función que cambia el estado del botón de cerrar la búsqueda rápida
-  $scope.searchClick = function(){
-    $scope.tabsState = !$scope.tabsState;
-    $scope.closeBtn = !$scope.closeBtn;
-  }
+  // $scope.searchClick = function(){
+  //   $scope.tabsState = !$scope.tabsState;
+  //   $scope.closeBtn = !$scope.closeBtn;
+  // }
 
 // función que resetea la busqueda
   $scope.resetSearch = function () {
@@ -184,6 +191,26 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
 
   $scope.goSingle = function(negId){
     $state.go('app.dirSingle',{singleId:negId});
+  }
+
+  $scope.goCerca = function(){
+    if(ionic.Platform.isAndroid()){
+      cordova.plugins.diagnostic.isLocationAuthorized(function(enabled){
+           console.log("Location is " + (enabled ? "enabled" : "disabled"));
+           if(!enabled){
+             cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
+                 console.log("Authorization status is now: "+status);
+                 $state.go('app.cerca')
+             }, function(error){
+                 console.error(error);
+             });
+           }
+       }, function(error){
+           console.error("The following error occurred: "+error);
+       });
+    }else{
+      $state.go('app.cerca')
+    }
   }
 
   $scope.showAlert = function(msj1, msj2) {
@@ -633,7 +660,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 .controller('CercaCtrl',
   function($state, $scope, $compile, $rootScope, $stateParams, $ionicLoading,
     $localStorage, $cordovaGeolocation, $ionicNavBarDelegate, $ionicHistory,
-    $ionicPopup, $timeout, EstablecimientosData, GasolinasData) {
+    $ionicPopup, $timeout, EstablecimientosData, GasolinasData, $filter) {
 
   $ionicLoading.show();
   $scope.$storage = $localStorage;
@@ -641,8 +668,8 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
   $scope.categories = [];
   $scope.subcategories = [];
   $scope.showsubcats = false;
-  $scope.chosenCat = {name:'GASOLINERAS'};
-  $scope.chosenSubcat = {};
+  $scope.chosenCat = 'GASOLINERAS';
+  $scope.chosenSubcat = '';
   $scope.markers = [];
   var options = {timeout: 10000, enableHighAccuracy: true};
   var the_markers = [];
@@ -661,9 +688,10 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
   });
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-    var mypos_lat = position.coords.latitude;
-    var mypos_lng = position.coords.longitude;
-    var latLng = new google.maps.LatLng(mypos_lat, mypos_lng);
+    console.log("cordovaGeolocation");
+    var latLng = new google.maps.LatLng(
+      position.coords.latitude,
+      position.coords.longitude);
     var mapOptions = {
       center: latLng,
       zoom: 15,
@@ -682,6 +710,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 
     //Wait until the map is loaded
     google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      console.log("map is loaded");
       $ionicLoading.hide();
       var marker = new google.maps.Marker({
         map: $scope.map,
@@ -689,13 +718,10 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
         position: latLng,
         icon: iconObj
       });
-
       var infoWindow = new google.maps.InfoWindow({
         content: '¡Hola! este eres tú'
       });
-
       $scope.getMarkers({name: 'no'});
-
       google.maps.event.addListener(marker, 'click', function () {
         infoWindow.open($scope.map, marker);
       });
@@ -703,6 +729,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
     });
   }, function(error){
     // console.log("Could not get location");
+    console.log(error);
     $ionicLoading.hide();
     $scope.showAlert('¡Ups!',
     'Lo sentimos parece que tu conexión a internet está fallando o no podemos'+
@@ -725,30 +752,37 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 
 // Obtener las subcategorías según la caegoría elegida
   $scope.getSubcats = function(cat){
-    if (cat.subcategories !== 'no') {
-      $scope.subcategories = cat.subcategories;
+    var category_filter = $filter('filter')($scope.categories,{name:cat});
+    $scope.the_cat = category_filter[0];
+    if ($scope.the_cat.subcategories !== 'no') {
+      $scope.subcategories = $scope.the_cat.subcategories;
       $scope.showsubcats = true;
-    }else{
+    }else if($scope.the_cat.subcategories === 'no'){
       $scope.showsubcats = false;
+      $scope.getMarkers({name:'no'});
     }
   }
 
 // Función para poder obtener los marcadores de los establecimientos
   $scope.getMarkers = function(subcat){
+    console.log("getting markers");
+    console.log(subcat);
+
+    $scope.the_subcat = subcat
 
     var cercademi_to = $timeout(function(){
       //en caso de que la petición tarde demasiado se cancela el loading
-
       $ionicLoading.hide();
       $scope.showAlert('¡Ups!',
       'Lo sentimos parece que tu conexión a internet está fallando o no podemos'+
       ' encontrar tu ubicación, asegurate de que la configuración de tu teléfono esté en orden.');
-    },10000);
-    if(subcat !== undefined){
-      if(subcat.name !== 'no'){
+    },15000);
+
+    if($scope.the_subcat !== undefined){
+      if($scope.the_subcat.name !== 'no'){
         $scope.deleteMarkers();
         $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
-        EstablecimientosData.getEstablecimientos(subcat.id, $scope.userCity)
+        EstablecimientosData.getEstablecimientos($scope.the_subcat.id, $scope.userCity)
         .then(function(response){
           $timeout.cancel(cercademi_to);
           if (response.length > 0) {
@@ -781,7 +815,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
           ' muy lejos de la ubicación que tienes por defecto o hay un problema'+
           ' de la conexión de base de datos, intenta más tarde.');
         });
-      }else if(subcat.name === 'no'){
+      }else if($scope.the_subcat.name === 'no'){
         $scope.deleteMarkers();
         $ionicLoading.show({templateUrl:'templates/obteniendo.html'})
         GasolinasData.getGasStations($scope.userCity)
@@ -833,7 +867,7 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
       "<div id='infowindow-"+record.id+"'>"+
         "<h4>"+record.business+"</h4>"+
         "<button class='button button-positive button-clear' "+
-        "onClick='goSingle("+record.id+")'>"+
+        "ng-click='goSingle("+record.id+")'>"+
         "ver detalle</button>";
     }else{
       var infoWindowContent =

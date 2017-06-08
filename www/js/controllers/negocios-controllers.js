@@ -211,7 +211,7 @@ $scope.enviarSucursal = function(){
       $ionicLoading.hide();
       $scope.showAlert(
         'Información enviada con éxito',
-        'Los datos seran analizados, por el momento el negocio se encuentra como \'pendiente\', te avisaremos si es aceptado o rechazado'
+        'Los datos serán analizados, por el momento el negocio se encuentra como \'pendiente\', te avisaremos si es aceptado o rechazado'
       );
     }).catch(function(resp){
       $scope.showAlert(

@@ -13,19 +13,19 @@
       <!-- No. Motor -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">No. Motor</span>
-       <input type="text" ng-model="sendData.Motor">
+       <input type="text" ng-model="sendData.Motor" ng-init="sendData.Motor = 9784879412789412">
       </label>
 
       <!-- No. Serie -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">No. Serie</span>
-       <input type="text" ng-model="sendData.Serie">
+       <input type="text" ng-model="sendData.Serie" ng-init="sendData.Serie = 6523562781">
       </label>
 
       <!-- Placas -->
       <label class="item item-input" id="codigo-label">
        <span class="input-label">Placas</span>
-       <input type="text" ng-model="sendData.Placas">
+       <input type="text" ng-model="sendData.Placas" ng-init="sendData.Placas = ASG3434">
       </label>
 
       <p class="info-label">
@@ -38,7 +38,7 @@
         <div class="col">
         </div>
         <div class="col">
-          <button class="button button-block button-positive button-clear" ng-click="goPaso4()">
+          <button class="button button-block button-positive button-clear" ng-click="validateAllData()">
             CONTINUAR
           </button>
         </div>

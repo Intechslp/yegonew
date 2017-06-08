@@ -4,37 +4,8 @@ angular.module('starter.seguro.controllers',
 
 // SEGUROS CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('SegurosCtrl', function($state, $scope, $stateParams, $ionicLoading, SegurosData, $ionicNavBarDelegate, $ionicPopup) {
-  $scope.sendData = {
-    "TipoPersona":"FISICA",
-    "ApellidoP":"Lopez",
-    "ApellidoM":"Govea",
-    "Nombre":"Eduardo",
-    "FechaNac":"01 11 1990",
-    "Genero":"MASCULINO",
-    "RFC":"LOGA910206KF3",
-    "Telefono":"444444444",
-    "Celular":"4444444444",
-    "Email":"mail@elmail.com",
-    "Nacionalidad":"MEXICANO",
-    "LugarNac":"CDMX",
-    "Calle": "Insurgentes",
-    "CPostal":"55034",
-    "Colonia": "Benito Juarez",
-    "Ciudad":"CDMX"
-  }
-
-  SegurosData.crearUsuario($scope.sendData).then(function(response){
-    console.log("creando usuario? ");
-    console.log(response);
-    // SegurosData.setDataForRC($scope.sendData);
-  }).catch(function(err){
-    console.log("Error:");
-    console.log(err);
-  });
-
-
-
+.controller('SegurosCtrl', function($state, $scope, $stateParams, $ionicLoading,
+   SegurosData, $ionicNavBarDelegate, $ionicPopup, $timeout) {
 
   $ionicNavBarDelegate.showBackButton(false);
   $scope.brands = {};
@@ -43,7 +14,16 @@ angular.module('starter.seguro.controllers',
   $scope.sendData = {};
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 
+  var brands_timeout = $timeout(()=>{
+    $ionicLoading.hide();
+    $scope.showConfirm(
+      'Tiempo de espera superado',
+      'La llamada al servicio de Seguro Inteligente ha tomado más tiempo del esperado. ¿Deseas volver a intentarlo?'
+    );
+  },10000);
+
   SegurosData.getMarcas().then(function(response){
+    $timeout.cancel(brands_timeout);
     console.log(response);
     $ionicLoading.hide();
     var brands = JSON.parse(response);
@@ -93,14 +73,12 @@ angular.module('starter.seguro.controllers',
       $scope.sendData.CPostal == null
       ) {
       $ionicLoading.hide();
-      // $scope.showAlert2('sendData',$scope.sendData);
       $scope.showAlert(
         'Imposible enviar',
         'Debes de llenar todos los datos que se piden en este formulario.'
       );
     } else {
       SegurosData.setData($scope.sendData);
-      // $scope.showAlert2('sendData',$scope.sendData);
       console.log($scope.sendData)
       SegurosData.getCotizacion($scope.sendData).then(function(response){
         $ionicLoading.hide();
@@ -133,23 +111,20 @@ angular.module('starter.seguro.controllers',
     });
   };
 
-  $scope.showAlert2 = function(res, response) {
-    var alertPopup = $ionicPopup.alert({
-      title: res,
-      template:
-        '<pre>'+response.tipoAuto+'</pre>'+
-        '<pre>'+response.Marca+'</pre>'+
-        '<pre>'+response.Modelo+'</pre>'+
-        '<pre>'+response.Descripcion+'</pre>'+
-        '<pre>'+response.Edad+'</pre>'+
-        '<pre>'+response.Genero+'</pre>'+
-        '<pre>'+response.CPostal+'</pre>'+
-        '<pre>'+response.perioricidadPago+'</pre>'+
-        '<pre>'+response.Plan+'</pre>'+
-        '<pre>'+response.Grupo+'</pre>'
-
-    });
-  };
+  // A confirm dialog
+   $scope.showConfirm = function(msj1,msj2) {
+     var confirmPopup = $ionicPopup.confirm({
+       title: msj1,
+       template: msj2
+     });
+     confirmPopup.then(function(res) {
+       if(res) {
+         $state.reload();
+       } else {
+         console.log('You are not sure');
+       }
+     });
+   };
 
 })// END SEGUROS CONTROLLER
 //**********
@@ -319,10 +294,12 @@ $ionicLoading, SegurosData) {
     SegurosData.setData($scope.sendData);
     SegurosData.getReCotizacion($scope.sendData).then(function(response){
       console.log(response);
+      var response_json = JSON.parse(response);
       $ionicLoading.hide();
       SegurosData.setReCotizacion(response);
+      SegurosData.setPrimaTotal(response_json.RespuestaCotizacion.PrimaTotal);
       $scope.emiteOT = {}
-      $scope.emiteOT.RespuestaCotizacion = JSON.stringify(response);
+      $scope.emiteOT.RespuestaCotizacion = response;
       SegurosData.setEmiteOTData($scope.emiteOT)
       $state.go('app.segCompPaso1');
     }).catch(function(response){
@@ -365,7 +342,7 @@ SegurosData) {
 // SEGUROS COMPRA PASO 2 CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('SegComp2Ctrl', function($scope, $state, $stateParams,
-  $ionicLoading, $storage, SegurosData) {
+  $ionicLoading, $localStorage, SegurosData) {
   $scope.sendData = SegurosData.getEmiteOTData();
   $scope.goPaso3 = function(){
     SegurosData.setEmiteOTData($scope.sendData);
@@ -377,68 +354,100 @@ SegurosData) {
 // SEGUROS COMPRA PASO 3 CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('SegComp3Ctrl', function($scope, $state, $stateParams,
-  $ionicLoading, SegurosData, $localStorage) {
+  $ionicLoading, SegurosData, $localStorage, UserData) {
   $scope.$storage = $localStorage;
   $scope.sendData = SegurosData.getEmiteOTData();
   $scope.credentials = {email:"nel",pass:"nel"};
   $scope.app_user = {};
   $scope.userId = $scope.$storage.id;
   $scope.user = $scope.$storage.user;
-  $scope.credentials = {};
-  $scope.goPaso4 = function(){
 
+  $scope.validateAllData = function(){
+    console.log("validateAllData()");
     $scope.sendData.FechaNac = $scope.sendData.FechaNac.getDate()+" "+
       ($scope.sendData.FechaNac.getMonth()+1)+" "+$scope.sendData.FechaNac.getFullYear();
-    if($scope.user.passwordsi != null && $scope.user.passwordsi != ""){
-      $scope.credentials.pass = $scope.user.passwordsi;
-      $scope.credentials.email = $scope.sendData.Email;
-      SegurosData.validaUsuario($scope.credentials).then(function(response){
-        console.log("validación? ");
-        console.log(response);
-        $scope.sendData.idCont = $scope.getElementFromXML(response,"idcont");
-        $scope.sendData.idcli = $scope.getElementFromXML(response,"idcli");
-        $scope.sendData.idDir = $scope.getElementFromXML(response,"iddir");
-      }).catch(function(err){
-        console.log("Error:");
-        console.log(err);
-      });
+    console.log("Fecha de de nacimiento: "+$scope.sendData.FechaNac);
+    if($scope.user.passwordsi !== null && $scope.user.passwordsi != ""){
+      $scope.validateUserForSI();
     }else{
-      SegurosData.crearUsuario($scope.sendData).then(function(response){
-        console.log("creando usuario? ");
-        console.log(response);
-        $scope.app_user.passwordsi = xmlDoc.getElementsByTagName("pass")[0].childNodes[0].nodeValue;
-        UserData.updateUser($scope.userId, $scope.app_user).then(function(){
-          console.log('usuario actualizado');
-        }).catch(function(){
-          console.log('problemas con la actualización de usuario');
-        });
+      $scope.createUserForSI();
+    }
+  }
+
+  $scope.validateUserForSI = function(){
+    console.log('validateUserForSI()');
+    $scope.credentials = {};
+    $scope.credentials.pass = $scope.user.passwordsi;
+    $scope.credentials.email = $scope.sendData.Email;
+    console.log($scope.credentials);
+    SegurosData.validaUsuario($scope.credentials).then(function(response){
+      console.log("validación? ");
+      console.log(response);
+      if(response === "<CATALOGO><DETALLE><respuesta>no se encontraron resultados</respuesta></DETALLE></CATALOGO>"){
+        $scope.createUserForSI();
+      }else{
         $scope.sendData.idCont = $scope.getElementFromXML(response,"idcont");
         $scope.sendData.idcli = $scope.getElementFromXML(response,"idcli");
         $scope.sendData.idDir = $scope.getElementFromXML(response,"iddir");
-        // SegurosData.setDataForRC($scope.sendData);
-      }).catch(function(err){
-        console.log("Error:");
-        console.log(err);
-      });
-    }
-
-    $scope.getElementFromXML = function(the_xml,element){
-      parser = new DOMParser();
-      xmlDoc = parser.parseFromString(the_xml,"text/xml");
-      return xmlDoc.getElementsByTagName(element)[0].childNodes[0].nodeValue;
-    }
-    // $state.go('app.segCompPaso4');
+        $scope.goPaso4();
+      }
+    }).catch(function(err){
+      console.log("Error:");
+      console.log(err);
+    });
   }
+
+  $scope.createUserForSI = function(){
+    console.log('createUserForSI()');
+    SegurosData.crearUsuario($scope.sendData).then(function(response){
+      console.log("creando usuario? ");
+      console.log(response);
+      $scope.app_user.passwordsi = $scope.getElementFromXML(response,"pass");
+      UserData.updateUser($scope.userId, $scope.app_user).then(function(){
+        console.log('usuario actualizado');
+      }).catch(function(){
+        console.log('problemas con la actualización de usuario');
+      });
+      $scope.sendData.idCont = $scope.getElementFromXML(response,"idcont");
+      $scope.sendData.idcli = $scope.getElementFromXML(response,"idcli");
+      $scope.sendData.idDir = $scope.getElementFromXML(response,"iddir");
+      $scope.goPaso4();
+    }).catch(function(err){
+      console.log("Error:");
+      console.log(err);
+    });
+  }
+  $scope.getElementFromXML = function(the_xml,element){
+    console.log('getElementFromXML()');
+    console.log(the_xml);
+    console.log(element);
+    parser = new DOMParser();
+    xmlDoc = parser.parseFromString(the_xml,"text/xml");
+    return xmlDoc.getElementsByTagName(element)[0].childNodes[0].nodeValue;
+  }
+
+  $scope.goPaso4 = function(){
+    SegurosData.setEmiteOTData($scope.sendData);
+    $state.go('app.segCompPaso4');
+  }
+
+
 })// END SEGUROS COMPRA PASO 3 CONTROLLER
 //**********
 
 // SEGUROS COMPRA PASO 4 CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('SegComp4Ctrl', function($scope, $state, $stateParams, $ionicLoading, SegurosData) {
-  $scope.datosPago = SegurosData.getReCotizacion('already');
   $scope.sendData = SegurosData.getEmiteOTData();
+  $scope.prima_total = SegurosData.getPrimaTotal();
+  console.log($scope.sendData);
+  // $scope.datosPago = SegurosData.getReCotizacion('already');
+  // $scope.sendData = SegurosData.getEmiteOTData();
   $scope.goPay = function(){
-    SegurosData.sendEmiteOT($scope.sendData);
+    console.log($scope.sendData);
+    SegurosData.sendEmiteOT($scope.sendData).then(function(response){
+      console.log(response);
+    })
   }
 })// END SEGUROS COMPRA PASO 4 CONTROLLER
 //**********
