@@ -27,7 +27,7 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
     $scope.$storage = $localStorage;
     if(!$scope.$storage.guest){
       $scope.perfil = $scope.$storage.user;
-      console.log($scope.perfil);
+      // console.log($scope.perfil);
       $rootScope.userId = $scope.$storage.id;
       $rootScope.usuario = $scope.$storage.user;
     }else{
@@ -56,8 +56,9 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirectorioCtrl',
 function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
-  $ionicPopup, $stateParams,UserData,
+  $ionicPopup, $stateParams,UserData, $rootScope,
   $ionicHistory, $localStorage, EstablecimientosData, NegociosData) {
+
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
 //Comprobación de sesión
@@ -89,6 +90,12 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   });
 // Declaración de variables
   $scope.$storage = $localStorage;
+
+  // UserData.updateUser($scope.$storage.id,{passwordsi:'Jyr67Asp'}).then(function(resp){
+  //   console.log(resp)
+  // }).catch(function(err){
+  //   console.log(err);
+  // });
 
   if(!$scope.$storage.guest){
     $scope.userCity = $scope.$storage.user.city.id;
@@ -196,10 +203,10 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   $scope.goCerca = function(){
     if(ionic.Platform.isAndroid()){
       cordova.plugins.diagnostic.isLocationAuthorized(function(enabled){
-           console.log("Location is " + (enabled ? "enabled" : "disabled"));
+          //  console.log("Location is " + (enabled ? "enabled" : "disabled"));
            if(!enabled){
              cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
-                 console.log("Authorization status is now: "+status);
+                //  console.log("Authorization status is now: "+status);
                  $state.go('app.cerca')
              }, function(error){
                  console.error(error);
@@ -239,6 +246,12 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
      }
    });
  };
+
+
+ // función para probar mailing.
+ $scope.goToMailing = function(){
+   $state.go('app.segurosSuccess');
+ }
 
 })// END DIRECTORIO CONTROLLER
 //**********
@@ -765,8 +778,8 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 
 // Función para poder obtener los marcadores de los establecimientos
   $scope.getMarkers = function(subcat){
-    console.log("getting markers");
-    console.log(subcat);
+    // console.log("getting markers");
+    // console.log(subcat);
 
     $scope.the_subcat = subcat
 

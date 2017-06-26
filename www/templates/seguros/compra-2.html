@@ -9,7 +9,8 @@
       <!-- Género -->
       <label class="item item-input item-select" id="genero-label">
         <div class="input-label">Género</div>
-        <select ng-model="sendData.Genero" id="genero" ng-init="sendData.Genero = 'MASCULINO'">
+        <!-- <select ng-model="sendData.Genero" id="genero" ng-init="sendData.Genero = 'MASCULINO'"> -->
+        <select ng-model="sendData.Genero" id="genero">
           <option value="" disabled selected hidden>-- Selecciona --</option>
           <option value="MASCULINO">Masculino</option>
           <option value="FEMENINO">Femenino</option>
@@ -17,48 +18,55 @@
       </label>
 
       <!-- CPostal -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="cpostal-label">
        <span class="input-label">Código Postal</span>
-       <input type="tel" ng-model="sendData.CPostal" maxlength="5" ng-init="sendData.CPostal = '78250'">
+       <input type="tel" ng-model="sendData.CPostal" maxlength="5">
+       <!-- <input type="tel" ng-model="sendData.CPostal" maxlength="5" ng-init="sendData.CPostal = '78250'"> -->
       </label>
 
 
       <!-- Calle -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="calle-label">
        <span class="input-label">Calle</span>
-       <input type="text" ng-model="sendData.Calle" ng-init="sendData.Calle = 'Avanzada'">
+       <input type="text" ng-model="sendData.Calle">
+       <!-- <input type="text" ng-model="sendData.Calle" ng-init="sendData.Calle = 'Avanzada'"> -->
       </label>
 
       <div class="item double-holder">
         <!-- No. Ext -->
-        <label class="item item-input" id="codigo-label">
+        <label class="item item-input" id="ext-label">
          <span class="input-label">No. Ext</span>
-         <input type="tel" ng-model="sendData.NoExt" maxlength="5" ng-init="sendData.NoExt = '328'">
+         <input type="tel" ng-model="sendData.NoExt" maxlength="5">
+         <!-- <input type="tel" ng-model="sendData.NoExt" maxlength="5" ng-init="sendData.NoExt = '328'"> -->
         </label>
 
         <!-- No. Int -->
-        <label class="item item-input" id="codigo-label">
+        <label class="item item-input" id="int-label">
          <span class="input-label">No. Int</span>
-         <input type="text" ng-model="sendData.NoInt" maxlength="4" ng-init="sendData.NoInt = '2'">
+         <input type="text" ng-model="sendData.NoInt" maxlength="4">
+         <!-- <input type="text" ng-model="sendData.NoInt" maxlength="4" ng-init="sendData.NoInt = '2'"> -->
         </label>
       </div>
 
       <!-- Colonia -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="colonia-label">
        <span class="input-label">Colonia</span>
-       <input type="text" ng-model="sendData.Colonia" ng-init="sendData.Colonia = 'Tequisquiapan'">
+       <input type="text" ng-model="sendData.Colonia">
+       <!-- <input type="text" ng-model="sendData.Colonia" ng-init="sendData.Colonia = 'Tequisquiapan'"> -->
       </label>
 
       <!-- Estado -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="estado-label">
        <span class="input-label">Estado</span>
-       <input type="text" ng-model="sendData.Estado" ng-init="sendData.Estado = 'San Luis Potosí'">
+       <input type="text" ng-model="sendData.Estado">
+       <!-- <input type="text" ng-model="sendData.Estado" ng-init="sendData.Estado = 'San Luis Potosí'"> -->
       </label>
 
       <!-- Municipio -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="municipio-label">
        <span class="input-label">Municipio</span>
-       <input type="text" ng-model="sendData.Ciudad" ng-init="sendData.Ciudad = 'San Luis Potosí'">
+       <input type="text" ng-model="sendData.Ciudad">
+       <!-- <input type="text" ng-model="sendData.Ciudad" ng-init="sendData.Ciudad = 'San Luis Potosí'"> -->
       </label>
 
       <p class="info-label">

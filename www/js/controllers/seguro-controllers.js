@@ -1,3 +1,4 @@
+// require("../sendinblue/mailin.js");
 angular.module('starter.seguro.controllers',
 ['starter.controllers','starter.perfil.controllers','starter.login.controllers',
 'ngMap','ngStorage','ng-token-auth','ngCordova'])
@@ -287,10 +288,10 @@ $ionicLoading, SegurosData) {
 
   $scope.goPaso1 = function(){
     $ionicLoading.show({templateUrl:'templates/enviando.html'});
-    console.log("cve vehic before: "+$scope.sendData.CveVehic)
+    // console.log("cve vehic before: "+$scope.sendData.CveVehic)
     $scope.sendData.CveVehic = $scope.sendData.CveVehic.toString();
-    console.log("cve vehic after: "+$scope.sendData.CveVehic)
-    console.log($scope.sendData);
+    // console.log("cve vehic after: "+$scope.sendData.CveVehic)
+    // console.log($scope.sendData);
     SegurosData.setData($scope.sendData);
     SegurosData.getReCotizacion($scope.sendData).then(function(response){
       console.log(response);
@@ -354,7 +355,8 @@ SegurosData) {
 // SEGUROS COMPRA PASO 3 CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('SegComp3Ctrl', function($scope, $state, $stateParams,
-  $ionicLoading, SegurosData, $localStorage, UserData) {
+  $ionicLoading, SegurosData, $localStorage, $rootScope, UserData) {
+
   $scope.$storage = $localStorage;
   $scope.sendData = SegurosData.getEmiteOTData();
   $scope.credentials = {email:"nel",pass:"nel"};
@@ -384,7 +386,7 @@ SegurosData) {
       console.log("validación? ");
       console.log(response);
       if(response === "<CATALOGO><DETALLE><respuesta>no se encontraron resultados</respuesta></DETALLE></CATALOGO>"){
-        $scope.createUserForSI();
+        // $scope.createUserForSI();
       }else{
         $scope.sendData.idCont = $scope.getElementFromXML(response,"idcont");
         $scope.sendData.idcli = $scope.getElementFromXML(response,"idcli");
@@ -403,10 +405,13 @@ SegurosData) {
       console.log("creando usuario? ");
       console.log(response);
       $scope.app_user.passwordsi = $scope.getElementFromXML(response,"pass");
-      UserData.updateUser($scope.userId, $scope.app_user).then(function(){
+      UserData.updateUser($scope.userId, $scope.app_user).then(function(resp){
         console.log('usuario actualizado');
-      }).catch(function(){
+        $scope.$storage.user = resp;
+        $rootScope.user = resp;
+      }).catch(function(err){
         console.log('problemas con la actualización de usuario');
+        console.log(err);
       });
       $scope.sendData.idCont = $scope.getElementFromXML(response,"idcont");
       $scope.sendData.idcli = $scope.getElementFromXML(response,"idcli");
@@ -437,19 +442,185 @@ SegurosData) {
 
 // SEGUROS COMPRA PASO 4 CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('SegComp4Ctrl', function($scope, $state, $stateParams, $ionicLoading, SegurosData) {
+.controller('SegComp4Ctrl',
+function($scope, $state, $stateParams, $ionicLoading, SegurosData,
+  MailingService, $ionicPopup
+) {
   $scope.sendData = SegurosData.getEmiteOTData();
   $scope.prima_total = SegurosData.getPrimaTotal();
   console.log($scope.sendData);
-  // $scope.datosPago = SegurosData.getReCotizacion('already');
-  // $scope.sendData = SegurosData.getEmiteOTData();
-  $scope.goPay = function(){
-    console.log($scope.sendData);
-    SegurosData.sendEmiteOT($scope.sendData).then(function(response){
-      console.log(response);
-    })
+  $scope.certificado = {};
+
+  $scope.goLink = function(n){
+   // Open in app browser
+   if(n==1){
+     var url = 'http://yegoapp.com/documents/Aviso-De-Privacidad.pdf'
+   }else if(n==0){
+     var url = 'http://yegoapp.com/documents/Politicas-de-Uso.pdf'
+   }
+   window.open(url,'_blank');
+  };
+
+  $scope.dataConfirmation = function(){
+    if (
+      $scope.sendData.Banco !== null && $scope.sendData.Banco !== undefined &&
+      $scope.sendData.TipoTarjeta !== null && $scope.sendData.TipoTarjeta !== undefined &&
+      $scope.sendData.Carrier !== null && $scope.sendData.Carrier !== undefined &&
+      $scope.sendData.NumeroPlastico !== null && $scope.sendData.NumeroPlastico !== undefined && $scope.sendData.NumeroPlastico !== '' &&
+      $scope.sendData.NombrePlastico !== null && $scope.sendData.NombrePlastico !== undefined && $scope.sendData.NombrePlastico !== '' &&
+      $scope.sendData.MesVigencia !== null && $scope.sendData.MesVigencia !== undefined && $scope.sendData.MesVigencia !== '' &&
+      $scope.sendData.AnioVigencia !== null && $scope.sendData.AnioVigencia !== undefined && $scope.sendData.AnioVigencia !== '' &&
+      $scope.sendData.CodSeguridad !== null && $scope.sendData.CodSeguridad !== undefined && $scope.sendData.CodSeguridad !== ''
+    ) {
+      return true
+    }else{
+      return false
+    }
   }
+
+  $scope.goPay = function(){
+    $ionicLoading.show({templateUrl:'templates/enviando.html'});
+    if($scope.dataConfirmation()){
+      console.log($scope.sendData);
+      SegurosData.sendEmiteOT($scope.sendData).then(function(response){
+        console.log(response);
+        $scope.certificado.iddocto = $scope.getElementFromXML(response,'iddocto')
+        $scope.certificado.url = $scope.getElementFromXML(response,'url')
+        $scope.certificado.error = $scope.getElementFromXML(response,'error')
+        if($scope.certificado.error === 'CORRECTO'){
+          $scope.sendData.url = $scope.certificado.url;
+          SegurosData.setEmiteOTData($scope.sendData);
+          $scope.sendEmail($scope.certificado);
+
+        }else{
+          $scope.showAlert(
+            'Error',
+            'Algo inesperado a ocurrido tratando de contactar a Seguro '+
+            'Inteligente®. Intenta más tarde.'
+          );
+          $ionicLoading.hide();
+        }
+      }).catch(function(error){
+        console.log(error);
+      });
+    }else{
+      $scope.showAlert('Error', 'Asegurate de que ningún dato se quede vacío.');
+      $ionicLoading.hide();
+    }
+  }
+
+  $scope.getElementFromXML = function(the_xml,element){
+    console.log('getElementFromXML()');
+    console.log(the_xml);
+    console.log(element);
+    parser = new DOMParser();
+    xmlDoc = parser.parseFromString(the_xml,"text/xml");
+    return xmlDoc.getElementsByTagName(element)[0].childNodes[0].nodeValue;
+  }
+  // función de prueba para enviar el correo electrónico
+  $scope.sendEmail = function(cert){
+    // $scope.certificado = {
+    //   iddocto:'706221',
+    //   url:'http://www.samgmag.mx/SICAS1001/_TempFiles/Exp_01551406205.pdf',
+    //   error: 'CORRECTO'
+    // }
+    var reciever_email = $scope.sendData.Email;
+    var to_data = {}
+    to_data[reciever_email] = $scope.sendData.Nombre+" "+$scope.sendData.ApellidoP;
+  	data = {
+      "to" : to_data,
+  		"from" : ["seguros@yegoapp.com", "Seguros Yego®"],
+  		"subject" : "Certificado de póliza",
+  		"html" : `<h4>Gracias por utilizar Seguro Inteligente® con Yego®</h4>
+        <p>Adjunto a este correo encontrarás tu certificado de poliza, es
+          importante que lo mantengas en un lugar seguro mientras se tramita tu
+          poliza oficial.</p>
+        <p>El cobro de tu tarjeta aún no ha sido procesado, tu información está
+          siendo revisada por el personal de Seguro Inteligente®, una vez validada
+          <strong>(en un máximo de 72hrs)</strong> se llevará a cabo el cobro y se pondrán en
+          contacto a tu correo electrónico para enviarte tu poliza de seguro con
+          validez oficial.</p>`,
+  		"attachment" : [cert.url]
+  	}
+
+  	MailingService.send_email(data).then(function(response) {
+  		console.log(response);
+      $scope.goToSuccess();
+      $ionicLoading.hide();
+  	}).catch(function(err){
+      console.log(err);
+      $scope.showAlert(
+        'Error',
+        'Hubo algun problema de comunicación para enviarte tu certificado, '+
+        'intenta más adelante');
+      $scope.goToSuccess();
+      $ionicLoading.hide();
+    });
+  }
+
+  $scope.goToSuccess = function(){
+    $state.go('app.segurosSuccess');
+  }
+
+  $scope.showAlert = function(msj1,msj2) {
+    var alertPopup = $ionicPopup.alert({
+     title: msj1,
+     template: msj2
+    });
+  }
+
 })// END SEGUROS COMPRA PASO 4 CONTROLLER
+//**********
+
+// SEGUROS COMPRA SUCCESS CONTROLLER
+//–––––––––––––––––––––––––––––––––––––––––––––
+.controller('SegSuccessCtrl',
+  function($scope, $state, $stateParams, $ionicLoading, SegurosData,
+    $ionicHistory, MailingService) {
+
+  $scope.sendData = SegurosData.getEmiteOTData();
+  // función de prueba para enviar el correo electrónico
+  var reciever_email = $scope.sendData.Email;
+  var to_data = {}
+  to_data[reciever_email] = $scope.sendData.Nombre+" "+$scope.sendData.ApellidoP;
+
+  $scope.sendEmail = function(){
+    // $scope.certificado = {
+    //   iddocto:'706221',
+    //   url:'http://www.samgmag.mx/SICAS1001/_TempFiles/Exp_01551406205.pdf',
+    //   error: 'CORRECTO'
+    // }
+    data = {
+      "to" : to_data,
+  		"from" : ["seguros@yegoapp.com", "Seguros Yego®"],
+  		"subject" : "Certificado de póliza",
+  		"html" : `<h4>Gracias por utilizar Seguro Inteligente® con Yego®</h4>
+      <p>Adjunto a este correo encontrarás tu certificado de poliza, es
+        importante que lo mantengas en un lugar seguro mientras se tramita tu
+        poliza oficial.</p>
+      <p>El cobro de tu tarjeta aún no ha sido procesado, tu información está
+        siendo revisada por el personal de Seguro Inteligente®, una vez validada
+        <strong>(en un máximo de 72hrs)</strong> se llevará a cabo el cobro y se pondrán en
+        contacto a tu correo electrónico para enviarte tu poliza de seguro con
+        validez oficial.
+        </p>`,
+  		"attachment" : [$scope.sendData.url]
+  	}
+
+  	MailingService.send_email(data).then(function(response) {
+  		console.log(response);
+  	}).catch(function(err){
+      console.log(err);
+    });
+  }
+  // función para regresar al directorio.
+  $scope.goToDirectory = function(){
+    $ionicHistory.nextViewOptions({
+      historyRoot: true
+    })
+    $state.go('app.directorio');
+  }
+})// END SEGUROS COMPRA SUCCESS CONTROLLER
 //**********
 
 // MIS SEGUROS CONTROLLER

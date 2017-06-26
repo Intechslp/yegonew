@@ -16,15 +16,15 @@
       </p> -->
 
       <!-- Pago Anual -->
-      <label class="item item-input" id="codigo-label">
-       <span class="input-label">Pago anual: {{ prima_total }}</span>
+      <label class="item item-input" id="pago-label">
+       <span class="input-label">Pago anual: ${{ prima_total }}</span>
       </label>
       <!-- <ion-radio ng-model="choice" ng-value="'A'">Pago Anual $3406.95</ion-radio> -->
       <!-- Pago Mensual -->
       <!-- <ion-radio ng-model="choice" ng-value="'B'" checked>Pago Mensual $283.91</ion-radio> -->
 
       <!-- Banco -->
-      <label class="item item-input item-select" id="genero-label">
+      <label class="item item-input item-select" id="banco-label">
         <div class="input-label">Banco</div>
         <select ng-model="sendData.Banco" id="genero">
           <option value="" disabled selected hidden>-- Selecciona --</option>
@@ -57,7 +57,7 @@
       </label>
 
       <!-- Tarjeta -->
-      <label class="item item-input item-select" id="genero-label">
+      <label class="item item-input item-select" id="tipo-label">
         <div class="input-label">Tipo Tarjeta</div>
         <select ng-model="sendData.TipoTarjeta" id="genero">
           <option value="" disabled selected hidden>-- Selecciona --</option>
@@ -67,7 +67,7 @@
       </label>
 
       <!-- Carrier -->
-      <label class="item item-input item-select" id="genero-label">
+      <label class="item item-input item-select" id="carrier-label">
         <div class="input-label">Carrier</div>
         <select ng-model="sendData.Carrier" id="genero">
           <option value="" disabled selected hidden>-- Selecciona --</option>
@@ -78,36 +78,49 @@
       </label>
 
       <!-- No. Tarjeta -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="tarjeta-label">
        <span class="input-label">No. Tarjeta</span>
-       <input type="tel" ng-model="sendData.NumeroPlastico" maxlength="16">
+       <input type="tel" ng-model="sendData.NumeroPlastico" maxlength="16"
+       placeholder="0000000000000000">
       </label>
 
       <!-- Nombre -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nombre-label">
        <span class="input-label">Nombre</span>
-       <input type="text" ng-model="sendData.NombrePlastico" maxlength="50">
+       <input type="text" ng-model="sendData.NombrePlastico" maxlength="50"
+       placeholder="Luis Pérez Hernández">
       </label>
 
       <div class="item double-holder">
         <!-- Mes -->
-        <label class="item item-input" id="codigo-label">
+        <label class="item item-input" id="mes-label">
          <span class="input-label">Mes</span>
-         <input type="tel" ng-model="sendData.MesVigencia" maxlength="2" placeholder="00">
+         <input type="tel" ng-model="sendData.MesVigencia" maxlength="2"
+         placeholder="00">
         </label>
 
         <!-- Año -->
-        <label class="item item-input" id="codigo-label">
+        <label class="item item-input" id="anio-label">
          <span class="input-label">Año</span>
-         <input type="tel" ng-model="sendData.AnioVigencia" maxlength="4" placeholder="0000">
+         <input type="tel" ng-model="sendData.AnioVigencia" maxlength="4"
+         placeholder="0000">
         </label>
       </div>
 
       <!-- Código Seguridad -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="seguridad-label">
        <span class="input-label">Código seguridad</span>
-       <input type="tel" ng-model="sendData.CodSeguridad" maxlength="3">
+       <input type="tel" ng-model="sendData.CodSeguridad" maxlength="3"
+       placeholder="000">
       </label>
+
+      <p class="info-label bigger">
+        ¡Importante!<br>
+        <span class="gray-info">Al dar clic en continuar, estás aceptando las
+          <span class="like-link" ng-click="goLink(0)">Políticas de uso</span> y el
+          <span class="like-link" ng-click="goLink(1)">Aviso de privacidad</span>
+          de Seguro Inteligente®.</span>
+      </p>
 
       <div class="row">
         <div class="col">

@@ -12,63 +12,73 @@
     <form class="list" id="amplia-list" ng-if="p_fisica">
 
       <!-- Correo electronico -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="email-label">
        <span class="input-label">Correo Electrónico</span>
-       <input type="email" ng-model="pFisica.Email" ng-init="pFisica.Email= 'elasaf@prueba.com'">
+       <input type="email" ng-model="pFisica.Email">
+       <!-- <input type="email" ng-model="pFisica.Email" ng-init="pFisica.Email= 'Asaf@omakase.mx'"> -->
       </label>
 
       <!-- Nombre -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nombre-label">
        <span class="input-label">Nombre(s)</span>
-       <input type="text" ng-model="pFisica.Nombre" ng-init="pFisica.Nombre= 'Asaf'">
+       <input type="text" ng-model="pFisica.Nombre">
+       <!-- <input type="text" ng-model="pFisica.Nombre" ng-init="pFisica.Nombre= 'Asaf'"> -->
       </label>
 
       <!-- Apellido Paterno -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="apaterno-label">
        <span class="input-label">Apellido Paterno</span>
-       <input type="text" ng-model="pFisica.ApellidoP" ng-init="pFisica.ApellidoP= 'Lopez'">
+       <input type="text" ng-model="pFisica.ApellidoP">
+       <!-- <input type="text" ng-model="pFisica.ApellidoP" ng-init="pFisica.ApellidoP= 'Lopez'"> -->
       </label>
 
       <!-- Apellido Materno -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="amaterno-label">
        <span class="input-label">Apellido Materno</span>
-       <input type="text" ng-model="pFisica.ApellidoM" ng-init="pFisica.ApellidoM= 'Govea'">
+       <input type="text" ng-model="pFisica.ApellidoM">
+       <!-- <input type="text" ng-model="pFisica.ApellidoM" ng-init="pFisica.ApellidoM= 'Govea'"> -->
       </label>
 
       <!-- RFC -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="rfc-label">
        <span class="input-label">RFC</span>
-       <input type="text" ng-model="pFisica.RFC" maxlength="13" ng-init="pFisica.RFC= 'loga910206kf3'">
+       <input type="text" ng-model="pFisica.RFC" maxlength="13">
+       <!-- <input type="text" ng-model="pFisica.RFC" maxlength="13" ng-init="pFisica.RFC= 'loga910206kf3'"> -->
       </label>
 
       <!-- Celular -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="celular-label">
        <span class="input-label">Celular</span>
-       <input type="tel" ng-model="pFisica.Celular" maxlength="10" ng-init="pFisica.Celular= '4443791187'">
+       <input type="tel" ng-model="pFisica.Celular" maxlength="10">
+       <!-- <input type="tel" ng-model="pFisica.Celular" maxlength="10" ng-init="pFisica.Celular= '4443791187'"> -->
       </label>
 
       <!-- Telefono -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="tel-label">
        <span class="input-label">Teléfono</span>
-       <input type="tel" ng-model="pFisica.Telefono" maxlength="10" ng-init="pFisica.Telefono= '2119531'">
+       <input type="tel" ng-model="pFisica.Telefono" maxlength="10">
+       <!-- <input type="tel" ng-model="pFisica.Telefono" maxlength="10" ng-init="pFisica.Telefono= '2119531'"> -->
       </label>
 
       <!-- Fecha -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="fecha-label">
        <span class="input-label">Fecha nacimiento</span>
        <input type="date" ng-model="pFisica.FechaNac">
+       <!-- <input type="date" ng-model="pFisica.FechaNac"> -->
       </label>
 
       <!-- Nacionalidad -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nacionalidad-label">
        <span class="input-label">Nacionalidad</span>
-       <input type="text" ng-model="pFisica.Nacionalidad" ng-init="pFisica.Nacionalidad= 'Mexicano'">
+       <input type="text" ng-model="pFisica.Nacionalidad">
+       <!-- <input type="text" ng-model="pFisica.Nacionalidad" ng-init="pFisica.Nacionalidad= 'Mexicano'"> -->
       </label>
 
       <!-- Lugar de nac. -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nacimiento-label">
        <span class="input-label">Lugar de nac.</span>
-       <input type="text" ng-model="pFisica.LugarNac" ng-init="pFisica.LugarNac= 'San Luis Potosí'">
+       <input type="text" ng-model="pFisica.LugarNac">
+       <!-- <input type="text" ng-model="pFisica.LugarNac" ng-init="pFisica.LugarNac= 'San Luis Potosí'"> -->
       </label>
 
       <!-- Tipo de persona -->
@@ -90,61 +100,61 @@
     <!-- MORAL -->
     <form class="list" id="limitada-list" ng-if="p_moral">
       <!-- Correo electronico -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="email-label">
        <span class="input-label">Correo Electrónico</span>
        <input type="email" ng-model="pMoral.Email">
       </label>
 
       <!-- Nombre -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nombre-label">
        <span class="input-label">Nombre(s)</span>
        <input type="text" ng-model="pMoral.Nombre">
       </label>
 
       <!-- Apellido Paterno -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="apaterno-label">
        <span class="input-label">Apellido Paterno</span>
        <input type="text" ng-model="pMoral.ApellidoP">
       </label>
 
       <!-- Apellido Materno -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="amaterno-label">
        <span class="input-label">Apellido Materno</span>
        <input type="text" ng-model="pMoral.ApellidoM">
       </label>
 
       <!-- RFC -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="rfc2-label">
        <span class="input-label">RFC (Empresa)</span>
        <input type="text" ng-model="pMoral.RFC" maxlength="13">
       </label>
 
       <!-- Celular -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="cel-label">
        <span class="input-label">Celular</span>
        <input type="tel" ng-model="pMoral.Celular" maxlength="10">
       </label>
 
       <!-- Telefono -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="tel-label">
        <span class="input-label">Teléfono</span>
        <input type="tel" ng-model="pMoral.Telefono" maxlength="10">
       </label>
 
       <!-- Fecha -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="fecha2-label">
        <span class="input-label">Fecha nacimiento</span>
        <input type="date" ng-model="pMoral.FechaNac">
       </label>
 
       <!-- Nacionalidad -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nacionalidad-label">
        <span class="input-label">Nacionalidad</span>
        <input type="text" ng-model="pMoral.Nacionalidad">
       </label>
 
       <!-- Lugar de nac. -->
-      <label class="item item-input" id="codigo-label">
+      <label class="item item-input" id="nacimiento2-label">
        <span class="input-label">Lugar de nac.</span>
        <input type="text" ng-model="pMoral.LugarNac">
       </label>

@@ -578,8 +578,8 @@ angular.module('starter')
             });
         },
         setData: function(datos){
-          console.log("Set Data:");
-          console.log(datos);
+        //   console.log("Set Data:");
+        //   console.log(datos);
             datosEnv = datos;
         },
         getData: function(){
@@ -659,10 +659,16 @@ angular.module('starter')
         getSingle: function(){
             return seguro;
         },
+        setPrimaTotal: function(prima){
+          prima_total = prima
+        },
+        getPrimaTotal: function(){
+          return prima_total
+        },
         setEmiteOTData: function(data){
             emiteOTData = data;
-            console.log("setEmiteOTData: ");
-            console.log(emiteOTData);
+            // console.log("setEmiteOTData: ");
+            // console.log(emiteOTData);
         },
         getEmiteOTData: function(){
             return emiteOTData;
@@ -782,36 +788,36 @@ angular.module('starter')
             }
             var object = {
               "RespuestaCotizacion": datos.RespuestaCotizacion,
-              "Nombre": datos.Nombre,
-              "ApellidoP": datos.ApellidoP,
-              "ApellidoM": datos.ApellidoM,
-              "Email": datos.Email,
-              "FechaNac": datos.FechaNac,
-              "LugarNac": datos.LugarNac,
-              "Nacionalidad": datos.Nacionalidad,
-              "RFC": datos.RFC,
-              "Telefono": datos.Telefono,
-              "Celular": datos.Celular,
-              "TipoPersona": datos.TipoPersona,
-              "Calle": datos.Calle,
-              "NoExt":datos.NoExt,
-              "NoInt": datos.NoInt,
-              "Colonia": datos.Colonia,
-              "CPostal": datos.CPostal,
-              "Estado":datos.Estado,
-              "Ciudad": datos.Ciudad,
-              "Banco": datos.Banco,
-              "TipoTarjeta": datos.TipoTarjeta,
-              "Carrier": datos.Carrier,
-              "NombrePlastico": datos.NombrePlastico,
-              "NumeroPlastico":Base64.encode(datos.NumeroPlastico),
-              "MesVigencia": datos.MesVigencia,
-              "AnioVigencia": datos.AnioVigencia,
-              "CodSeguridad": Base64.encode(datos.CodSeguridad),
-              "Serie": datos.Serie,
-              "Motor": datos.Motor,
-              "Placas":datos.Placas,
-              "NoInt": datos.NoInt,
+              "Nombre": ""+datos.Nombre,
+              "ApellidoP": ""+datos.ApellidoP,
+              "ApellidoM": ""+datos.ApellidoM,
+              "Email": ""+datos.Email,
+              "FechaNac": ""+datos.FechaNac,
+              "LugarNac": ""+datos.LugarNac,
+              "Nacionalidad": ""+datos.Nacionalidad,
+              "RFC": ""+datos.RFC,
+              "Telefono": ""+datos.Telefono,
+              "Celular": ""+datos.Celular,
+              "TipoPersona": ""+datos.TipoPersona,
+              "Calle": ""+datos.Calle,
+              "NoExt":""+datos.NoExt,
+              "NoInt": ""+datos.NoInt,
+              "Colonia": ""+datos.Colonia,
+              "CPostal": ""+datos.CPostal,
+              "Estado":""+datos.Estado,
+              "Ciudad": ""+datos.Ciudad,
+              "Banco": ""+datos.Banco,
+              "TipoTarjeta": ""+datos.TipoTarjeta,
+              "Carrier": ""+datos.Carrier,
+              "NombrePlastico": ""+datos.NombrePlastico,
+              "NumeroPlastico":Base64.encode(""+datos.NumeroPlastico),
+              "MesVigencia": ""+datos.MesVigencia,
+              "AnioVigencia": ""+datos.AnioVigencia,
+              "CodSeguridad": Base64.encode(""+datos.CodSeguridad),
+              "Serie": ""+datos.Serie,
+              "Motor": ""+datos.Motor,
+              "Placas":""+datos.Placas,
+              "NoInt": ""+datos.NoInt,
               "Alianza": "YEGO",
               "FormatInput": "JSON",
               "idCont": datos.idCont,
@@ -823,7 +829,9 @@ angular.module('starter')
         },
         validaUsuario: function(credentials){
             console.log("VALIDAR USUARIO");
-
+            the_pass = ""+credentials.email;
+            the_pass = the_pass.replace("@","")
+            the_pass = the_pass.replace(".","")
           return $soap.post(base_url,"validaUsuario", {
             "usuario": credentials.email,
             "contrasena": credentials.pass
@@ -835,7 +843,7 @@ angular.module('starter')
             the_pass = the_pass.replace("@","")
             the_pass = the_pass.replace(".","")
             userData = {
-                "usuario":the_pass,
+                "usuario":data.Email,
                 "contrasena":the_pass,
                 "tipoEnt":data.TipoPersona,
                 "apellidoP":data.ApellidoP,

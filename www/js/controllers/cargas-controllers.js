@@ -51,11 +51,11 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     GasolinasData.getFuels().then(function(resp){
       $scope.gasolinas = resp;
-      console.log(resp);
+      // console.log(resp);
       GasolinasData.getGasStations($scope.userCity).then(function(resp){
         $scope.gasolineras = resp;
         $ionicLoading.hide();
-        console.log(resp);
+        // console.log(resp);
       }).catch(function(resp){
         $ionicLoading.hide();
         console.log(resp);
@@ -84,12 +84,12 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 
 // funcion para crear una nueva carga de gasolina
   $scope.nuevaCarga = function() {
-    console.log($scope.carga);
+    // console.log($scope.carga);
     if($scope.comprobarCarga()){
       $ionicLoading.show({templateUrl:'templates/enviando.html'});
       $scope.objG.fuel_refill = $scope.carga;
       GasolinasData.NewFuelRefill(userId,$scope.objG).then(function(resp){
-        console.log(resp);
+        // console.log(resp);
         $ionicLoading.hide();
         $scope.showAlert(
           '¡Éxito!',
@@ -114,7 +114,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 
 // funcion para comprobar que estén todos los datos
   $scope.comprobarCarga = function(){
-    console.log($scope.carga);
+    // console.log($scope.carga);
     if(
       $scope.carga.fuel_id !== null ||
       $scope.carga.quantity !== null ||
@@ -157,13 +157,11 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
   $scope.$storage = $localStorage;
   $scope.cars = $scope.$storage.user.driver_of_vehicles;
   $scope.the_car = GasolinasData.getCar();
-  console.log($scope.the_car);
+  // console.log($scope.the_car);
   var userId = $scope.$storage.user.id;
   $scope.chooseCar = false;
-
-  $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
   $scope.mainCar = $scope.the_car.brand+' '+$scope.the_car.description+' '+$scope.the_car.model;
-  console.log($scope.mainCar);
+  // console.log($scope.mainCar);
   $scope.carId = $scope.the_car.id;
   $scope.theresCar = true;
   $scope.objG = {};
@@ -176,15 +174,6 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 
   // $scope.userCity = $scope.$storage.user.city.id;
 
-  var gasolineras_to = $timeout(function(){
-    //en caso de que la petición tarde demasiado se cancela el loading
-    $ionicLoading.hide();
-    $scope.showConfirm('¡Vaya!',
-    'Parece que ha habido un error accediendo a la base de datos o tu conexión'+
-    ' a internet no es óptima para que Yego funcione correctamente');
-    console.log('Time Out :(');
-  },7000);
-
   // A confirm dialog
  $scope.showConfirm = function(msj1, msj2) {
    var confirmPopup = $ionicPopup.confirm({
@@ -196,35 +185,49 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
    confirmPopup.then(function(res) {
      if(res) {
        $state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
-       console.log('You are sure');
+      //  console.log('You are sure');
      } else {
-       console.log('You are not sure');
+      //  console.log('You are not sure');
      }
    });
  };
 
-  GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
-    $timeout.cancel(gasolineras_to);
-    $scope.theMonths = _.groupBy(resp, 'month_year');
-    for (var prop in $scope.theMonths) {
-      if ($scope.theMonths.hasOwnProperty(prop)) {
-        var cargaSum = 0;
-        var costoSum = 0;
-        for (var i = 0; i < $scope.theMonths[prop].length; i++) {
-          cargaSum += $scope.theMonths[prop][i].quantity;
-          costoSum += $scope.theMonths[prop][i].price;
-        }
-        $scope.cargaTotal.push(cargaSum);
-        $scope.costoTotal.push(costoSum);
-      }
-    }
-    console.log($scope.theMonths);
-    $ionicLoading.hide();
-  }).catch(function(resp){
-    console.log(resp);
-    $ionicLoading.hide();
-  });
+ // Function that runs Gas Refills
+ $scope.runGetRefills = function(){
+   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+   var gasolineras_to = $timeout(function(){
+     //en caso de que la petición tarde demasiado se cancela el loading
+     $ionicLoading.hide();
+     $scope.showConfirm('¡Vaya!',
+     'Parece que ha habido un error accediendo a la base de datos o tu conexión'+
+     ' a internet no es óptima para que Yego funcione correctamente');
+     console.log('Time Out :(');
+   },15000);
 
+   GasolinasData.getFuelRefills(userId,$scope.carId).then(function(resp){
+     $timeout.cancel(gasolineras_to);
+     $scope.theMonths = _.groupBy(resp, 'month_year');
+     for (var prop in $scope.theMonths) {
+       if ($scope.theMonths.hasOwnProperty(prop)) {
+         var cargaSum = 0;
+         var costoSum = 0;
+         for (var i = 0; i < $scope.theMonths[prop].length; i++) {
+           cargaSum += $scope.theMonths[prop][i].quantity;
+           costoSum += $scope.theMonths[prop][i].price;
+         }
+         $scope.cargaTotal.push(cargaSum);
+         $scope.costoTotal.push(costoSum);
+       }
+     }
+     // console.log($scope.theMonths);
+     $ionicLoading.hide();
+   }).catch(function(resp){
+     console.log(resp);
+     $ionicLoading.hide();
+   });
+ }
+
+ $scope.runGetRefills();
 
 // se declara el modal para dar de alta una carga de gasolina
   $ionicModal.fromTemplateUrl('templates/cargas/nuevaCarga.html', {
@@ -239,11 +242,11 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
     $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
     GasolinasData.getFuels().then(function(resp){
       $scope.gasolinas = resp;
-      console.log(resp);
+      // console.log(resp);
       GasolinasData.getGasStations($scope.userCity).then(function(resp){
         $scope.gasolineras = resp;
         $ionicLoading.hide();
-        console.log(resp);
+        // console.log(resp);
       }).catch(function(resp){
         $ionicLoading.hide();
         console.log(resp);
@@ -267,7 +270,8 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 // funcion para cerrar el modal
   $scope.closeModal = function() {
     $scope.modal.hide();
-    $state.go('app.cargas', $stateParams, {reload: true, inherit: false});
+    // $state.go('app.cargas', $stateParams, {reload: true, inherit: false});
+    $scope.runGetRefills();
   };
 
 // funcion para crear una nueva carga de gasolina
@@ -276,7 +280,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
       $ionicLoading.show({templateUrl:'templates/enviando.html'});
       $scope.objG.fuel_refill = $scope.carga;
       GasolinasData.NewFuelRefill(userId,$scope.objG).then(function(resp){
-        console.log(resp);
+        // console.log(resp);
         $ionicLoading.hide();
         $scope.showAlert(
           '¡Éxito!',
@@ -301,7 +305,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 
 // funcion para comprobar que estén todos los datos
   $scope.comprobarCarga = function(){
-    console.log($scope.carga);
+    // console.log($scope.carga);
     if(
       $scope.carga.fuel_id !== null ||
       $scope.carga.gas_station_id !== null ||
@@ -317,7 +321,7 @@ function($state, $scope, $window, $rootScope, $stateParams, $filter, $timeout,
 
 // funcion que envía al resumen de cargas del mes
   $scope.goResumen = function(key,month,indx){
-    console.log(month);
+    // console.log(month);
     GasolinasData.setSingleMonth(key,month,$scope.cargaTotal[indx],$scope.costoTotal[indx]);
     $state.go('app.resumenMes', {cargaId: 1});
   }

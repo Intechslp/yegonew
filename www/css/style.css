@@ -84,7 +84,7 @@ ion-content.scroll-content.ionic-scroll.has-tabs-top {
 }
 
 p.info-label span.gray-info{
-  font-size: 11px;
+  font-size: 13px;
   color:#ccc;
 }
 p.info-label.bigger{
@@ -95,7 +95,7 @@ p.info-label.npb{
   margin-bottom: 0;
 }
 p.info-label.bigger span.gray-info{
-  font-size: 12px;
+  font-size: 13px;
 }
 .button{
   border-radius: 0;
@@ -814,8 +814,13 @@ img.menu-icon {
 }
 #seguros form.list .double-holder #modelo-label,#seguros form.list .double-holder #edad-label{width:40%;}
 #seguros form.list .double-holder #descripcion-label,#seguros form.list .double-holder #genero-label{width:60%;}
-#seguros form.list #edad-label input,#seguros form.list #codigo-label input{
+#seguros form.list #edad-label input,#seguros form.list #codigo-label input, #seguros.seguros-compra form .item input{
   background: #1a314e;padding-left: .8em;
+}
+#seguros #seguridad-label input {
+    width: 100%;
+    max-width: 70px;
+    padding-right: 1em;
 }
 #seguros img#seguro-inteligente{
   width:100%;
@@ -839,10 +844,15 @@ img.menu-icon {
 }
 #seguros p.info-label{
   padding: 1em;
-  font-size: 12px;
+  font-size: 15px;
   color:white;
   line-height: 15px;
   width:100%;
+}
+
+#seguros p.info-label span.like-link {
+    text-decoration: underline;
+    color: #92baf5;
 }
 
 #seguros .item-radio .item-content {

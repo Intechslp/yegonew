@@ -247,6 +247,16 @@ angular.module('starter', [
       }
     }
   })
+  // SEGUROS ENVÍO EXITOSO
+  .state('app.segurosSuccess', {
+    url: '/seguros/compra/success',
+    views: {
+      'menuContent': {
+        templateUrl: "templates/seguros/success.html",
+        controller: 'SegSuccessCtrl'
+      }
+    }
+  })
   /* LIBRO GUIA DE PRECIOS
   –––––––––––––––––––––––––––––––––––*/
   .state('app.guia',{
