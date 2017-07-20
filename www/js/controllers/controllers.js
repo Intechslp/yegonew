@@ -50,6 +50,7 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
   }
   $scope.goNextView = function(state){
     $state.go(state);
+    $ionicHistory.nextViewOptions({disableAnimate: true});
   }
   $scope.goProfile = function(){
     $state.go('app.perfil');
@@ -1090,8 +1091,11 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 
 // ABOUT CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('AboutCtrl', function($state, $scope, $ionicHistory) {
-  console.log($ionicHistory.viewHistory());
+.controller('AboutCtrl', function($state, $scope) {
+  $scope.openInAppBrowser = function(url){
+   // Open in app browser
+   window.open(url,'_blank');
+  };
 })//END ABOUT CONTROLLER
 //**********
 .filter('capitalize', function() {

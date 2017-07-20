@@ -376,7 +376,7 @@ angular.module('starter', [
     url: '/about',
     views: {
       'menuContent': {
-        templateUrl: "templates/about.html",
+        templateUrl: "templates/about/about.html",
         controller: 'AboutCtrl'
       }
     }

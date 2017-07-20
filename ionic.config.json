@@ -1,4 +1,8 @@
 {
   "name": "yegonew",
-  "app_id": "a843d5bc"
+  "app_id": "a843d5bc",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*"
+  ]
 }

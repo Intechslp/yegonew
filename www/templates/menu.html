@@ -17,10 +17,10 @@
     <ion-content>
       <div id="profile-card" class="profile-card"
         style="background-image:url({{perfil.driver_of_vehicles[0].imageurl}})">
-        <ion-item class="only-link" menu-close ng-click="goNextView('app.perfil')" ng-if="perfil.imageurl == null">
+        <ion-item class="only-link" menu-toggle ng-click="goNextView('app.perfil')" ng-if="perfil.imageurl == null">
           <img id="profile-pic" src="img/camera.jpg" alt="" class="profile-element">
         </ion-item>
-        <ion-item class="only-link" menu-close ng-click="goNextView('app.perfil')" ng-if="perfil.imageurl != null">
+        <ion-item class="only-link" menu-toggle ng-click="goNextView('app.perfil')" ng-if="perfil.imageurl != null">
           <img id="profile-pic" src="{{perfil.imageurl}}" alt=""
             class="profile-element">
         </ion-item>
@@ -29,27 +29,27 @@
           Yego Team: <strong>{{perfil.family_name}}</strong></h2>
       </div>
       <ion-list>
-        <!-- <ion-item menu-close href="#/app/directorio">
+        <!-- <ion-item menu-toggle href="#/app/directorio">
           <img src="img/inicio.png" alt="" />
           Inicio
         </ion-item> -->
-        <ion-item menu-close ng-click="goNextView('app.perfil')">
+        <ion-item menu-toggle ng-click="goNextView('app.perfil')">
           <img src="img/perfil.png" alt="" />
-          Perfil
+          Mi Perfil
         </ion-item>
-        <!-- <ion-item menu-close href="#/app/cargas" ng-if="!$storage.guest">
+        <!-- <ion-item menu-toggle href="#/app/cargas" ng-if="!$storage.guest">
           <img src="img/carga-dark.png" alt="" />
           Cargas de Gasolina
         </ion-item> -->
-        <ion-item menu-close ng-click="goNextView('app.autos')" ng-if="!$storage.guest">
+        <ion-item menu-toggle ng-click="goNextView('app.autos')" ng-if="!$storage.guest">
           <img src="img/auto.png" alt="" />
           Mis Autos
         </ion-item>
-        <ion-item menu-close ng-click="goNextView('app.misSeguros')" ng-if="!$storage.guest">
+        <ion-item menu-toggle ng-click="goNextView('app.misSeguros')" ng-if="!$storage.guest">
           <img src="img/seguro.png" alt="" />
           Mis Seguros
         </ion-item>
-        <ion-item menu-close ng-click="goNextView('app.team')" ng-if="!$storage.guest">
+        <ion-item menu-toggle ng-click="goNextView('app.team')" ng-if="!$storage.guest">
           <img src="img/team.png" alt="" />
           Mi Yego Team
         </ion-item>
@@ -71,11 +71,11 @@
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-item menu-close ng-click="goNextView('app.negocios')">
+        <ion-item menu-toggle ng-click="goNextView('app.negocios')">
           <img src="img/negocio.png" alt="" />
           Recomendar Negocio
         </ion-item>
-        <ion-item menu-close ng-click="goNextView('app.about')">
+        <ion-item menu-toggle ng-click="goNextView('app.about')">
           <img src="img/info.png" alt="" />
           Acerca de Yego
         </ion-item>

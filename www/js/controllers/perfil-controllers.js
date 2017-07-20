@@ -11,6 +11,7 @@ function($state, $scope, $rootScope, $window, $stateParams, $auth, $localStorage
   $scope.$storage = $localStorage;
   $scope.usuario = $scope.$storage.user;
   console.log($scope.usuario);
+  console.log($ionicHistory.backView());
   $scope.userId = $rootScope.userId;
   $scope.carData = {};
   $scope.famData = {};
