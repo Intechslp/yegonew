@@ -231,6 +231,8 @@ button#search-btn, button#close-btn {
 .active .dir-icon{background-image: url('../img/icons/dir-a.png');}
 .seg-icon{background-image: url('../img/icons/seg-i.png');}
 .active .seg-icon{background-image: url('../img/icons/seg-a.png');}
+.gas-icon{background-image: url('../img/icons/gas-i.png');}
+.active .gas-icon{background-image: url('../img/icons/gas.png');}
 .cup-icon{background-image: url('../img/icons/cup-i.png');}
 .active .cup-icon{background-image: url('../img/icons/cup-a.png');}
 .lib-icon{background-image: url('../img/icons/libro-i.png');}
@@ -241,6 +243,15 @@ button#search-btn, button#close-btn {
 .menu-left ion-content.scroll-content.ionic-scroll{
   top:0px;
   background:white;
+}
+.custom-menu-btn {
+  display: flex;
+}
+.custom-menu-btn img.profile-button {
+  width: 100%;
+  max-width: 28px;
+  border-radius: 50%;
+  border: 1px solid;
 }
 #profile-card{
   background-size: cover;
@@ -272,6 +283,7 @@ button#search-btn, button#close-btn {
 }
 #profile-card ion-item.only-link {
   background-color: transparent !important;
+  border: none;
   margin: 0;
   padding: 0;
   width: auto;
@@ -292,7 +304,8 @@ button#search-btn, button#close-btn {
 }
 #profile-card img#profile-pic{
   border-radius: 50%;
-  width: 50px;
+  width:100%;
+  max-width: 50px;
   border: 1px solid white;
   box-shadow: 1px 1px 5px #142840;
 }
@@ -313,8 +326,14 @@ button#search-btn, button#close-btn {
 #the-side-menu ion-item.item.item-complex {
   border: none;
 }
-#the-side-menu a.item-content, #the-side-menu ion-item.deactivated-item {
-  padding-left: 4em;
+#the-side-menu ion-item.item, #the-side-menu a.item-content, #the-side-menu ion-item.deactivated-item {
+  background: white;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    color:#003356;
 }
 #the-side-menu .list {
   padding: 1em 0;
@@ -326,22 +345,17 @@ button#search-btn, button#close-btn {
   border: none;
   color: #808080;
 }
-#the-side-menu ion-item.deactivated-item img{
-  position: absolute;
-  top: 12px;
-  left: 24px;
-  width: 100%;
-  max-width: 25px;
-}
 #the-side-menu ion-list:nth-of-type(1) {
   border-bottom: solid 1px #afafaf;
 }
-#the-side-menu .item .item-content >img {
-  position: absolute;
-  top: 12px;
+#the-side-menu ion-item.item >img, #the-side-menu .item .item-content >img {
   left: 24px;
   width: 100%;
   max-width: 25px;
+  margin-right: 1em;
+}
+#the-side-menu .list .item{
+  border-bottom: none;
 }
 /* highway class
 –––––––––––––––––––––––––––––
@@ -502,6 +516,17 @@ ion-view.highway{
   flex-direction: column;
   align-items: center;
 }
+#home .city-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+#home .city-info p {margin-bottom: 0}
+#home .city-info button.button, #home .city-info p {
+  width: auto;
+}
 .icon-cont {
   border-radius: 50%;
   background: #0d1927;
@@ -551,7 +576,7 @@ img.menu-icon {
   font-size: 15px;
 }
 #home .categories {
-  margin-top: 5%;
+  margin-top: 1%;
   width: 100%;
   max-width: 320px;
 }
@@ -899,12 +924,12 @@ img.menu-icon {
 /* PERFIL
 –––––––––––––––––––––––––––––
 –––––––––––––––––––––––––––––*/
-#perfil.perfil ion-content.scroll-content.ionic-scroll.has-header {
+/*#perfil.perfil ion-content.scroll-content.ionic-scroll.has-header {
   top: 0;
 }
 #perfil.perfil .header-item .left-buttons .ion-navicon {
   background: rgba(5, 89, 138, 0.49);
-}
+}*/
 #perfil-tabs{
   position: relative;
   top:0;

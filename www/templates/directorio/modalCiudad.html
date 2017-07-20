@@ -1,0 +1,41 @@
+<ion-modal-view id="edit-user-modal" class="perfil modal modal-edit-user" view-title="Editar Auto">
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Cambiar ciudad</h1>
+      <button class="button button-icon button-clear icon-right ion-ios-close" id="header-btn" ng-click="cerrarModal()">
+      </button>
+  </div>
+
+  <ion-content class="has-header">
+    <form ng-submit="editUser()" class="list">
+
+      <label class="item item-input item-select">
+        <i class="icon ion-ios-location"></i>
+        <div class="input-label">País</div>
+        <select name="pais" ng-model="country"
+        ng-options="p.name for p in paises track by p.id"
+        ng-change="loadStates(country.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Estado</div>
+        <select name="estado" ng-model="state"
+        ng-options="e.name for e in estados track by e.id"
+        ng-change="loadCities(country.id, state.id)">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Ciudad</div>
+        <select name="ciudad" ng-model="myUser.city_id">
+          <option value="" disabled selected hidden>-- Selecciona --</option>
+          <option ng-repeat="c in ciudades" value="{{c.id}}">{{c.name}}</option>
+        </select>
+      </label>
+      <div class="padding"><button type="submit" class="button button-block button-positive">Aceptar cambios</button></div>
+
+    </form>
+  </ion-content>
+</ion-modal-view>

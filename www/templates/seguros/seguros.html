@@ -3,7 +3,11 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="left">
-      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      <button class="button button-icon button-clear custom-menu-btn" menu-toggle="left">
+      <img ng-if="$storage.user.imageurl" ng-src="{{$storage.user.imageurl}}"
+      alt="" class="profile-button">
+      <img ng-if="!$storage.user.imageurl" src="img/camera.jpg"
+      alt="" class="profile-button">
       </button>
     </ion-nav-buttons>
   </ion-nav-bar>
@@ -103,11 +107,21 @@
     </form>
   </ion-content>
   <div class="tabs tabs-background-positive tabs-color-light tabs-icon-top home-tabs hide-on-keyboard-open">
-    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Directorio" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.directorio')">
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior"
+    title="Directorio" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline"
+    ng-click="changeTab('app.directorio')">
       <div class="my-icon dir-icon"></div>Directorio<span class="tab-title ng-binding" ng-bind-html="title"></span>
     </a>
-    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior active" title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="">
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior active"
+    title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline"
+    ng-click="">
       <div class="my-icon seg-icon"></div>Seguros<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior"
+    title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline"
+    ng-click="changeTab('app.cargas')">
+      <div class="my-icon gas-icon"></div>
+      Cargas<span class="tab-title ng-binding" ng-bind-html="title"></span>
     </a>
     <!-- <a nav-clear nav-transition="none" class="tab-item disable-user-behavior" title="Cuponera" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ng-click="changeTab('app.cuponera')">
       <div class="my-icon cup-icon"></div>Cuponera<span class="tab-title ng-binding" ng-bind-html="title"></span>

@@ -7,7 +7,7 @@ angular.module('starter.controllers',
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('AppCtrl',
 function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
-  $ionicHistory, $localStorage, $auth, UserData) {
+  $ionicHistory, $localStorage, $auth, $ionicPopup, UserData) {
 
   /*
   With the new view caching in Ionic, Controllers are only called
@@ -27,7 +27,7 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
     $scope.$storage = $localStorage;
     if(!$scope.$storage.guest){
       $scope.perfil = $scope.$storage.user;
-      // console.log($scope.perfil);
+      console.log($scope.perfil);
       $rootScope.userId = $scope.$storage.id;
       $rootScope.usuario = $scope.$storage.user;
     }else{
@@ -38,15 +38,31 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
   }
 
   $scope.changeTab = function(state){
+    if(state == 'app.cargas' && $scope.$storage.guest){
+      $scope.showAlert('Lo sentimos','Ésta opción solo está disponible para usuarios registrados');
+    }else{
+      $state.go(state);
+      $ionicHistory.nextViewOptions({
+        disableBack: true,
+        disableAnimate: true
+      });
+    }
+  }
+  $scope.goNextView = function(state){
     $state.go(state);
-    $ionicHistory.nextViewOptions({
-      disableBack: true,
-      disableAnimate: true
-    });
   }
   $scope.goProfile = function(){
     $state.go('app.perfil');
   }
+
+  $scope.showAlert = function(msj1, msj2) {
+    var alertPopup = $ionicPopup.alert({
+      title: msj1,
+      template: msj2
+    });
+    alertPopup.then(function(res) {
+    });
+  };
 
 }) // END APP CONTROLLER
 //**********
@@ -56,8 +72,8 @@ function($scope, $rootScope, $filter, $ionicModal, $window, $timeout,$state,
 //–––––––––––––––––––––––––––––––––––––––––––––
 .controller('DirectorioCtrl',
 function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
-  $ionicPopup, $stateParams,UserData, $rootScope,
-  $ionicHistory, $localStorage, EstablecimientosData, NegociosData) {
+  $ionicPopup, $stateParams,UserData, $rootScope, $ionicModal, LocationData,
+  $ionicHistory, $localStorage, EstablecimientosData, NegociosData, UserData) {
 
 
   $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
@@ -99,8 +115,12 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
 
   if(!$scope.$storage.guest){
     $scope.userCity = $scope.$storage.user.city.id;
+    $scope.cityName = $scope.$storage.user.city.name;
+    $scope.userImage = $scope.$storage.user.imageurl;
   }else{
     $scope.userCity = $scope.$storage.guestUser.city_id;
+    $scope.userName = $scope.$storage.guestUser.city_name;
+    $scope.userImage = 'img/camera.jpg';
   }
   $scope.tabsState = true;
   $scope.closeBtn = false;
@@ -108,6 +128,7 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   $scope.negocios = {};
   $scope.adn = {};
   $scope.searchIsActive = false;
+  $scope.myUser ={};
 
   var directory_to = $timeout(function(){
     //en caso de que la petición tarde demasiado se cancela el loading
@@ -171,17 +192,87 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
     $scope.searchList = true;
   };
 
-// función que cambia el estado del botón de cerrar la búsqueda rápida
-  // $scope.searchClick = function(){
-  //   $scope.tabsState = !$scope.tabsState;
-  //   $scope.closeBtn = !$scope.closeBtn;
-  // }
-
 // función que resetea la busqueda
   $scope.resetSearch = function () {
     $scope.searchList=false;
     $scope.adn.item = "";
     $scope.names = $scope.negocios;
+  }
+
+// Se crea el modal de cambio de ciudad
+  $ionicModal.fromTemplateUrl('templates/directorio/modalCiudad.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.changeCityModal = modal;
+  });
+
+// función que abre el modal para cambiar de ciudad
+  $scope.clickChangeCity = function(){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    // Mandamos llamar la lista de países disponibles
+    LocationData.getCountries().then(function(resp){
+      $scope.paises = resp;
+      $scope.changeCityModal.show();
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      $ionicLoading.hide();
+    });
+  }
+
+// Cerrar modal para cambiar ciudad
+  $scope.cerrarModal = function(){
+    $scope.changeCityModal.hide();
+  }
+// Manda llamar los estados en función del país
+  $scope.loadStates = function(paisId){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    LocationData.getStates(paisId).then(function(resp){
+      $scope.estados = resp;
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      $ionicLoading.hide();
+    });
+  }
+
+// Manda llamar las ciudades en función del estado
+  $scope.loadCities = function(paisId,estadoId){
+    $ionicLoading.show({templateUrl:'templates/obteniendo.html'});
+    LocationData.getCities(paisId,estadoId).then(function(resp){
+      $scope.ciudades = resp;
+      $ionicLoading.hide();
+    }).catch(function(resp){
+      $ionicLoading.hide();
+    });
+  }
+
+// Actualizar información de usuario sobre la ciudad
+  $scope.editUser = function(){
+    $ionicLoading.show({templateUrl:'templates/actualizando.html'});
+    if(!$scope.$storage.guest){
+      UserData.updateUser($scope.userId, $scope.myUser).then(function(resp){
+        // console.log('updateUser');
+        // console.log(resp);
+        //obtener información actualizada del usuario
+        $scope.$storage.user = resp;
+        $rootScope.user = resp;
+        $scope.userCity = $scope.$storage.user.city.id;
+        $scope.cityName = $scope.$storage.user.city.name;
+        $ionicLoading.hide();
+        $scope.cerrarModal();
+      }).catch(function(resp){
+        console.log(resp);
+        $scope.showAlert('Error',
+          'Hubo un problema al enviar tus datos, intenta más tarde');
+        $ionicLoading.hide();
+      });
+    }else{
+      $scope.$storage.guestUser.city_id = $scope.myUser
+      $scope.$storage.guestUser.city_name = $scope.myUser
+      $scope.userCity = $scope.$storage.guestUser.city_id;
+      $scope.userName = $scope.$storage.guestUser.city_name;
+    }
+
   }
 
 // Función para ir a la categoría deseada una vez que se le dió click
@@ -201,23 +292,23 @@ function($scope, $state, $filter, $window, $auth, $timeout, $ionicLoading,
   }
 
   $scope.goCerca = function(){
-    if(ionic.Platform.isAndroid()){
-      cordova.plugins.diagnostic.isLocationAuthorized(function(enabled){
-          //  console.log("Location is " + (enabled ? "enabled" : "disabled"));
-           if(!enabled){
-             cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
-                //  console.log("Authorization status is now: "+status);
-                 $state.go('app.cerca')
-             }, function(error){
-                 console.error(error);
-             });
-           }
-       }, function(error){
-           console.error("The following error occurred: "+error);
-       });
-    }else{
+    // if(ionic.Platform.isAndroid()){
+    //   cordova.plugins.diagnostic.isLocationAuthorized(function(enabled){
+    //       //  console.log("Location is " + (enabled ? "enabled" : "disabled"));
+    //        if(!enabled){
+    //          cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
+    //             //  console.log("Authorization status is now: "+status);
+    //              $state.go('app.cerca')
+    //          }, function(error){
+    //              console.error(error);
+    //          });
+    //        }
+    //    }, function(error){
+    //        console.error("The following error occurred: "+error);
+    //    });
+    // }else{
       $state.go('app.cerca')
-    }
+    // }
   }
 
   $scope.showAlert = function(msj1, msj2) {
@@ -999,8 +1090,8 @@ function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicHistory,
 
 // ABOUT CONTROLLER
 //–––––––––––––––––––––––––––––––––––––––––––––
-.controller('AboutCtrl', function($state, $scope, $rootScope, $stateParams, $ionicLoading, $ionicNavBarDelegate, $ionicPopup, CuponesData) {
-
+.controller('AboutCtrl', function($state, $scope, $ionicHistory) {
+  console.log($ionicHistory.viewHistory());
 })//END ABOUT CONTROLLER
 //**********
 .filter('capitalize', function() {

@@ -245,6 +245,7 @@ function ($scope, $state, $filter,
     $scope.usuarioData.city_id = city.id;
     if($scope.$storage.guest){
       $scope.$storage.guestUser = {'city_id': city.id};
+      $scope.$storage.guestUser = {'city_name': city.name};
       $state.go('welcome');
     }else{
       $ionicLoading.show({templateUrl: 'templates/enviando.html'});
@@ -254,7 +255,7 @@ function ($scope, $state, $filter,
         $state.go('autoReg');
       }).catch(function(resp){
         $ionicLoading.hide();
-        $scope.showAlert('Error','Hubo un problema al envar tus datos, intenta más tarde');
+        $scope.showAlert('Error','Hubo un problema al enviar tus datos, intenta más tarde');
       });
     }
   }

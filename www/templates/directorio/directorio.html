@@ -3,7 +3,11 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="left">
-      <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      <button class="button button-icon button-clear custom-menu-btn" menu-toggle="left">
+      <img ng-if="$storage.user.imageurl" ng-src="{{$storage.user.imageurl}}"
+      alt="" class="profile-button">
+      <img ng-if="!$storage.user.imageurl" src="img/camera.jpg"
+      alt="" class="profile-button">
       </button>
     </ion-nav-buttons>
     <ion-nav-title id="custom-navbar">
@@ -35,13 +39,19 @@
       </div>
       <div ng-if="names !== undefined && !names.length" class="no-results"
       ng-if="adn.item.length > 2">
-        <ion-item >No Results Found..</ion-item >
+        <ion-item >No se encontraron resultados…</ion-item >
       </div>
     </ion-list>
 
     <div class="after-search" ng-show="!searchIsActive">
       <!-- Logo -->
       <img src="img/logo-yego.png" alt="" class="logo">
+      <!-- Cambiar ciudad -->
+      <div class="city-info" ng-if="!$storage.guest">
+        <p>Estás en: <strong>{{cityName}}</strong></p>
+        <button class="button button-icon icon" ng-click="clickChangeCity()"><i class="ion-edit"></i></button>
+      </div>
+
       <!-- Categories -->
       <div class="categories">
         <div class="row">
@@ -104,6 +114,12 @@
     ng-click="changeTab('app.seguros')">
       <div class="my-icon seg-icon"></div>
       Seguros<span class="tab-title ng-binding" ng-bind-html="title"></span>
+    </a>
+    <a nav-clear nav-transition="none" class="tab-item disable-user-behavior"
+    title="Seguros" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline"
+    ng-click="changeTab('app.cargas')">
+      <div class="my-icon gas-icon"></div>
+      Cargas<span class="tab-title ng-binding" ng-bind-html="title"></span>
     </a>
     <!-- <a nav-clear nav-transition="none" class="tab-item disable-user-behavior"
     title="Cuponera" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline"
